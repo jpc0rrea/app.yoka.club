@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+button {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+span {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+svg {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+a {
+  @apply transition-all duration-300 ease-in-out;
+}
