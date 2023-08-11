@@ -36,8 +36,6 @@ const userNavigation: UserNavigation[] = [
 
 export default function Profile() {
   const session = useSession();
-  console.log(session);
-
   if (session.status === 'loading') {
     return (
       <div className="flex h-full items-center justify-center">

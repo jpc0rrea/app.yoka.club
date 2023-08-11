@@ -5,7 +5,7 @@ import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
 } from 'next';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { authOptions } from 'pages/api/auth/[...nextauth]';
 
 export function withSSREnsureSubscribed<P extends { [key: string]: any }>(
@@ -14,11 +14,7 @@ export function withSSREnsureSubscribed<P extends { [key: string]: any }>(
   return async (
     ctx: GetServerSidePropsContext
   ): Promise<GetServerSidePropsResult<P>> => {
-    const session = await unstable_getServerSession(
-      ctx.req,
-      ctx.res,
-      authOptions
-    );
+    const session = await getServerSession(ctx.req, ctx.res, authOptions);
 
     if (!session || !session.user) {
       return {

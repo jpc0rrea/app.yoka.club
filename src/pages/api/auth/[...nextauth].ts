@@ -13,9 +13,6 @@ export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
     async session({ session }) {
-      console.log('SESSION');
-      console.log(session);
-
       const user = await prisma.user.findUnique({
         where: {
           email: session.user?.email || '',
@@ -40,6 +37,8 @@ export const authOptions: NextAuthOptions = {
           username: user.username,
           emailVerified: user.emailVerified,
           accounts: user.accounts,
+          role: user.role,
+          checkInsQuantity: user.checkInsQuantity,
         },
       };
     },

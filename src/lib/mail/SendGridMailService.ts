@@ -3,7 +3,7 @@ import sendGridMail from '@sendgrid/mail';
 import {
   type MailTemplates,
   sendGridTemplatesMapper,
-} from 'services/mail/mailTemplateMapper';
+} from '@lib/mail/mailTemplateMapper';
 import { type MailService } from './interfaces/MailService';
 
 export class SendGridMailService implements MailService {

@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../components/Form/Input';
-import { BeatLoader } from 'react-spinners';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { errorToast } from '@components/Toast/ErrorToast';
@@ -12,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import { successToast } from '@components/Toast/SuccessToast';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { Loader2 } from 'lucide-react';
 
 const resetPasswordFormSchema = z
   .object({
@@ -107,7 +107,7 @@ export default function ForgotPassword() {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
             {hasResetedPassword ? (
               <>
                 <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -120,7 +120,7 @@ export default function ForgotPassword() {
 
                 <a
                   href="/login"
-                  className="mt-6 flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className="mt-6 flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                 >
                   ir para o login
                 </a>
@@ -152,17 +152,10 @@ export default function ForgotPassword() {
                   <div>
                     <button
                       type="submit"
-                      className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                      className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                     >
                       {isSubmitting ? (
-                        <BeatLoader
-                          color="#fff"
-                          size={7}
-                          cssOverride={{
-                            height: '1.25rem',
-                          }}
-                          className="translate-y-[4px] transform"
-                        />
+                        <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
                       ) : (
                         'cadastrar nova senha'
                       )}

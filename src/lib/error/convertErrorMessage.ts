@@ -35,6 +35,7 @@ export default function convertErrorMessage({
       return defaultError;
     }
   }
+
   if (!(err instanceof AppError)) {
     return defaultError;
   }

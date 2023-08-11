@@ -204,13 +204,10 @@ const Profile: NextPage = () => {
                         </div>
                         <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex sm:flex-shrink-0 sm:items-center">
                           {hasConnectedAgenda ? (
-                            <button
-                              type="button"
-                              className="inline-flex cursor-not-allowed items-center rounded-md border border-transparent bg-gray-400 px-4 py-2 font-medium text-white shadow-sm sm:text-sm"
-                            >
+                            <div className="inline-flex cursor-not-allowed items-center rounded-md border border-transparent bg-gray-400 px-4 py-2 font-medium text-white shadow-sm sm:text-sm">
                               conectado
                               <CheckIcon className="ml-2 h-4 w-4" />
-                            </button>
+                            </div>
                           ) : (
                             <button
                               type="button"
@@ -219,7 +216,7 @@ const Profile: NextPage = () => {
                                   callbackUrl: '/profile',
                                 });
                               }}
-                              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                              className="inline-flex items-center rounded-md border border-transparent bg-purple-800 px-4 py-2 font-medium text-white shadow-sm hover:bg-purple-900"
                             >
                               conectar
                             </button>
@@ -233,15 +230,15 @@ const Profile: NextPage = () => {
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
                       >
-                        Cancel
+                        cancelar
                       </button>
                       <button
                         type="submit"
-                        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-purple-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
                       >
-                        Save
+                        salvar
                       </button>
                     </div>
                   </div>

@@ -1,7 +1,7 @@
 interface AppErrorConstructor {
   title: string;
   description?: string;
-  statusCode?: number
+  statusCode?: number;
 }
 
 export class AppError {
@@ -10,11 +10,7 @@ export class AppError {
 
   public readonly statusCode: number;
 
-  constructor({
-    title,
-    description,
-    statusCode = 400,
-  }: AppErrorConstructor) {
+  constructor({ title, description, statusCode = 400 }: AppErrorConstructor) {
     this.title = title;
     this.description = description;
     this.statusCode = statusCode;

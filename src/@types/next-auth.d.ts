@@ -1,4 +1,5 @@
 import { Account } from "@prisma/client";
+import { UserRole } from '@prisma/client';
 import NextAuth from "next-auth";
 
 declare module 'next-auth' {
@@ -10,6 +11,8 @@ declare module 'next-auth' {
     emailVerified: Date | null;
     image: string | null;
     username: string;
+    role: UserRole;
+    checkInsQuantity: number;
   }
 
   interface Session {

@@ -1,18 +1,9 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import {
-  CalendarIcon,
-  ChartBarIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
-import { classNames } from '@utils/classNames';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSidebar } from '@hooks/useSidebar';
 import Image from 'next/image';
-
-const navigation = [
-  { name: 'calendário', href: '#', icon: CalendarIcon, current: true },
-  { name: 'estatísticas', href: '#', icon: ChartBarIcon, current: false },
-];
+import MainContent from './MainContext';
 
 export default function Sidebar() {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
@@ -79,33 +70,7 @@ export default function Sidebar() {
                     height={100}
                   />
                 </div>
-                <div className="mt-5 h-0 flex-1 overflow-y-auto">
-                  <nav className="space-y-1 px-2">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-100 text-gray-900'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                          'group flex items-center rounded-md px-2 py-2 text-base font-medium'
-                        )}
-                      >
-                        <item.icon
-                          className={classNames(
-                            item.current
-                              ? 'text-gray-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            'mr-4 h-6 w-6 flex-shrink-0'
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
+                <MainContent />
               </Dialog.Panel>
             </Transition.Child>
             <div className="w-14 flex-shrink-0" aria-hidden="true">
@@ -128,33 +93,7 @@ export default function Sidebar() {
               height={100}
             />
           </div>
-          <div className="mt-5 flex flex-grow flex-col">
-            <nav className="flex-1 space-y-1 px-2 pb-4">
-              {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                    'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
-                  )}
-                >
-                  <item.icon
-                    className={classNames(
-                      item.current
-                        ? 'text-gray-500'
-                        : 'text-gray-400 group-hover:text-gray-500',
-                      'mr-3 h-6 w-6 flex-shrink-0'
-                    )}
-                    aria-hidden="true"
-                  />
-                  {item.name}
-                </a>
-              ))}
-            </nav>
-          </div>
+          <MainContent />
         </div>
       </div>
     </>

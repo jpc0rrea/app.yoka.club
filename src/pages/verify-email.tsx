@@ -1,11 +1,11 @@
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { api } from '@lib/api';
+import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { LegacyRef, useEffect, useState } from 'react';
-import { BeatLoader } from 'react-spinners';
 
 export default function VerifyEmail() {
   // get the token from the query
@@ -72,13 +72,13 @@ export default function VerifyEmail() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
           <div
             className="flex items-center justify-center"
             ref={titleAndButtonRef as LegacyRef<HTMLDivElement>}
           >
             {state === 'loading' ? (
-              <BeatLoader size={7} />
+              <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
             ) : state === 'success' ? (
               <CheckCircleIcon className="mt-1 h-5 w-5 text-green-400" />
             ) : (
@@ -96,7 +96,7 @@ export default function VerifyEmail() {
           <div className="mt-6">
             <button
               type="button"
-              className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
+              className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
               onClick={() => {
                 if (session && session.data && session.data.user) {
                   router.push('/');

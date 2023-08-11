@@ -4,7 +4,7 @@ import { prisma } from '@server/db';
 import ensureAuthenticated, {
   EnsureAuthenticatedRequest,
 } from '@server/middlewares/ensureAuthenticated';
-import { SendGridMailService } from 'services/mail/SendGridMailService';
+import { SendGridMailService } from '@lib/mail/SendGridMailService';
 
 const sendMailConfirmation = async (
   req: EnsureAuthenticatedRequest,

@@ -96,7 +96,6 @@ export default function PrismaAdapter(): Adapter {
     // },
 
     async linkAccount(account) {
-      console.log('LINK ACCOUNT');
       console.table(account);
       await prisma.account.create({
         data: {
@@ -120,7 +119,6 @@ export default function PrismaAdapter(): Adapter {
     // },
 
     async createSession({ sessionToken, userId, expires }) {
-      console.log('CREATE SESSION');
       console.table({ sessionToken, userId, expires });
       await prisma.session.create({
         data: {
@@ -138,7 +136,6 @@ export default function PrismaAdapter(): Adapter {
     },
 
     async getSessionAndUser(sessionToken) {
-      console.log('GET SESSION AND USER');
       console.table(sessionToken);
       const session = await prisma.session.findUnique({
         where: {
@@ -150,7 +147,6 @@ export default function PrismaAdapter(): Adapter {
       });
 
       if (!session) {
-        console.log('vou retornar null');
         return null;
       }
 

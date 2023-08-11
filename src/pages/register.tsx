@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, useSession } from 'next-auth/react';
-import { BeatLoader } from 'react-spinners';
 
 import { Input } from '@components/Form/Input';
 import { successToast } from '@components/Toast/SuccessToast';
@@ -13,6 +12,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { api } from '@lib/api';
 import { isAxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 
 const registerFormSchema = z
   .object({
@@ -160,7 +160,7 @@ export default function Login() {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
             <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
               crie sua conta
             </h2>
@@ -208,17 +208,10 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                 >
                   {isSubmitting ? (
-                    <BeatLoader
-                      color="#ffffff"
-                      size={7}
-                      cssOverride={{
-                        height: '1.25rem',
-                      }}
-                      className="translate-y-[4px] transform"
-                    />
+                    <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
                   ) : (
                     'criar conta'
                   )}
@@ -244,7 +237,7 @@ export default function Login() {
                         callbackUrl: '/',
                       });
                     }}
-                    className={`flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-gray-500 shadow-sm hover:bg-gray-50 ${
+                    className={`flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-500 shadow-sm hover:bg-gray-50 ${
                       hasCalendarError
                         ? 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-500'
                         : ''
@@ -252,11 +245,33 @@ export default function Login() {
                   >
                     <svg
                       className="h-5 w-5"
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
+                      viewBox="0 0 48 48"
+                      fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M7.9 7v2.4H12c-.2 1-1.2 3-4 3-2.4 0-4.3-2-4.3-4.4 0-2.4 2-4.4 4.3-4.4 1.4 0 2.3.6 2.8 1.1l1.9-1.8C11.5 1.7 9.9 1 8 1 4.1 1 1 4.1 1 8s3.1 7 7 7c4 0 6.7-2.8 6.7-6.8 0-.5 0-.8-.1-1.2H7.9z" />
+                      <g clipPath="url(#clip0_17_40)">
+                        <path
+                          d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M24.48 48.0016C30.9529 48.0016 36.4116 45.8764 40.3888 42.2078L32.6549 36.2111C30.5031 37.675 27.7252 38.5039 24.4888 38.5039C18.2275 38.5039 12.9187 34.2798 11.0139 28.6006H3.03296V34.7825C7.10718 42.8868 15.4056 48.0016 24.48 48.0016Z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M11.0051 28.6006C9.99973 25.6199 9.99973 22.3922 11.0051 19.4115V13.2296H3.03298C-0.371021 20.0112 -0.371021 28.0009 3.03298 34.7825L11.0051 28.6006Z"
+                          fill="#FBBC04"
+                        />
+                        <path
+                          d="M24.48 9.49932C27.9016 9.44641 31.2086 10.7339 33.6866 13.0973L40.5387 6.24523C36.2 2.17101 30.4414 -0.068932 24.48 0.00161733C15.4055 0.00161733 7.10718 5.11644 3.03296 13.2296L11.005 19.4115C12.901 13.7235 18.2187 9.49932 24.48 9.49932Z"
+                          fill="#EA4335"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_17_40">
+                          <rect width="48" height="48" fill="white" />
+                        </clipPath>
+                      </defs>
                     </svg>
                     <span className="ml-2 text-sm font-semibold">
                       criar conta com o google

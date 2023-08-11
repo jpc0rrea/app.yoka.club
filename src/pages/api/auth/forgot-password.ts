@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@server/db';
 import { sign } from 'jsonwebtoken';
-import { SendGridMailService } from 'services/mail/SendGridMailService';
+import { SendGridMailService } from '@lib/mail/SendGridMailService';
 
 interface ForgotPasswordRequest extends NextApiRequest {
   body: {
