@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+// import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import {
   Bars3BottomLeftIcon,
   CheckCircleIcon,
@@ -25,9 +25,9 @@ export default function Header() {
         </button>
         <div className="flex flex-1 justify-between px-4">
           <div className="flex flex-1">
-            <button className="my-auto h-min rounded-md p-1 hover:bg-gray-100">
+            {/* <button className="my-auto h-min rounded-md p-1 hover:bg-gray-100">
               <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
-            </button>
+            </button> */}
           </div>
           <div className="ml-4 flex items-center md:ml-6">
             {status === 'authenticated' && data.user && (

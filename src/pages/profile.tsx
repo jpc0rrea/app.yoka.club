@@ -51,7 +51,7 @@ const Profile: NextPage = () => {
                           />
                         </div>
 
-                        <div className="sm:col-span-4">
+                        {/* <div className="sm:col-span-4">
                           <label
                             htmlFor="username"
                             className="block text-sm font-medium text-gray-700"
@@ -91,12 +91,12 @@ const Profile: NextPage = () => {
                           <p className="mt-2 text-sm text-gray-500">
                             fale um pouquinho sobre você
                           </p>
-                        </div>
+                        </div> */}
 
                         <div className="sm:col-span-6">
                           <label
                             htmlFor="photo"
-                            className="block text-sm font-medium text-gray-700"
+                            className="ml-2 block text-sm font-medium text-gray-700"
                           >
                             foto
                           </label>

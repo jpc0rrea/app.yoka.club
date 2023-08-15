@@ -49,7 +49,7 @@ export default function ConfirmEmailAlert() {
           <p className="text-sm text-yellow-700">
             {isSending ? (
               <div className="flex w-full justify-center">
-                <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               </div>
             ) : (
               <>

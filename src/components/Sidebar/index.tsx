@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSidebar } from '@hooks/useSidebar';
@@ -7,6 +7,12 @@ import MainContent from './MainContext';
 
 export default function Sidebar() {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
+
+  // when the route changes (page is changed) we close the sidebar
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [setIsSidebarOpen]);
+
   return (
     <>
       <Transition.Root show={isSidebarOpen} as={Fragment}>

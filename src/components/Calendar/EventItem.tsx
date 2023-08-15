@@ -117,9 +117,14 @@ export default function EventItem({ event }: EventProps) {
       </div>
       {eventAlreadyStarted ? (
         recordedUrl ? (
-          <button className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none">
+          <a
+            href={recordedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+          >
             ver aula gravada
-          </button>
+          </a>
         ) : (
           <button
             disabled
@@ -130,9 +135,14 @@ export default function EventItem({ event }: EventProps) {
         )
       ) : alreadyCheckedId ? (
         liveUrl ? (
-          <button className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none">
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+          >
             ir para aula
-          </button>
+          </a>
         ) : (
           <button
             disabled
