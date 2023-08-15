@@ -42,9 +42,10 @@ const Profile: NextPage = () => {
                         </p>
                       </div>
 
-                      <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                      <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
                         <div className="sm:col-span-4">
                           <Input
+                            name="nome"
                             label="nome"
                             helperText="esse é o nome que ficará disponível para os outros usuários"
                           />
@@ -111,7 +112,7 @@ const Profile: NextPage = () => {
                             </span>
                             <button
                               type="button"
-                              className="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                              className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                               atualizar
                             </button>
@@ -130,13 +131,13 @@ const Profile: NextPage = () => {
                           notificações
                         </p>
                       </div>
-                      <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                      <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
                         <div className="sm:col-span-4">
-                          <Input label="nome completo" />
+                          <Input name="" label="nome completo" />
                         </div>
 
                         <div className="sm:col-span-4">
-                          <Input label="e-mail" />
+                          <Input name="" label="e-mail" />
                         </div>
                       </div>
                     </div>
@@ -202,7 +203,7 @@ const Profile: NextPage = () => {
                             </p>
                           </div>
                         </div>
-                        <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex sm:flex-shrink-0 sm:items-center">
+                        <div className="mt-5 sm:ml-6 sm:mt-0 sm:flex sm:flex-shrink-0 sm:items-center">
                           {hasConnectedAgenda ? (
                             <div className="inline-flex cursor-not-allowed items-center rounded-md border border-transparent bg-gray-400 px-4 py-2 font-medium text-white shadow-sm sm:text-sm">
                               conectado
@@ -230,13 +231,13 @@ const Profile: NextPage = () => {
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
+                        className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
                       >
                         cancelar
                       </button>
                       <button
                         type="submit"
-                        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-purple-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
+                        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
                       >
                         salvar
                       </button>

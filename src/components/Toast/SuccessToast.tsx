@@ -31,7 +31,7 @@ export default function SuccessToast({
   toastDismissFunction,
 }: ToastProps) {
   return (
-    <div className="my-[-4px] mx-[-10px] rounded-md bg-green-50 p-4">
+    <div className="mx-[-10px] my-[-4px] rounded-md bg-green-50 p-4">
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <CheckCircleIcon
