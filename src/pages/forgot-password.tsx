@@ -54,7 +54,6 @@ export default function ForgotPassword() {
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
-        isFromAxios: true,
       });
 
       errorToast({

@@ -41,7 +41,6 @@ export default function DeleteEventModal({
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
-        isFromAxios: true,
       });
 
       errorToast({

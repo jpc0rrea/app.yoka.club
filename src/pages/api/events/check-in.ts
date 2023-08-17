@@ -37,7 +37,8 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
 
     if (!user.checkInsQuantity || user.checkInsQuantity <= 0) {
       return res.status(400).json({
-        message: 'você não tem check-ins disponíveis',
+        message: 'erro ao realizar check-in',
+        description: 'você não tem check-ins disponíveis',
         errorCode: 'no-check-ins-available',
       });
     }

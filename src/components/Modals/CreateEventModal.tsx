@@ -152,7 +152,6 @@ export default function CreateEventModal() {
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
-        isFromAxios: true,
       });
 
       errorToast({

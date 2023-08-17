@@ -1,10 +1,9 @@
 import { AppError } from '.';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, isAxiosError } from 'axios';
 import { APIError } from './types';
 
 interface ConvertErrorMessageProps {
   err: unknown;
-  isFromAxios?: boolean;
 }
 
 const defaultError = {
@@ -14,12 +13,11 @@ const defaultError = {
 
 export default function convertErrorMessage({
   err,
-  isFromAxios = false,
 }: ConvertErrorMessageProps): {
   message: string;
   description: string | undefined;
 } {
-  if (isFromAxios) {
+  if (isAxiosError(err)) {
     const error = err as AxiosError<APIError>;
 
     if (

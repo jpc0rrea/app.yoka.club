@@ -127,7 +127,6 @@ export default function EditEventModal({
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
-        isFromAxios: true,
       });
 
       errorToast({

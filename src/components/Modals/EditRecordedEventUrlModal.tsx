@@ -66,7 +66,6 @@ export default function EditRecordedEventUrlModal({
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
-        isFromAxios: true,
       });
 
       errorToast({

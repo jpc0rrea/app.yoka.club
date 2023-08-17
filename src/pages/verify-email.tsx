@@ -57,7 +57,8 @@ export default function VerifyEmail() {
           }
         });
     }
-  }, [router, session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.token]);
 
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
