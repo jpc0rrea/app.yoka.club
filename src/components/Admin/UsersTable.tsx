@@ -1,4 +1,4 @@
-import AddMoreCheckInsToUser from '@components/Modals/AddMoreCheckinsToUser';
+import AddMoreCheckInsToUser from '@components/Modals/AddMoreCheckInsToUser';
 import { useUsers } from '@hooks/useUsers';
 import { Loader2 } from 'lucide-react';
 
