@@ -25,6 +25,16 @@ export default function PrismaAdapter(): Adapter {
         },
       });
 
+      await prisma.statement.create({
+        data: {
+          userId: prismaUser.id,
+          title: 'boas vindas à plataforma :)',
+          description: 'check-in inicial para experimentar a plataforma',
+          type: 'CREDIT',
+          checkInsQuantity: 1,
+        },
+      });
+
       return prismaUser;
     },
 

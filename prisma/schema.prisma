@@ -126,14 +126,14 @@ model Statement {
 
     user    User     @relation(fields: [userId], references: [id])
     payment Payment? @relation(fields: [paymentId], references: [id])
-    checkIn CheckIn? @relation(fields: [checkInId], references: [id])
+    checkIn CheckIn? @relation(fields: [checkInId], references: [id], onDelete: SetNull)
 
     @@map("statements")
 }
 
 enum StatementType {
-    CHECK_IN
-    PAYMENT
+    DEBIT
+    CREDIT
 }
 
 model Payment {

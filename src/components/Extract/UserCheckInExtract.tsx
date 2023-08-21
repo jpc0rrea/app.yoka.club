@@ -1,45 +1,37 @@
-import { isAfter } from 'date-fns';
-
-const checkInExtract = [
-  {
-    id: 1,
-    type: 'credit',
-    quantity: 1,
-    date: '15/06/2023',
-    datetime: '2023-06-15',
-    description: 'check-in inicial - bem vindo a plataforma :)',
-    balance: 1,
-  },
-  {
-    id: 2,
-    type: 'debit',
-    quantity: 1,
-    date: '16/06/2023',
-    datetime: '2023-06-16',
-    description: 'check-in realizado - aula online com kaká',
-    balance: 0,
-  },
-  {
-    id: 3,
-    type: 'credit',
-    quantity: 8,
-    date: '17/06/2023',
-    datetime: '2023-06-17',
-    description: 'assinatura mensal - plataforma',
-    balance: 8,
-  },
-  {
-    id: 4,
-    type: 'debit',
-    quantity: 1,
-    date: '18/06/2023',
-    datetime: '2023-06-18',
-    description: 'check-in realizado - aula online com kaká',
-    balance: 7,
-  },
-];
+import { useStatement } from '@hooks/useStatement';
+import { format, isAfter } from 'date-fns';
+import { useSession } from 'next-auth/react';
 
 export default function UserCheckInExtract() {
+  const { data: statement } = useStatement();
+
+  const session = useSession();
+
+  const checkInsQuantity = session.data?.user?.checkInsQuantity || 0;
+
+  let balance = checkInsQuantity;
+
+  const statementToRender = statement
+    ?.sort((a, b) => {
+      // sort by date
+      if (isAfter(new Date(a.createdAt), new Date(b.createdAt))) {
+        return -1;
+      } else {
+        return 1;
+      }
+    })
+    .map((statementItem) => {
+      const thisBalance = balance;
+      balance =
+        statementItem.type === 'CREDIT'
+          ? balance - statementItem.checkInsQuantity
+          : balance + statementItem.checkInsQuantity;
+      return {
+        ...statementItem,
+        balance: thisBalance,
+      };
+    });
+
   return (
     <div>
       <div className="mt-6">
@@ -110,52 +102,48 @@ export default function UserCheckInExtract() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {checkInExtract
-                        .sort((a, b) => {
-                          // sort by date
-                          if (
-                            isAfter(new Date(a.datetime), new Date(b.datetime))
-                          ) {
-                            return -1;
-                          } else {
-                            return 1;
-                          }
-                        })
-                        .map((extractItem) => (
-                          <tr key={extractItem.id}>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-                              <time dateTime={extractItem.datetime}>
-                                {extractItem.date}
-                              </time>
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {extractItem.type === 'credit' ? (
-                                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                                  crédito
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                                  débito
-                                </span>
-                              )}
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {extractItem.description}
-                            </td>
-                            <td
-                              className={`whitespace-nowrap px-6 py-4 text-sm ${
-                                extractItem.type === 'credit'
-                                  ? 'text-green-500'
-                                  : 'text-red-500'
-                              }`}
+                      {statementToRender?.map((statementItem) => (
+                        <tr key={statementItem.id}>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                            <time
+                              dateTime={new Date(
+                                statementItem.createdAt
+                              ).toISOString()}
                             >
-                              {extractItem.type === 'credit' ? '+' : '-'}
-                              {extractItem.quantity}
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {extractItem.balance}
-                            </td>
-                            {/* <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                              {format(
+                                new Date(statementItem.createdAt),
+                                'dd/MM/yyyy'
+                              )}
+                            </time>
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            {statementItem.type === 'CREDIT' ? (
+                              <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                crédito
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                                débito
+                              </span>
+                            )}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            {statementItem.description}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-6 py-4 text-sm ${
+                              statementItem.type === 'CREDIT'
+                                ? 'text-green-500'
+                                : 'text-red-500'
+                            }`}
+                          >
+                            {statementItem.type === 'CREDIT' ? '+' : '-'}
+                            {statementItem.checkInsQuantity}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            {statementItem.balance}
+                          </td>
+                          {/* <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <a
                               href={payment.href}
                               className="text-orange-600 hover:text-orange-900"
@@ -163,8 +151,8 @@ export default function UserCheckInExtract() {
                               View receipt
                             </a>
                           </td> */}
-                          </tr>
-                        ))}
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>

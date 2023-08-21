@@ -120,7 +120,7 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
             href={liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+            className="flex w-24 justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
           >
             ir para aula
           </a>

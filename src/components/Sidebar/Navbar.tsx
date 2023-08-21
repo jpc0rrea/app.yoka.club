@@ -9,7 +9,7 @@ import { classNames } from '@lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { HistoryIcon } from 'lucide-react';
+import { HistoryIcon, UsersIcon } from 'lucide-react';
 
 export const navigationItems = [
   {
@@ -41,6 +41,12 @@ export const navigationItems = [
     href: '/events/manage',
     icon: LockClosedIcon,
     role: ['ADMIN', 'INSTRUCTOR'],
+  },
+  {
+    name: 'gerenciar usuários',
+    href: '/admin/users',
+    icon: UsersIcon,
+    role: ['ADMIN'],
   },
 ];
 

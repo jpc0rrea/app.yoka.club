@@ -1,7 +1,12 @@
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
+import { useSession } from 'next-auth/react';
 
 export default function UserCheckIns() {
+  const session = useSession();
+
+  const checkInsQuantity = session.data?.user?.checkInsQuantity || 0;
+
   return (
     <div>
       <div>
@@ -19,8 +24,8 @@ export default function UserCheckIns() {
             <div className="flex items-center">
               <CheckCircleIcon className="inline-block h-6 w-6 text-purple-800" />
               <p className="ml-1 text-gray-900">
-                <strong className="text-purple-800">6</strong> check-ins
-                restantes
+                <strong className="text-purple-800">{checkInsQuantity}</strong>{' '}
+                check-ins restantes
               </p>
             </div>
             <p className="text-sm text-gray-500">

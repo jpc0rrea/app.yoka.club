@@ -12,15 +12,22 @@ import { useEventById } from '@hooks/useEvents';
 import { Loader2 } from 'lucide-react';
 import getCheckInStatuses from '@lib/utilities/getCheckInStatuses';
 import CheckInButton from '@components/reusables/CheckInButton';
+import { useState } from 'react';
+import { api } from '@lib/api';
+import { queryClient } from '@lib/queryClient';
+import { successToast } from '@components/Toast/SuccessToast';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { errorToast } from '@components/Toast/ErrorToast';
 
 const Event: NextPage = () => {
   const router = useRouter();
-  const { data } = useSession();
+  const session = useSession();
   const eventId = router.query.eventId as string;
+  const [isCancellingCheckIn, setIsCancellingCheckIn] = useState(false);
 
-  const userId = data?.user?.id || '';
+  const userId = session.data?.user?.id || '';
 
-  const userCheckInsQuantity = data?.user?.checkInsQuantity || 0;
+  const userCheckInsQuantity = session.data?.user?.checkInsQuantity || 0;
 
   const { data: event } = useEventById({ eventId });
 
@@ -44,16 +51,77 @@ const Event: NextPage = () => {
     );
   }
 
-  const { alreadyCheckedIn, eventAlreadyStarted, stillHasVacancy } =
-    getCheckInStatuses({
-      event,
-      userId,
-      userCheckInsQuantity,
-    });
+  const {
+    alreadyCheckedIn,
+    eventAlreadyStarted,
+    stillHasVacancy,
+    canCancelCheckIn,
+  } = getCheckInStatuses({
+    event,
+    userId,
+    userCheckInsQuantity,
+  });
 
   const recordedUrl = event?.recordedUrl;
 
   const liveUrl = event?.liveUrl;
+
+  const handleCancelCheckIn = async () => {
+    setIsCancellingCheckIn(true);
+
+    try {
+      const cancelCheckInResponse = await api.delete<{
+        checkInsRemaining: number;
+      }>(`/events/cancel-check-in?eventId=${event.id}`);
+
+      session.update({
+        ...session.data,
+        user: {
+          ...session.data?.user,
+          checkInsQuantity: cancelCheckInResponse.data.checkInsRemaining,
+        },
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [
+          'events',
+          {
+            isLive: true,
+          },
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['events', 'byId', event.id],
+      });
+
+      await queryClient.refetchQueries({
+        queryKey: [
+          'events',
+          {
+            isLive: true,
+          },
+        ],
+      });
+      await queryClient.refetchQueries({
+        queryKey: ['events', 'byId', event.id],
+      });
+
+      successToast({
+        message: 'check-in cancelado com sucesso',
+      });
+    } catch (err) {
+      const { message, description } = convertErrorMessage({
+        err,
+      });
+
+      errorToast({
+        message,
+        description,
+      });
+    }
+
+    setIsCancellingCheckIn(false);
+  };
 
   return (
     <>
@@ -188,6 +256,18 @@ const Event: NextPage = () => {
                           </p>
                         )}
                         <CheckInButton event={event} />
+                        {canCancelCheckIn && (
+                          <button
+                            onClick={handleCancelCheckIn}
+                            className="mt-4 flex w-32 items-center justify-center rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100"
+                          >
+                            {isCancellingCheckIn ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              'cancelar check-in'
+                            )}
+                          </button>
+                        )}
                       </div>
                       <aside className="mt-8 xl:hidden">
                         <h2 className="sr-only">Details</h2>
@@ -240,10 +320,11 @@ const Event: NextPage = () => {
                                       className="flex items-start justify-start"
                                       key={checkIn.id}
                                     >
-                                      <a
+                                      {/* <a
                                         href={`/users/${checkIn.userId}`}
                                         className="flex items-center space-x-3"
-                                      >
+                                      > */}
+                                      <p className="flex items-center space-x-3">
                                         <div className="flex-shrink-0">
                                           <img
                                             className="h-5 w-5 rounded-full"
@@ -266,7 +347,8 @@ const Event: NextPage = () => {
                                             )}
                                           </p>
                                         </div>
-                                      </a>
+                                      </p>
+                                      {/* </a> */}
                                     </li>
                                   );
                                 })
@@ -368,10 +450,11 @@ const Event: NextPage = () => {
                                 className="flex items-start justify-start"
                                 key={checkIn.id}
                               >
-                                <a
+                                {/* <a
                                   href={`/users/${checkIn.userId}`}
                                   className="flex items-center space-x-3"
-                                >
+                                > */}
+                                <p className="flex items-center space-x-3">
                                   <div className="flex-shrink-0">
                                     <img
                                       className="h-5 w-5 rounded-full"
@@ -395,7 +478,8 @@ const Event: NextPage = () => {
                                       )}
                                     </p>
                                   </div>
-                                </a>
+                                </p>
+                                {/* </a> */}
                               </li>
                             );
                           })

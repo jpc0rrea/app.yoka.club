@@ -6,15 +6,18 @@ import {
 } from '@server/middlewares/ensureAuthenticated';
 import { prisma } from '@server/db';
 import { isAfter, subMinutes } from 'date-fns';
-import { MINUTES_TO_CHECK_IN } from '@lib/constants';
+import { MINUTES_TO_CANCEL_CHECK_IN } from '@lib/constants';
 
-interface CheckInEventRequest extends EnsureAuthenticatedRequest {
+interface CancelCheckInEventRequest extends EnsureAuthenticatedRequest {
   query: {
     eventId: string;
   };
 }
 
-const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
+const cancelCheckInRoute = async (
+  req: CancelCheckInEventRequest,
+  res: NextApiResponse
+) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -33,14 +36,6 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       return res.status(400).json({
         message: 'você precisa verificar seu email antes de fazer check-in',
         errorCode: 'email-not-verified',
-      });
-    }
-
-    if (!user.checkInsQuantity || user.checkInsQuantity <= 0) {
-      return res.status(400).json({
-        message: 'erro ao realizar check-in',
-        description: 'você não tem check-ins disponíveis',
-        errorCode: 'no-check-ins-available',
       });
     }
 
@@ -67,24 +62,35 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       });
     }
 
-    if (isAfter(new Date(), subMinutes(event.startDate, MINUTES_TO_CHECK_IN))) {
+    if (
+      isAfter(
+        new Date(),
+        subMinutes(event.startDate, MINUTES_TO_CANCEL_CHECK_IN)
+      )
+    ) {
       return res.status(400).json({
-        message: 'não é mais possível fazer check-in nesse evento',
+        message: 'não é mais possível cancelar check-in nesse evento',
         errorCode: 'event-already-started',
       });
     }
 
-    if (event.checkIns.length >= event.checkInsMaxQuantity) {
-      return res.status(400).json({
-        message: 'não há mais vagas para esse evento',
-        errorCode: 'event-is-full',
+    const checkIn = await prisma.checkIn.findFirst({
+      where: {
+        eventId: event.id,
+        userId: user.id,
+      },
+    });
+
+    if (!checkIn) {
+      return res.status(404).json({
+        message: 'check-in não encontrado',
+        errorCode: 'check-in-not-found',
       });
     }
 
-    const createCheckIn = prisma.checkIn.create({
-      data: {
-        eventId: event.id,
-        userId: user.id,
+    const deleteCheckIn = prisma.checkIn.delete({
+      where: {
+        id: checkIn.id,
       },
     });
 
@@ -94,28 +100,29 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       },
       data: {
         checkInsQuantity: {
-          decrement: 1,
+          increment: 1,
         },
       },
     });
 
-    const [checkIn] = await prisma.$transaction([createCheckIn, updateUser]);
-
-    const statement = await prisma.statement.create({
+    const cancelCheckInStatement = prisma.statement.create({
       data: {
         userId: user.id,
-        checkInId: checkIn.id,
-        title: `check-in realizado no evento ${event.title}`,
-        type: 'DEBIT',
-        description: 'check-in realizado com sucesso',
+        title: `check-in cancelado evento ${event.title}`,
+        type: 'CREDIT',
+        description: 'check-in cancelado com sucesso',
         checkInsQuantity: 1,
       },
     });
 
+    await prisma.$transaction([
+      deleteCheckIn,
+      updateUser,
+      cancelCheckInStatement,
+    ]);
+
     return res.status(201).json({
-      checkIn,
-      statement,
-      checkInsRemaining: user.checkInsQuantity - 1,
+      checkInsRemaining: user.checkInsQuantity + 1,
     });
   } catch (err) {
     console.log(err);
@@ -126,7 +133,7 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
   }
 };
 
-export default ensureAuthenticatedWithRole(checkInRoute, [
+export default ensureAuthenticatedWithRole(cancelCheckInRoute, [
   'ADMIN',
   'INSTRUCTOR',
   'USER',
