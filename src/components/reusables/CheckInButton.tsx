@@ -138,7 +138,7 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
           className="flex h-7 w-20 justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
         >
           {isCheckingIn ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             'check-in'
           )}

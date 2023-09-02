@@ -3,7 +3,7 @@ import {
   CalendarIcon,
   CreditCardIcon,
   LockClosedIcon,
-  UserIcon,
+  // UserIcon,
 } from '@heroicons/react/24/outline';
 import { classNames } from '@lib/utils';
 import Link from 'next/link';
@@ -30,12 +30,12 @@ export const navigationItems = [
     icon: HistoryIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
-  {
-    name: 'perfil',
-    href: '/profile',
-    icon: UserIcon,
-    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
-  },
+  // {
+  //   name: 'perfil',
+  //   href: '/profile',
+  //   icon: UserIcon,
+  //   role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  // },
   {
     name: 'gerenciar eventos',
     href: '/events/manage',

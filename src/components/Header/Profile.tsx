@@ -3,7 +3,7 @@ import { Fragment, SVGProps } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { classNames } from '@utils/classNames';
 import { signOut } from 'next-auth/react';
-import { UserIcon } from '@heroicons/react/20/solid';
+// import { UserIcon } from '@heroicons/react/20/solid';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 
 interface UserNavigation {
@@ -20,7 +20,7 @@ interface UserNavigation {
 }
 
 const userNavigation: UserNavigation[] = [
-  { name: 'perfil', href: '/profile', type: 'link', icon: UserIcon },
+  // { name: 'perfil', href: '/profile', type: 'link', icon: UserIcon },
   {
     name: 'sair',
     href: '#',

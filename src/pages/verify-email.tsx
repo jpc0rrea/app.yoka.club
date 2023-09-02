@@ -25,22 +25,26 @@ export default function VerifyEmail() {
   const [descriptionRef] = useAutoAnimate();
 
   useEffect(() => {
-    if (router.query.token) {
+    console.log(router.query.token, session.data?.user);
+    if (router.query.token && session.data?.user) {
       api
         .put('/users/verify-email', { token: router.query.token })
         .then(() => {
           setState('success');
           setMessage('e-mail verificado com sucesso!');
 
-          if (session && session.data && session.data.user) {
-            setDescription(
-              'você já pode fechar essa aba, ou ir para a página inicial'
-            );
-            setButtonText('página inicial');
-          } else {
-            setDescription('você já pode fazer o login');
-            setButtonText('fazer login');
-          }
+          setDescription(
+            'você já pode fechar essa aba, ou ir para a página inicial'
+          );
+          setButtonText('página inicial');
+
+          session.update({
+            ...session.data,
+            user: {
+              ...session.data.user,
+              emailVerified: true,
+            },
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -58,7 +62,7 @@ export default function VerifyEmail() {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query.token]);
+  }, []);
 
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
