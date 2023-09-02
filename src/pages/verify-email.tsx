@@ -16,6 +16,7 @@ export default function VerifyEmail() {
   const [description, setDescription] = useState(
     'aguarde um pouquinho, não leva mais do que 10 segundos'
   );
+  const [hasVerifiedEmail, setHasVerifiedEmail] = useState(false);
   const [state, setState] = useState<'loading' | 'success' | 'error'>(
     'loading'
   );
@@ -37,14 +38,15 @@ export default function VerifyEmail() {
             'você já pode fechar essa aba, ou ir para a página inicial'
           );
           setButtonText('página inicial');
+          setHasVerifiedEmail(true);
 
-          session.update({
-            ...session.data,
-            user: {
-              ...session.data.user,
-              emailVerified: true,
-            },
-          });
+          // session.update({
+          //   ...session.data,
+          //   user: {
+          //     ...session.data.user,
+          //     emailVerified: true,
+          //   },
+          // });
         })
         .catch((err) => {
           console.log(err);
@@ -104,6 +106,15 @@ export default function VerifyEmail() {
               className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
               onClick={() => {
                 if (session && session.data && session.data.user) {
+                  if (hasVerifiedEmail) {
+                    session.update({
+                      ...session.data,
+                      user: {
+                        ...session.data.user,
+                        emailVerified: true,
+                      },
+                    });
+                  }
                   router.push('/');
                 } else {
                   router.push('/login');
