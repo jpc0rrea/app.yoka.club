@@ -63,7 +63,8 @@ export default function Login() {
         message: 'login realizado com sucesso',
         description: 'aproveite a plataforma :)',
       });
-      router.push('/profile');
+
+      router.push('/');
     } else if (loginResponse.error === 'invalid-credentials') {
       errorToast({
         message: 'e-mail ou senha incorretos',
@@ -153,10 +154,10 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className="flex h-10 w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     'entrar'
                   )}

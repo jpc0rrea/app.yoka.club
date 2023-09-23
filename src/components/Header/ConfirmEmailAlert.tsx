@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react';
 export default function ConfirmEmailAlert() {
   const session = useSession();
   const [isSending, setIsSending] = useState(false);
+  const [hasSent, setHasSent] = useState(false);
 
   const hasEmailVerified = session.data?.user?.emailVerified;
 
@@ -23,6 +24,8 @@ export default function ConfirmEmailAlert() {
         message: 'enviamos um e-mail de confirmação',
         description: 'verifique sua caixa de entrada',
       });
+
+      setHasSent(true);
     } else {
       setIsSending(false);
       errorToast({
@@ -51,6 +54,8 @@ export default function ConfirmEmailAlert() {
               <div className="flex w-full justify-center">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               </div>
+            ) : hasSent ? (
+              <>email de confirmação enviado.</>
             ) : (
               <>
                 email não confirmado.{' '}

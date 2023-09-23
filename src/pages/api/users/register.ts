@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@server/db';
 import { BcryptHashAdapter } from '@lib/hash/BcryptHashAdapter';
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 interface RegisterRequest extends NextApiRequest {
   body: {
     email: string;
     password: string;
     name: string;
+    phoneNumber: string;
   };
 }
 
@@ -16,7 +18,7 @@ const register = async (req: RegisterRequest, res: NextApiResponse) => {
     return res.status(405).send('Method not allowed');
   }
 
-  const { email, password, name } = req.body;
+  const { email, password, name, phoneNumber } = req.body;
 
   console.log(req.body);
 
@@ -26,10 +28,17 @@ const register = async (req: RegisterRequest, res: NextApiResponse) => {
     !password ||
     password.trim().length < 6 ||
     !name ||
-    name.trim().length < 6
+    name.trim().length < 6 ||
+    !phoneNumber
   ) {
     return res.status(422).json({
       code: 'invalid-input',
+    });
+  }
+
+  if (!isValidPhoneNumber(phoneNumber)) {
+    return res.status(422).json({
+      code: 'invalid-phone-number',
     });
   }
 
@@ -69,6 +78,7 @@ const register = async (req: RegisterRequest, res: NextApiResponse) => {
       // get only the first name
       displayName: name.split(' ')[0] || name,
       username,
+      phoneNumber,
     },
   });
 

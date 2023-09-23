@@ -57,6 +57,7 @@ model User {
     image            String?
     password         String?
     username         String    @unique
+    phoneNumber      String    @map("phone_number")
     role             UserRole  @default(USER)
     checkInsQuantity Int       @default(1) @map("check_ins_quantity")
     stripeId         String?   @map("stripe_id")

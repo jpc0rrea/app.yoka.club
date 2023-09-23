@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { FieldError, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, useSession } from 'next-auth/react';
 
@@ -9,10 +9,12 @@ import { Input } from '@components/Form/Input';
 import { successToast } from '@components/Toast/SuccessToast';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '@lib/api';
 import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
+import PhoneNumberInput from '@components/Form/PhoneNumberInput';
+import { Value, isValidPhoneNumber } from 'react-phone-number-input';
 
 const registerFormSchema = z
   .object({
@@ -65,13 +67,42 @@ export default function Login() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
   });
+  const [phoneNumber, setPhoneNumber] = useState<Value | undefined>(undefined);
+  const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState<
+    FieldError | undefined
+  >(undefined);
+
+  const handlePhoneNumberChange = (value?: Value) => {
+    setPhoneNumber(value);
+
+    if (isValidPhoneNumber(String(phoneNumber))) {
+      setPhoneNumberErrorMessage(undefined);
+    }
+  };
 
   const handleRegister = async (data: RegisterFormData) => {
+    if (!phoneNumber) {
+      setPhoneNumberErrorMessage({
+        type: 'min',
+        message: 'Número de telefone inválido',
+      });
+      return;
+    }
+
+    if (!isValidPhoneNumber(String(phoneNumber))) {
+      setPhoneNumberErrorMessage({
+        type: 'min',
+        message: 'Número de telefone inválido',
+      });
+      return;
+    }
+
     try {
       await api.post('/users/register', {
         email: data.email,
         password: data.password,
         name: data.fullName,
+        phoneNumber: String(phoneNumber),
       });
 
       const loginResponse = await signIn('credentials', {
@@ -191,6 +222,16 @@ export default function Login() {
                 {...register('email')}
               />
 
+              <PhoneNumberInput
+                name="phoneNumber"
+                label="celular"
+                phoneNumber={phoneNumber}
+                setPhoneNumber={handlePhoneNumberChange}
+                error={phoneNumberErrorMessage}
+                // backgroundColor={inputBackgroundColor}
+                // hoverBackgroundColor={inputHoverBackgroundColor}
+              />
+
               <Input
                 label="sua senha"
                 type="password"
@@ -208,7 +249,7 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className="flex h-10 w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                 >
                   {isSubmitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
