@@ -22,6 +22,7 @@ export default function PrismaAdapter(): Adapter {
           email: user.email,
           image: user.image,
           username,
+          phoneNumber: '',
         },
       });
 
