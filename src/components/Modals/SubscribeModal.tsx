@@ -1,11 +1,58 @@
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ArrowPathIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { SegmentedControl } from '@mantine/core';
+import { convertNumberToReal } from '@lib/utils';
+import {
+  getFullPricePerBillingPeriod,
+  getPlanPricePerMonth,
+} from '@hooks/useUserPlan';
+import { api } from '@lib/api';
+import { getStripeJs } from '@lib/stripe';
+import { errorToast } from '@components/Toast/ErrorToast';
+import { Loader2 } from 'lucide-react';
 
 export default function SubscribeModal() {
   const [open, setOpen] = useState(false);
+  const [billingPeriod, setBillingPeriod] = useState<string>('quarterly');
+  const [checkInsQuantity, setCheckInsQuantity] = useState<number>(8);
+  const [isRedirectingToCheckout, setIsRedirectingToCheckout] = useState(false);
 
-  const cancelButtonRef = useRef(null);
+  const handleRedirectToCheckout = useCallback(async () => {
+    setIsRedirectingToCheckout(true);
+
+    try {
+      const checkoutSessionResponse = await api.post<{ sessionId: string }>(
+        '/users/checkout-session',
+        {
+          billingPeriod,
+          checkInsQuantity,
+        }
+      );
+
+      const sessionId = checkoutSessionResponse.data.sessionId;
+
+      const stripe = await getStripeJs();
+
+      if (!stripe) {
+        errorToast({
+          message: 'ocorreu um erro ao redirecionar para o checkout',
+        });
+
+        setIsRedirectingToCheckout(false);
+        return;
+      }
+
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (err) {
+      console.log(err);
+      errorToast({
+        message: 'ocorreu um erro ao redirecionar para o checkout',
+      });
+    } finally {
+      setIsRedirectingToCheckout(false);
+    }
+  }, [billingPeriod, checkInsQuantity]);
 
   return (
     <>
@@ -55,26 +102,71 @@ export default function SubscribeModal() {
                         aria-hidden="true"
                       />
                     </div> */}
-                    <div className="mt text-center sm:mt-5">
+                    <div className="mt text-center">
                       <Dialog.Title
                         as="h3"
-                        className="text-base font-semibold leading-6 text-purple-700"
+                        className="mb-2 text-base font-semibold leading-6 text-purple-700"
                       >
-                        assinar plataforma yoga com kaká
+                        planos - yoga com kaká
                       </Dialog.Title>
+                      <div className="items-center justify-between sm:flex">
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-800">
+                            escolha a frequência
+                          </p>
+                          <SegmentedControl
+                            value={billingPeriod}
+                            onChange={setBillingPeriod}
+                            size="xs"
+                            className="mt-1"
+                            data={[
+                              { label: 'Mensal', value: 'monthly' },
+                              { label: 'Trimestral', value: 'quarterly' },
+                            ]}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-800">
+                            escolha a quantidade de check-ins
+                          </p>
+                          <SegmentedControl
+                            value={String(checkInsQuantity)}
+                            onChange={(value) => {
+                              setCheckInsQuantity(Number(value));
+                            }}
+                            className="ml-2 mt-1"
+                            size="xs"
+                            data={[
+                              { label: '8 check-ins/mês', value: '8' },
+                              { label: '12 check-ins/mês', value: '12' },
+                            ]}
+                          />
+                        </div>
+                      </div>
                       <div className="mt-3 flex items-center ">
                         <div className="mx-auto flex items-end">
                           <p className="text-xl font-bold text-purple-800">
-                            R$ 199,90
+                            {convertNumberToReal(
+                              getPlanPricePerMonth({
+                                billingPeriod: billingPeriod as
+                                  | 'monthly'
+                                  | 'quarterly',
+                                checkInsQuantity,
+                              })
+                            )}
                           </p>
-                          <p className="text-sm text-gray-500">/mês</p>
+                          <p className="text-sm text-gray-500">
+                            {billingPeriod === 'monthly' ? '/mês' : '/mês*'}
+                          </p>
                         </div>
                       </div>
                       <div className="mt-4 flex items-center">
                         <ArrowPathIcon className="inline-block h-5 w-5 text-purple-800" />
 
                         <p className="ml-1 text-sm text-gray-700">
-                          <strong className="text-purple-800">8</strong>{' '}
+                          <strong className="text-purple-800">
+                            {checkInsQuantity}
+                          </strong>{' '}
                           check-ins por mês
                         </p>
                       </div>
@@ -86,15 +178,39 @@ export default function SubscribeModal() {
                         </p>
                       </div>
                       <div className="mt-3">
-                        <p className="text-sm text-gray-500">
-                          no pagamento recorrente, você pode cancelar a qualquer
-                          momento :)
+                        <p className="text-left text-sm text-gray-500">
+                          você pode cancelar a qualquer momento :)
                         </p>
                       </div>
+                      {billingPeriod === 'quarterly' && (
+                        <div className="mt-1 flex items-center">
+                          <p className="text-left text-sm text-gray-500">
+                            * pagamento único de{' '}
+                            {convertNumberToReal(
+                              getFullPricePerBillingPeriod({
+                                billingPeriod: billingPeriod as
+                                  | 'monthly'
+                                  | 'quarterly',
+                                checkInsQuantity,
+                              })
+                            )}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                  <div className="mt-5 sm:mt-6">
                     <button
+                      className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
+                      onClick={handleRedirectToCheckout}
+                    >
+                      {isRedirectingToCheckout ? (
+                        <Loader2 className="h-5 w-5 text-white" />
+                      ) : (
+                        'assinar a plataforma'
+                      )}
+                    </button>
+                    {/* <button
                       type="button"
                       className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-2"
                       onClick={() => setOpen(false)}
@@ -108,7 +224,7 @@ export default function SubscribeModal() {
                       ref={cancelButtonRef}
                     >
                       pagamento recorrente (cartão de crédito)
-                    </button>
+                    </button> */}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

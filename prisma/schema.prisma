@@ -59,6 +59,11 @@ model User {
     username         String    @unique
     role             UserRole  @default(USER)
     checkInsQuantity Int       @default(1) @map("check_ins_quantity")
+    stripeId         String?   @map("stripe_id")
+    subscriptionId   String?   @map("subscription_id")
+    expirationDate   DateTime? @map("expiration_date")
+    updatedAt        DateTime  @updatedAt @map("updated_at")
+    createdAt        DateTime  @default(now()) @map("created_at")
 
     accounts   Account[]
     sessions   Session[]
@@ -124,7 +129,7 @@ model Statement {
     createdAt        DateTime      @default(now())
     updatedAt        DateTime      @updatedAt
 
-    user    User     @relation(fields: [userId], references: [id])
+    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     payment Payment? @relation(fields: [paymentId], references: [id])
     checkIn CheckIn? @relation(fields: [checkInId], references: [id], onDelete: SetNull)
 

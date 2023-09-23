@@ -211,7 +211,7 @@ export default function Login() {
                   className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     'criar conta'
                   )}
@@ -219,7 +219,7 @@ export default function Login() {
               </div>
             </form>
 
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300" />
@@ -286,7 +286,7 @@ export default function Login() {
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
