@@ -59,6 +59,15 @@ export default function UsersTable() {
                         <div className="ml-4">
                           <div className="font-medium text-gray-900">
                             {user.name}
+                            {user.isUserActivated ? (
+                              <span className="ml-1 inline-flex items-center rounded-md bg-green-50 px-1 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                ativado
+                              </span>
+                            ) : (
+                              <span className="ml-1 inline-flex items-center rounded-md bg-red-50 px-1 py-0.5 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                                não ativado
+                              </span>
+                            )}
                           </div>
                           <div className="mt-1 text-gray-500">{user.email}</div>
                         </div>

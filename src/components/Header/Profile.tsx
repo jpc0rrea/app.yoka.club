@@ -2,7 +2,10 @@ import { Fragment, SVGProps } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { classNames } from '@utils/classNames';
 // import { UserIcon } from '@heroicons/react/20/solid';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftOnRectangleIcon,
+  HomeIcon,
+} from '@heroicons/react/24/outline';
 import useUser from '@hooks/useUser';
 
 interface UserNavigation {
@@ -22,6 +25,12 @@ export default function Profile() {
   const { logout, isLoading, user } = useUser();
   const userNavigation: UserNavigation[] = [
     // { name: 'perfil', href: '/profile', type: 'link', icon: UserIcon },
+    {
+      name: user?.displayName || '',
+      href: '/',
+      type: 'link',
+      icon: HomeIcon,
+    },
     {
       name: 'sair',
       href: '#',
@@ -57,8 +66,17 @@ export default function Profile() {
       <div>
         <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2">
           <span className="sr-only">Open user menu</span>
-          {user.imageUrl ? (
-            <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+          <img
+            className="h-8 w-8 rounded-full"
+            src={user.imageUrl || '/images/default-avatar.png'}
+            alt=""
+          />
+          {/* {user.imageUrl ? (
+            <img
+              className="h-8 w-8 rounded-full"
+              src={user.imageUrl || '/images/default-avatar.png'}
+              alt=""
+            />
           ) : (
             <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
               <svg
@@ -69,7 +87,7 @@ export default function Profile() {
                 <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             </span>
-          )}
+          )} */}
         </Menu.Button>
       </div>
       <Transition
@@ -98,7 +116,7 @@ export default function Profile() {
                         active
                           ? 'text-gray-500'
                           : 'text-gray-400 group-hover:text-gray-500',
-                        'mr-3 h-6 w-6 flex-shrink-0'
+                        'mr-3 h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden="true"
                     />
@@ -118,7 +136,7 @@ export default function Profile() {
                         active
                           ? 'text-gray-500'
                           : 'text-gray-400 group-hover:text-gray-500',
-                        'mr-3 h-6 w-6 flex-shrink-0'
+                        'mr-3 h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden="true"
                     />

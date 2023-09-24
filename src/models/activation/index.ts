@@ -1,11 +1,12 @@
-import webserver from '@infra/webserver';
-import { User } from '@prisma/client';
-
-import { prisma } from '@server/db';
 import { addMinutes, isAfter } from 'date-fns';
+
+import webserver from '@infra/webserver';
+import { prisma } from '@server/db';
 import {
   // ActivateUserByUserIdParams,
   ActivateUserUsingTokenIdParams,
+  CreateActivationTokenParams,
+  CreateAndSendActivationEmailParams,
   SendEmailToUserParams,
 } from './types';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
@@ -13,15 +14,19 @@ import { NotFoundError, ValidationError } from '@errors/index';
 import user from '@models/user';
 import checkin from '@models/checkin';
 
-async function createAndSendActivationEmail(user: User) {
-  const tokenObject = await create(user);
+async function createAndSendActivationEmail({
+  user,
+}: CreateAndSendActivationEmailParams) {
+  const tokenObject = await createActivationToken({
+    user,
+  });
   await sendEmailToUser({
     user,
     tokenId: tokenObject.id,
   });
 }
 
-async function create(user: User) {
+async function createActivationToken({ user }: CreateActivationTokenParams) {
   const token = await prisma.activateAccountToken.create({
     data: {
       userId: user.id,

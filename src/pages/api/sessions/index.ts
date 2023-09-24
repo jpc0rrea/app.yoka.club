@@ -6,8 +6,9 @@ import authentication from '@models/authentication';
 import cacheControl from '@models/cache-control';
 import session from '@models/session';
 import user from '@models/user';
-import { UnauthorizedError } from '@errors/index';
+import { ForbiddenError, UnauthorizedError } from '@errors/index';
 import { AuthenticatedRequest } from '@models/controller/types';
+import activation from '@models/activation';
 
 const router = createRouter<AuthenticatedRequest, NextApiResponse>();
 
@@ -80,6 +81,19 @@ async function createSessionHandler(
       message: `dados não conferem.`,
       action: `verifique se as credenciais enviadas estão corretas.`,
       errorLocationCode: `CONTROLLER:SESSIONS:POST_HANDLER:DATA_MISMATCH`,
+    });
+  }
+
+  // checar se o usuário já está com a conta ativa
+  if (!storedUser.isUserActivated) {
+    await activation.createAndSendActivationEmail({
+      user: storedUser,
+    });
+
+    throw new ForbiddenError({
+      message: `o seu usuário ainda não está ativado.`,
+      action: `verifique seu email, acabamos de enviar um novo convite de ativação :)`,
+      errorLocationCode: 'CONTROLLER:SESSIONS:POST_HANDLER:USER_NOT_ACTIVATED',
     });
   }
 

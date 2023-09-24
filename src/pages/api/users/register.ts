@@ -46,7 +46,9 @@ function registerValidationHandler(
 async function register(req: RegisterRequest, res: NextApiResponse) {
   const newUser = await user.create(req.body);
 
-  await activation.createAndSendActivationEmail(newUser);
+  await activation.createAndSendActivationEmail({
+    user: newUser,
+  });
 
   return res.status(201).json({
     code: 'user-created',
