@@ -72,7 +72,7 @@ const verifyEmail = async (req: VerifyEmailRequest, res: NextApiResponse) => {
       id: req.userId,
     },
     data: {
-      emailVerified: new Date(),
+      isUserActivated: true,
     },
   });
 
