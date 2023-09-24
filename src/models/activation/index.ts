@@ -35,8 +35,6 @@ async function create(user: User) {
 async function sendEmailToUser({ user, tokenId }: SendEmailToUserParams) {
   const activationPageEndpoint = getActivationPageEndpoint(tokenId);
 
-  console.log('activationPageEndpoint', activationPageEndpoint);
-
   const mailService = new SendGridMailService();
 
   await mailService.send({
