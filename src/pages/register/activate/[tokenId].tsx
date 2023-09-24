@@ -7,9 +7,11 @@ import { Loader2 } from 'lucide-react';
 import Confetti from '@components/Confetti';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
+import useUser from '@hooks/useUser';
 
 export default function ActiveUser() {
   const router = useRouter();
+  const { fetchUser } = useUser();
   const { tokenId } = router.query;
 
   const [globalMessage, setGlobalMessage] = useState('ativando sua conta...');
@@ -24,7 +26,7 @@ export default function ActiveUser() {
     try {
       setIsLoading(true);
 
-      const response = await api.patch('/users/activate', { token });
+      const response = await api.patch('/user/activate', { token });
 
       if (response.status === 200) {
         setIsSuccess(true);
@@ -33,6 +35,7 @@ export default function ActiveUser() {
           'você ganhou 1 check-in para testar a plataforma. aproveite!'
         );
         setButtonText('ir para a página inicial');
+        await fetchUser();
 
         return;
       }
@@ -66,6 +69,7 @@ export default function ActiveUser() {
     if (tokenId) {
       handleActivateUser(tokenId as string);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenId]);
 
   return (

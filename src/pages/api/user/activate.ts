@@ -30,8 +30,13 @@ async function activateUserHandler(
   req: ActivateUserRequest,
   res: NextApiResponse
 ) {
-  await activation.activateUserUsingTokenId({
+  const tokenObject = await activation.activateUserUsingTokenId({
     tokenId: req.body.token,
+  });
+
+  await authentication.createSessionAndSetCookies({
+    userId: tokenObject.userId,
+    response: res,
   });
 
   return res.status(200).json({
