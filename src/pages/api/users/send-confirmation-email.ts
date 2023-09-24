@@ -22,7 +22,7 @@ const sendMailConfirmation = async (
     return res.status(404).json({ code: 'user-not-found' });
   }
 
-  if (user.emailVerified) {
+  if (user.isUserActivated) {
     return res.status(400).json({ code: 'email-already-verified' });
   }
 

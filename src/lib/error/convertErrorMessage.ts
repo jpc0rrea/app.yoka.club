@@ -26,9 +26,9 @@ export default function convertErrorMessage({
       error.response.data &&
       error.response.data.message
     ) {
-      const { message, description } = error.response.data;
+      const { message, description, action } = error.response.data;
 
-      return { message, description };
+      return { message, description: description || action };
     } else {
       return defaultError;
     }

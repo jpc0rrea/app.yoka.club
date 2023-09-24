@@ -7,11 +7,11 @@ import { Input } from '../components/Form/Input';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { errorToast } from '@components/Toast/ErrorToast';
-import { useSession } from 'next-auth/react';
 import { successToast } from '@components/Toast/SuccessToast';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { Loader2 } from 'lucide-react';
+import useUser from '@hooks/useUser';
 
 const resetPasswordFormSchema = z
   .object({
@@ -44,7 +44,7 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>;
 
 export default function ForgotPassword() {
   const router = useRouter();
-  const session = useSession();
+  const { user } = useUser();
   const {
     register,
     handleSubmit,
@@ -88,8 +88,8 @@ export default function ForgotPassword() {
     }
   };
 
-  if (session.status === 'authenticated') {
-    router.push('/profile');
+  if (user) {
+    router.push('/');
   }
 
   return (

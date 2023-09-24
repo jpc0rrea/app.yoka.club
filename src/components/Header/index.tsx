@@ -5,12 +5,12 @@ import {
 } from '@heroicons/react/24/outline';
 import { useSidebar } from '@hooks/useSidebar';
 import Profile from './Profile';
-import ConfirmEmailAlert from './ConfirmEmailAlert';
-import { useSession } from 'next-auth/react';
+// import ConfirmEmailAlert from './ConfirmEmailAlert';
+import useUser from '@hooks/useUser';
 
 export default function Header() {
   const { setIsSidebarOpen } = useSidebar();
-  const { data, status } = useSession();
+  const { user } = useUser();
 
   return (
     <>
@@ -30,14 +30,14 @@ export default function Header() {
             </button> */}
           </div>
           <div className="ml-4 flex items-center md:ml-6">
-            {status === 'authenticated' && data.user && (
+            {user && (
               <div className="font-semi flex flex-col items-center text-xs text-gray-500">
                 <CheckCircleIcon className="inline-block h-5 w-5 text-purple-800" />
                 <p>
                   <strong className="font-bold text-purple-800">
-                    {data.user.checkInsQuantity}
+                    {user.checkInsQuantity}
                   </strong>{' '}
-                  check-in{data.user.checkInsQuantity !== 1 && 's'}
+                  check-in{user.checkInsQuantity !== 1 && 's'}
                 </p>
                 {/* <p className="text-[9px]">restantes</p> */}
               </div>
@@ -46,7 +46,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <ConfirmEmailAlert />
+      {/* <ConfirmEmailAlert /> */}
     </>
   );
 }

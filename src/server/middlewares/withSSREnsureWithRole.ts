@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { api } from '@lib/api';
+import session from '@models/session';
+import user from '@models/user';
 import { UserRole } from '@prisma/client';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
+  NextApiRequest,
 } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from 'pages/api/auth/[...nextauth]';
 
 export function withSSREnsureWithRole<P extends { [key: string]: any }>(
   fn: GetServerSideProps<P>,
@@ -16,9 +17,11 @@ export function withSSREnsureWithRole<P extends { [key: string]: any }>(
   return async (
     ctx: GetServerSidePropsContext
   ): Promise<GetServerSidePropsResult<P>> => {
-    const session = await getServerSession(ctx.req, ctx.res, authOptions);
+    const sessionObject = await session.findOneValidFromRequest({
+      req: ctx.req as NextApiRequest,
+    });
 
-    if (!session || !session.user) {
+    if (!sessionObject) {
       return {
         redirect: {
           destination: '/login?error=not-logged-in',
@@ -27,7 +30,11 @@ export function withSSREnsureWithRole<P extends { [key: string]: any }>(
       };
     }
 
-    if (!allowedRoles.includes(session.user.role)) {
+    const userObject = await user.findOneById({
+      userId: sessionObject.userId,
+    });
+
+    if (!allowedRoles.includes(userObject.role)) {
       return {
         redirect: {
           destination: '/?error=not-allowed',

@@ -1,11 +1,11 @@
 import { errorToast } from '@components/Toast/ErrorToast';
 import { successToast } from '@components/Toast/SuccessToast';
+import useUser from '@hooks/useUser';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { queryClient } from '@lib/queryClient';
 import getCheckInStatuses from '@lib/utilities/getCheckInStatuses';
 import { Loader2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import { EventFromAPI } from 'pages/api/events/list';
 import { useState } from 'react';
 
@@ -15,12 +15,11 @@ interface CheckInButtonProps {
 
 export default function CheckInButton({ event }: CheckInButtonProps) {
   const [isCheckingIn, setIsCheckingIn] = useState(false);
+  const { user, fetchUser } = useUser();
 
-  const session = useSession();
+  const userId = user?.id || '';
 
-  const userId = session.data?.user?.id || '';
-
-  const userCheckInsQuantity = session.data?.user?.checkInsQuantity || 0;
+  const userCheckInsQuantity = user?.checkInsQuantity || 0;
 
   if (!event.startDate || !event.checkInsMaxQuantity) {
     return null;
@@ -41,17 +40,11 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
     setIsCheckingIn(true);
 
     try {
-      const checkInResponse = await api.post<{
+      await api.post<{
         checkInsRemaining: number;
       }>(`/events/check-in?eventId=${event.id}`);
 
-      session.update({
-        ...session.data,
-        user: {
-          ...session.data?.user,
-          checkInsQuantity: checkInResponse.data.checkInsRemaining,
-        },
-      });
+      await fetchUser();
 
       queryClient.invalidateQueries({
         queryKey: [

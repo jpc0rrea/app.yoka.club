@@ -1,10 +1,9 @@
-import { useSession } from 'next-auth/react';
 import { Fragment, SVGProps } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { classNames } from '@utils/classNames';
-import { signOut } from 'next-auth/react';
 // import { UserIcon } from '@heroicons/react/20/solid';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import useUser from '@hooks/useUser';
 
 interface UserNavigation {
   name: string;
@@ -19,24 +18,20 @@ interface UserNavigation {
   onClick?: () => void;
 }
 
-const userNavigation: UserNavigation[] = [
-  // { name: 'perfil', href: '/profile', type: 'link', icon: UserIcon },
-  {
-    name: 'sair',
-    href: '#',
-    type: 'button',
-    onClick: () => {
-      signOut({
-        callbackUrl: '/login',
-      });
-    },
-    icon: ArrowLeftOnRectangleIcon,
-  },
-];
-
 export default function Profile() {
-  const session = useSession();
-  if (session.status === 'loading') {
+  const { logout, isLoading, user } = useUser();
+  const userNavigation: UserNavigation[] = [
+    // { name: 'perfil', href: '/profile', type: 'link', icon: UserIcon },
+    {
+      name: 'sair',
+      href: '#',
+      type: 'button',
+      onClick: logout,
+      icon: ArrowLeftOnRectangleIcon,
+    },
+  ];
+
+  if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex h-full animate-pulse">
@@ -53,7 +48,7 @@ export default function Profile() {
     );
   }
 
-  if (session.status === 'unauthenticated') {
+  if (!user) {
     return null;
   }
 
@@ -62,12 +57,8 @@ export default function Profile() {
       <div>
         <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2">
           <span className="sr-only">Open user menu</span>
-          {session.data?.user?.image ? (
-            <img
-              className="h-8 w-8 rounded-full"
-              src={session.data.user.image}
-              alt=""
-            />
+          {user.imageUrl ? (
+            <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
           ) : (
             <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
               <svg

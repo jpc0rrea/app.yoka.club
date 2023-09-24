@@ -6,7 +6,6 @@ import Head from 'next/head';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import { useEventById } from '@hooks/useEvents';
 import { Loader2 } from 'lucide-react';
@@ -18,16 +17,17 @@ import { queryClient } from '@lib/queryClient';
 import { successToast } from '@components/Toast/SuccessToast';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
+import useUser from '@hooks/useUser';
 
 const Event: NextPage = () => {
   const router = useRouter();
-  const session = useSession();
+  const { user, fetchUser } = useUser();
   const eventId = router.query.eventId as string;
   const [isCancellingCheckIn, setIsCancellingCheckIn] = useState(false);
 
-  const userId = session.data?.user?.id || '';
+  const userId = user?.id || '';
 
-  const userCheckInsQuantity = session.data?.user?.checkInsQuantity || 0;
+  const userCheckInsQuantity = user?.checkInsQuantity || 0;
 
   const { data: event } = useEventById({ eventId });
 
@@ -70,17 +70,11 @@ const Event: NextPage = () => {
     setIsCancellingCheckIn(true);
 
     try {
-      const cancelCheckInResponse = await api.delete<{
+      await api.delete<{
         checkInsRemaining: number;
       }>(`/events/cancel-check-in?eventId=${event.id}`);
 
-      session.update({
-        ...session.data,
-        user: {
-          ...session.data?.user,
-          checkInsQuantity: cancelCheckInResponse.data.checkInsRemaining,
-        },
-      });
+      await fetchUser();
 
       queryClient.invalidateQueries({
         queryKey: [
@@ -153,7 +147,7 @@ const Event: NextPage = () => {
                               <img
                                 className="mr-1 h-5 w-5 rounded-full"
                                 src={
-                                  event.instructor.image ||
+                                  event.instructor.imageUrl ||
                                   '/default-user-img.jpeg'
                                 }
                                 alt=""
@@ -329,7 +323,7 @@ const Event: NextPage = () => {
                                           <img
                                             className="h-5 w-5 rounded-full"
                                             src={
-                                              checkIn.user.image ||
+                                              checkIn.user.imageUrl ||
                                               '/default-user-img.jpeg'
                                             }
                                             alt={checkIn.user.displayName}
@@ -459,7 +453,7 @@ const Event: NextPage = () => {
                                     <img
                                       className="h-5 w-5 rounded-full"
                                       src={
-                                        checkIn.user.image ||
+                                        checkIn.user.imageUrl ||
                                         '/default-user-img.jpeg'
                                       }
                                       alt={checkIn.user.displayName}

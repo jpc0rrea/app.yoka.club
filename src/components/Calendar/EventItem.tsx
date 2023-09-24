@@ -22,7 +22,7 @@ export default function EventItem({ event }: EventProps) {
       className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100"
     >
       <img
-        src={event.instructor.image || '/default-user-img.jpeg'}
+        src={event.instructor.imageUrl || '/default-user-img.jpeg'}
         alt=""
         className="h-10 w-10 flex-none rounded-full"
       />

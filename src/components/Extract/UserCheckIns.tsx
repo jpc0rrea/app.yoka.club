@@ -1,11 +1,11 @@
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
-import { useSession } from 'next-auth/react';
+import useUser from '@hooks/useUser';
 
 export default function UserCheckIns() {
-  const session = useSession();
+  const { user } = useUser();
 
-  const checkInsQuantity = session.data?.user?.checkInsQuantity || 0;
+  const checkInsQuantity = user?.checkInsQuantity || 0;
 
   return (
     <div>

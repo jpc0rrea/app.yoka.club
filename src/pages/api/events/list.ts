@@ -19,7 +19,7 @@ export const eventSelect = {
   instructor: {
     select: {
       displayName: true,
-      image: true,
+      imageUrl: true,
       id: true,
     },
   },
@@ -31,14 +31,14 @@ export const eventSelect = {
       user: {
         select: {
           displayName: true,
-          image: true,
+          imageUrl: true,
         },
       },
     },
   },
 };
 
-export const eventFromAPI = Prisma.validator<Prisma.EventArgs>()({
+export const eventFromAPI = Prisma.validator<Prisma.EventDefaultArgs>()({
   select: eventSelect,
 });
 
@@ -68,7 +68,7 @@ const listEvents = async (req: ListEventsRequest, res: NextApiResponse) => {
       select: eventSelect,
     });
 
-    return res.status(201).json({
+    return res.status(200).json({
       events,
     });
   } catch (err) {

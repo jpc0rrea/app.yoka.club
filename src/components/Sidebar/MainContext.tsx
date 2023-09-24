@@ -1,8 +1,9 @@
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import Navbar from './Navbar';
-import { signOut } from 'next-auth/react';
+import useUser from '@hooks/useUser';
 
 export default function MainContent() {
+  const { logout } = useUser();
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
       <nav className="flex-1 space-y-2 px-4 py-2">
@@ -10,11 +11,7 @@ export default function MainContent() {
       </nav>
       <div className="mb-4 mt-auto w-full space-y-1 pt-10">
         <button
-          onClick={() => {
-            signOut({
-              callbackUrl: '/login',
-            });
-          }}
+          onClick={logout}
           className="group flex w-full items-center border-l-4 border-transparent px-4 py-2 text-base font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-800 group-hover:text-gray-800"
         >
           <ArrowLeftOnRectangleIcon

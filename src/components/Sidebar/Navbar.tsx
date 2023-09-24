@@ -8,8 +8,8 @@ import {
 import { classNames } from '@lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import { HistoryIcon, UsersIcon } from 'lucide-react';
+import useUser from '@hooks/useUser';
 
 export const navigationItems = [
   {
@@ -52,13 +52,13 @@ export const navigationItems = [
 
 export default function Navbar() {
   const router = useRouter();
-  const session = useSession();
+  const { user } = useUser();
 
   return (
     <nav className="flex-1 space-y-1 py-2">
       {navigationItems
         .filter((item) => {
-          return item.role.includes(session?.data?.user.role || '');
+          return item.role.includes(user?.role || '');
         })
         .map((item) => {
           const isCurrent = router.pathname === item.href;

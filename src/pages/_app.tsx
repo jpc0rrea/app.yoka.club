@@ -1,18 +1,14 @@
 import { type AppType } from 'next/app';
-import { type Session } from 'next-auth';
 import { Toaster } from 'react-hot-toast';
-import { SessionProvider } from 'next-auth/react';
 import { MantineProvider } from '@mantine/core';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import '../styles/globals.css';
 import { SidebarProvider } from '@contexts/SidebarContext';
 import { queryClient } from '@lib/queryClient';
+import { UserProvider } from '@hooks/useUser';
 
-const MyApp: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (
     <MantineProvider
       theme={{
@@ -35,7 +31,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         },
       }}
     >
-      <SessionProvider session={session}>
+      <UserProvider>
         <QueryClientProvider client={queryClient}>
           <SidebarProvider>
             <Toaster
@@ -51,7 +47,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <Component {...pageProps} />
           </SidebarProvider>
         </QueryClientProvider>
-      </SessionProvider>
+      </UserProvider>
     </MantineProvider>
   );
 };

@@ -1,9 +1,13 @@
+import { createRouter } from 'next-connect';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@server/db';
-import { BcryptHashAdapter } from '@lib/hash/BcryptHashAdapter';
-import { isValidPhoneNumber } from 'react-phone-number-input';
 
-interface RegisterRequest extends NextApiRequest {
+import controller from '@models/controller';
+import authentication from '@models/authentication';
+import cacheControl from '@models/cache-control';
+import user from '@models/user';
+import activation from '@models/activation';
+
+export interface RegisterRequest extends NextApiRequest {
   body: {
     email: string;
     password: string;
@@ -12,80 +16,41 @@ interface RegisterRequest extends NextApiRequest {
   };
 }
 
-const register = async (req: RegisterRequest, res: NextApiResponse) => {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).send('Method not allowed');
-  }
+const router = createRouter<NextApiRequest, NextApiResponse>();
 
-  const { email, password, name, phoneNumber } = req.body;
+router
+  .use(controller.injectRequestMetadata)
+  .use(authentication.injectAnonymousOrUser)
+  .use(controller.logRequest)
+  .use(cacheControl.noCache)
+  .post(registerValidationHandler, register);
 
-  console.log(req.body);
+export default router.handler({
+  // attachParams: true,
+  onNoMatch: controller.onNoMatchHandler,
+  onError: controller.onErrorHandler,
+});
 
-  if (
-    !email ||
-    !email.includes('@') ||
-    !password ||
-    password.trim().length < 6 ||
-    !name ||
-    name.trim().length < 6 ||
-    !phoneNumber
-  ) {
-    return res.status(422).json({
-      code: 'invalid-input',
-    });
-  }
+function registerValidationHandler(
+  req: RegisterRequest,
+  res: NextApiResponse,
+  next: () => void
+) {
+  const cleanBody = user.validateRegisterUserRequest(req);
 
-  if (!isValidPhoneNumber(phoneNumber)) {
-    return res.status(422).json({
-      code: 'invalid-phone-number',
-    });
-  }
+  req.body = cleanBody;
 
-  const userWithSameEmail = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
+  return next();
+}
 
-  if (userWithSameEmail) {
-    return res.status(422).json({
-      code: 'user-already-exists',
-    });
-  }
+async function register(req: RegisterRequest, res: NextApiResponse) {
+  const newUser = await user.create(req.body);
 
-  const bcryptHashAdapter = new BcryptHashAdapter();
-
-  const passwordHash = bcryptHashAdapter.hash(password, 10);
-
-  let username = email.split('@')[0] || email;
-
-  const userWithSameUsername = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-  });
-
-  if (userWithSameUsername) {
-    username = `${username}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: passwordHash,
-      name: name,
-      // get only the first name
-      displayName: name.split(' ')[0] || name,
-      username,
-      phoneNumber,
-    },
-  });
+  await activation.createAndSendActivationEmail(newUser);
 
   return res.status(201).json({
     code: 'user-created',
-    user,
   });
-};
+}
 
-export default register;
+// export default register;

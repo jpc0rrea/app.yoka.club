@@ -4,36 +4,20 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "./src",
     "paths": {
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@styles/*": [
-        "styles/*"
-      ],
-      "@public": [
-        "../public/*"
-      ],
-      "@components/*": [
-        "components/*"
-      ],
-      "@components": [
-        "components"
-      ],
-      "@hooks/*": [
-        "hooks/*"
-      ],
-      "@contexts/*": [
-        "contexts/*"
-      ],
-      "@middlewares/*": [
-        "middlewares/*"
-      ],
-      "@utils/*": [
-        "utils/*"
-      ],
-      "@server/*": [
-        "server/*"
-      ],
+      "@lib/*": ["lib/*"],
+      "@styles/*": ["styles/*"],
+      "@public": ["../public/*"],
+      "@components/*": ["components/*"],
+      "@components": ["components"],
+      "@hooks/*": ["hooks/*"],
+      "@contexts/*": ["contexts/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@utils/*": ["utils/*"],
+      "@server/*": ["server/*"],
+      "@pages/*": ["pages/*"],
+      "@infra/*": ["infra/*"],
+      "@models/*": ["models/*"],
+      "@errors/*": ["errors/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

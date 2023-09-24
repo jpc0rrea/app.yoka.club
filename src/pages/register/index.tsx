@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { z } from 'zod';
 import { FieldError, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn, useSession } from 'next-auth/react';
 
 import { Input } from '@components/Form/Input';
 import { successToast } from '@components/Toast/SuccessToast';
@@ -11,10 +10,11 @@ import { errorToast } from '@components/Toast/ErrorToast';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { api } from '@lib/api';
-import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
 import PhoneNumberInput from '@components/Form/PhoneNumberInput';
 import { Value, isValidPhoneNumber } from 'react-phone-number-input';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
+import useUser from '@hooks/useUser';
 
 const registerFormSchema = z
   .object({
@@ -59,7 +59,7 @@ type RegisterFormData = z.infer<typeof registerFormSchema>;
 
 export default function Login() {
   const router = useRouter();
-  const session = useSession();
+  const { user } = useUser();
   const {
     register,
     handleSubmit,
@@ -67,6 +67,7 @@ export default function Login() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
   });
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<Value | undefined>(undefined);
   const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState<
     FieldError | undefined
@@ -105,58 +106,60 @@ export default function Login() {
         phoneNumber: String(phoneNumber),
       });
 
-      const loginResponse = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        callbackUrl: '/',
-        redirect: false,
+      localStorage.setItem('registrationEmail', data.email);
+      router.push('/register/confirm');
+
+      successToast({
+        message: 'usuário criado com sucesso',
+        description: 'confirme seu e-mail para continuar',
       });
 
-      console.log('LOGIN RESPONSE');
-      console.log(loginResponse);
+      // router.push('/');
 
-      if (!loginResponse) {
-        errorToast({
-          message: 'algum erro aconteceu',
-          description: 'tente novamente mais tarde',
-        });
+      // const loginResponse = await signIn('credentials', {
+      //   email: data.email,
+      //   password: data.password,
+      //   callbackUrl: '/',
+      //   redirect: false,
+      // });
 
-        return;
-      }
+      // console.log('LOGIN RESPONSE');
+      // console.log(loginResponse);
 
-      if (loginResponse.ok) {
-        successToast({
-          message: 'usuário criado com sucesso',
-          description: 'aproveite a plataforma :)',
-        });
-        router.push('/');
-      } else if (loginResponse.error === 'invalid-credentials') {
-        errorToast({
-          message: 'e-mail ou senha incorretos',
-        });
+      // if (!loginResponse) {
+      //   errorToast({
+      //     message: 'algum erro aconteceu',
+      //     description: 'tente novamente mais tarde',
+      //   });
 
-        return;
-      } else if (loginResponse.error === 'invalid-login-method') {
-        errorToast({
-          message: 'método de login inválido',
-          description: 'tente fazer login usando o google',
-        });
+      //   return;
+      // }
 
-        return;
-      }
+      // if (loginResponse.ok) {
+      //   successToast({
+      //     message: 'usuário criado com sucesso',
+      //     description: 'aproveite a plataforma :)',
+      //   });
+      //   router.push('/');
+      // } else if (loginResponse.error === 'invalid-credentials') {
+      //   errorToast({
+      //     message: 'e-mail ou senha incorretos',
+      //   });
+
+      //   return;
+      // } else if (loginResponse.error === 'invalid-login-method') {
+      //   errorToast({
+      //     message: 'método de login inválido',
+      //     description: 'tente fazer login usando o google',
+      //   });
+
+      //   return;
+      // }
     } catch (err) {
-      if (isAxiosError(err) && err.response?.data) {
-        if (err.response.data.code === 'user-already-exists') {
-          errorToast({
-            message: 'e-mail já cadastrado',
-            description: 'tente fazer login ou recupere sua senha',
-          });
-          return;
-        }
-      }
+      const { description, message } = convertErrorMessage({ err });
       errorToast({
-        message: 'falha ao criar usuário',
-        description: 'tente novamente mais tarde',
+        message,
+        description,
       });
     }
   };
@@ -173,7 +176,7 @@ export default function Login() {
     }
   }, [hasCalendarError]);
 
-  if (session.status === 'authenticated') {
+  if (user) {
     router.push('/');
   }
 
@@ -246,10 +249,41 @@ export default function Login() {
                 {...register('passwordConfirmation')}
               />
 
+              <div className="flex items-center">
+                <input
+                  id="agreed-to-terms"
+                  name="agreed-to-terms"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  checked={agreedToTerms}
+                  onChange={(e) => {
+                    setAgreedToTerms(e.target.checked);
+                  }}
+                />
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm leading-6 text-gray-700"
+                >
+                  li e estou de acordo com os{' '}
+                  <Link
+                    href="/service-terms"
+                    target="_blank"
+                    className="font-medium text-brand-purple-900 hover:text-brand-purple-800 hover:underline"
+                  >
+                    termos de serviço
+                  </Link>
+                </label>
+              </div>
+
               <div>
                 <button
                   type="submit"
-                  className="flex h-10 w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className={`flex h-10 w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none ${
+                    isSubmitting || !agreedToTerms
+                      ? 'cursor-not-allowed opacity-50'
+                      : ''
+                  }`}
+                  disabled={isSubmitting || !agreedToTerms}
                 >
                   {isSubmitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

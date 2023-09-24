@@ -4,15 +4,10 @@ import Head from 'next/head';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import { Input } from '@components/Form/Input';
-import { signIn, useSession } from 'next-auth/react';
 import { CheckIcon } from '@heroicons/react/20/solid';
 
 const Profile: NextPage = () => {
-  const session = useSession();
-
-  const hasConnectedAgenda = !!session.data?.user?.accounts.find((account) => {
-    return account.provider === 'google';
-  });
+  const hasConnectedAgenda = false;
 
   return (
     <>
@@ -213,9 +208,7 @@ const Profile: NextPage = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                signIn('google', {
-                                  callbackUrl: '/profile',
-                                });
+                                console.log('conectar agenda');
                               }}
                               className="inline-flex items-center rounded-md border border-transparent bg-purple-800 px-4 py-2 font-medium text-white shadow-sm hover:bg-purple-900"
                             >

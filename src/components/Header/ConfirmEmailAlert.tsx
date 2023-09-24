@@ -1,5 +1,4 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
-import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
@@ -7,11 +6,10 @@ import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
 
 export default function ConfirmEmailAlert() {
-  const session = useSession();
   const [isSending, setIsSending] = useState(false);
   const [hasSent, setHasSent] = useState(false);
 
-  const hasEmailVerified = session.data?.user?.emailVerified;
+  const hasEmailVerified = true;
 
   const handleSendConfirmationEmail = async () => {
     setIsSending(true);
@@ -35,7 +33,7 @@ export default function ConfirmEmailAlert() {
     }
   };
 
-  if (hasEmailVerified || session.status == 'loading') {
+  if (hasEmailVerified) {
     return null;
   }
 

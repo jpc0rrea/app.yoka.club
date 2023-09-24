@@ -29,9 +29,9 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       });
     }
 
-    if (!user.emailVerified) {
+    if (!user.isUserActivated) {
       return res.status(400).json({
-        message: 'você precisa verificar seu email antes de fazer check-in',
+        message: 'você precisa ativar sua conta antes de fazer check-in',
         errorCode: 'email-not-verified',
       });
     }

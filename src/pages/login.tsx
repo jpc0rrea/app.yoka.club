@@ -7,9 +7,11 @@ import { Input } from '../components/Form/Input';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { errorToast } from '@components/Toast/ErrorToast';
-import { signIn, useSession } from 'next-auth/react';
 import { successToast } from '@components/Toast/SuccessToast';
 import { Loader2 } from 'lucide-react';
+import useUser from '@hooks/useUser';
+import { api } from '@lib/api';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
 
 const loginFormSchema = z.object({
   email: z
@@ -30,7 +32,8 @@ type LoginFormData = z.infer<typeof loginFormSchema>;
 
 export default function Login() {
   const router = useRouter();
-  const session = useSession();
+  const { user, fetchUser } = useUser();
+
   const {
     register,
     handleSubmit,
@@ -40,48 +43,46 @@ export default function Login() {
   });
 
   const handleLogin = async (data: LoginFormData) => {
-    const loginResponse = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-      callbackUrl: '/',
-    });
-
-    console.log(loginResponse);
-
-    if (!loginResponse) {
-      errorToast({
-        message: 'algum erro aconteceu',
-        description: 'tente novamente mais tarde',
+    try {
+      const createSessionResponse = await api.post<{
+        message?: string;
+        description?: string;
+        actions?: string;
+      }>('/sessions', {
+        email: data.email,
+        password: data.password,
       });
 
-      return;
-    }
+      console.log(createSessionResponse);
 
-    if (loginResponse.ok) {
-      successToast({
-        message: 'login realizado com sucesso',
-        description: 'aproveite a plataforma :)',
-      });
+      if (createSessionResponse.status === 201) {
+        await fetchUser();
 
-      router.push('/');
-    } else if (loginResponse.error === 'invalid-credentials') {
+        successToast({
+          message: 'login realizado com sucesso',
+          description: 'aproveite a plataforma :)',
+        });
+
+        router.push('/');
+        return;
+      }
+
+      if (createSessionResponse.data.message) {
+        errorToast({
+          message: createSessionResponse.data.message,
+          description:
+            createSessionResponse.data.description ||
+            createSessionResponse.data.actions,
+        });
+
+        router.push('/');
+      }
+    } catch (err) {
+      const { message, description } = convertErrorMessage({ err });
+
       errorToast({
-        message: 'e-mail ou senha incorretos',
-      });
-
-      return;
-    } else if (loginResponse.error === 'invalid-login-method') {
-      errorToast({
-        message: 'método de login inválido',
-        description: 'tente fazer login usando o google',
-      });
-
-      return;
-    } else {
-      errorToast({
-        message: 'aconteceu algo de errado',
-        description: 'tente novamente mais tarde',
+        message,
+        description,
       });
     }
   };
@@ -94,8 +95,8 @@ export default function Login() {
     }
   }, [router.query.error]);
 
-  if (session.status === 'authenticated') {
-    router.push('/profile');
+  if (user) {
+    router.push('/');
   }
 
   return (

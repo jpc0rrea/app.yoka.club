@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { api } from '@lib/api';
+import session from '@models/session';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
+  NextApiRequest,
 } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from 'pages/api/auth/[...nextauth]';
 
 export function withSSREnsureSubscribed<P extends { [key: string]: any }>(
   fn: GetServerSideProps<P>
@@ -14,9 +14,24 @@ export function withSSREnsureSubscribed<P extends { [key: string]: any }>(
   return async (
     ctx: GetServerSidePropsContext
   ): Promise<GetServerSidePropsResult<P>> => {
-    const session = await getServerSession(ctx.req, ctx.res, authOptions);
+    try {
+      await session.findOneValidFromRequest({
+        req: ctx.req as NextApiRequest,
+      });
 
-    if (!session || !session.user) {
+      return fn(ctx);
+    } catch (err) {
+      console.error(err);
+
+      if (ctx.req.url === '/') {
+        return {
+          redirect: {
+            destination: '/login',
+            permanent: false,
+          },
+        };
+      }
+
       return {
         redirect: {
           destination: '/login?error=not-logged-in',
@@ -24,7 +39,5 @@ export function withSSREnsureSubscribed<P extends { [key: string]: any }>(
         },
       };
     }
-
-    return fn(ctx);
   };
 }

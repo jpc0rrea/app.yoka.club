@@ -1,13 +1,12 @@
 import { useStatement } from '@hooks/useStatement';
+import useUser from '@hooks/useUser';
 import { format, isAfter } from 'date-fns';
-import { useSession } from 'next-auth/react';
 
 export default function UserCheckInExtract() {
   const { data: statement } = useStatement();
+  const { user } = useUser();
 
-  const session = useSession();
-
-  const checkInsQuantity = session.data?.user?.checkInsQuantity || 0;
+  const checkInsQuantity = user?.checkInsQuantity || 0;
 
   let balance = checkInsQuantity;
 

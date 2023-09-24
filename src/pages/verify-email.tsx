@@ -1,8 +1,8 @@
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
+import useUser from '@hooks/useUser';
 import { api } from '@lib/api';
 import { Loader2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { LegacyRef, useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import { LegacyRef, useEffect, useState } from 'react';
 export default function VerifyEmail() {
   // get the token from the query
   const router = useRouter();
-  const session = useSession();
+  const { user, fetchUser } = useUser();
 
   const [message, setMessage] = useState('verificando o seu e-mail...');
   const [description, setDescription] = useState(
@@ -26,8 +26,8 @@ export default function VerifyEmail() {
   const [descriptionRef] = useAutoAnimate();
 
   useEffect(() => {
-    console.log(router.query.token, session.data?.user);
-    if (router.query.token && session.data?.user) {
+    console.log(router.query.token, user);
+    if (router.query.token && user) {
       api
         .put('/users/verify-email', { token: router.query.token })
         .then(() => {
@@ -52,7 +52,7 @@ export default function VerifyEmail() {
           console.log(err);
           setState('error');
           setMessage('erro ao verificar o e-mail');
-          if (session && session.data && session.data.user) {
+          if (user) {
             setDescription(
               'você já pode fechar essa aba, ou ir para a página inicial'
             );
@@ -64,7 +64,7 @@ export default function VerifyEmail() {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session.data?.user]);
+  }, [user]);
 
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -104,16 +104,10 @@ export default function VerifyEmail() {
             <button
               type="button"
               className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
-              onClick={() => {
-                if (session && session.data && session.data.user) {
+              onClick={async () => {
+                if (user) {
                   if (hasVerifiedEmail) {
-                    session.update({
-                      ...session.data,
-                      user: {
-                        ...session.data.user,
-                        emailVerified: true,
-                      },
-                    });
+                    await fetchUser();
                   }
                   router.push('/');
                 } else {

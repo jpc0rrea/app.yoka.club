@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import session from '@models/session';
+import user from '@models/user';
 import { UserRole } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from 'pages/api/auth/[...nextauth]';
 
 export interface EnsureAuthenticatedRequest extends NextApiRequest {
   userId: string;
@@ -11,13 +11,11 @@ export interface EnsureAuthenticatedRequest extends NextApiRequest {
 export default function ensureAuthenticated(handler: any) {
   return async (req: EnsureAuthenticatedRequest, res: NextApiResponse) => {
     try {
-      const session = await getServerSession(req, res, authOptions);
+      const sessionObject = await session.findOneValidFromRequest({
+        req,
+      });
 
-      if (!session || !session.user) {
-        return res.status(401).json({ message: 'Unauthorized' });
-      }
-
-      req.userId = session.user.id;
+      req.userId = sessionObject.userId;
 
       return handler(req, res);
     } catch (err) {
@@ -30,15 +28,21 @@ export default function ensureAuthenticated(handler: any) {
 export function ensureAuthenticatedWithRole(handler: any, roles: UserRole[]) {
   return async (req: EnsureAuthenticatedRequest, res: NextApiResponse) => {
     try {
-      const session = await getServerSession(req, res, authOptions);
+      const sessionObject = await session.findOneValidFromRequest({
+        req,
+      });
 
-      if (!session || !session.user) {
+      if (!sessionObject) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
 
-      req.userId = session.user.id;
+      req.userId = sessionObject.userId;
 
-      if (!roles.includes(session.user.role)) {
+      const userObject = await user.findOneById({
+        userId: sessionObject.userId,
+      });
+
+      if (!roles.includes(userObject.role)) {
         return res.status(403).json({ message: 'Forbidden' });
       }
 

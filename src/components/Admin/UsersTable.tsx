@@ -52,7 +52,7 @@ export default function UsersTable() {
                         <div className="h-11 w-11 flex-shrink-0">
                           <img
                             className="h-11 w-11 rounded-full"
-                            src={user.image || '/images/default-avatar.png'}
+                            src={user.imageUrl || '/images/default-avatar.png'}
                             alt=""
                           />
                         </div>
