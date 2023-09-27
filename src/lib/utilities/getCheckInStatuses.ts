@@ -1,3 +1,4 @@
+import { TOLERANCE_MINUTES_TO_ENTER_EVENT } from '@lib/constants';
 import { differenceInMinutes } from 'date-fns';
 import { EventFromAPI } from 'pages/api/events/list';
 
@@ -10,6 +11,7 @@ interface GetCheckInStatusesParams {
 interface GetCheckInStatusesResponse {
   alreadyCheckedIn: boolean;
   eventAlreadyStarted: boolean;
+  canEnterTheEvent: boolean;
   stillHasVacancy: boolean;
   canCheckIn: boolean;
   canCancelCheckIn: boolean;
@@ -25,16 +27,23 @@ export default function getCheckInStatuses({
       alreadyCheckedIn: false,
       eventAlreadyStarted: false,
       stillHasVacancy: false,
+      canEnterTheEvent: false,
       canCheckIn: false,
       canCancelCheckIn: false,
     };
   }
+
   const alreadyCheckedIn = event.checkIns
     .map((checkIn) => checkIn.userId)
     .includes(userId);
 
   const eventAlreadyStarted = event.startDate
     ? new Date(event?.startDate) < new Date()
+    : false;
+
+  const canEnterTheEvent = event.startDate
+    ? differenceInMinutes(new Date(event.startDate), new Date()) <
+      TOLERANCE_MINUTES_TO_ENTER_EVENT
     : false;
 
   const stillHasVacancy = event.checkIns.length < event.checkInsMaxQuantity;
@@ -59,6 +68,7 @@ export default function getCheckInStatuses({
     alreadyCheckedIn,
     eventAlreadyStarted,
     stillHasVacancy,
+    canEnterTheEvent,
     canCheckIn,
     canCancelCheckIn,
   };

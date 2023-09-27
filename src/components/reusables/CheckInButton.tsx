@@ -25,12 +25,16 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
     return null;
   }
 
-  const { alreadyCheckedIn, eventAlreadyStarted, stillHasVacancy } =
-    getCheckInStatuses({
-      event,
-      userId,
-      userCheckInsQuantity,
-    });
+  const {
+    alreadyCheckedIn,
+    eventAlreadyStarted,
+    canEnterTheEvent,
+    stillHasVacancy,
+  } = getCheckInStatuses({
+    event,
+    userId,
+    userCheckInsQuantity,
+  });
 
   const recordedUrl = event?.recordedUrl;
 
@@ -89,7 +93,7 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
 
   return (
     <>
-      {eventAlreadyStarted ? (
+      {eventAlreadyStarted && !canEnterTheEvent ? (
         recordedUrl ? (
           <a
             href={recordedUrl}
