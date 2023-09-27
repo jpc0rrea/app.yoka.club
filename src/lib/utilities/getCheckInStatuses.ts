@@ -41,11 +41,6 @@ export default function getCheckInStatuses({
     ? new Date(event?.startDate) < new Date()
     : false;
 
-  const canEnterTheEvent = event.startDate
-    ? differenceInMinutes(new Date(event.startDate), new Date()) <
-      TOLERANCE_MINUTES_TO_ENTER_EVENT
-    : false;
-
   const stillHasVacancy = event.checkIns.length < event.checkInsMaxQuantity;
 
   // to checkIn/ cancel checkIn, there must be at least 30 minutes left to the event
@@ -53,6 +48,14 @@ export default function getCheckInStatuses({
     new Date(event.startDate),
     new Date()
   );
+
+  console.log(timeToEventInMinutes);
+
+  const canEnterTheEvent = event.startDate
+    ? timeToEventInMinutes > -TOLERANCE_MINUTES_TO_ENTER_EVENT
+    : false;
+
+  console.log(canEnterTheEvent);
 
   const canCheckIn =
     !alreadyCheckedIn &&
