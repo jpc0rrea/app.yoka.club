@@ -1,4 +1,5 @@
 import AddMoreCheckInsToUser from '@components/Modals/AddMoreCheckInsToUser';
+import RemoveCheckInsFromUser from '@components/Modals/RemoveCheckInsFromUser';
 import { useUsers } from '@hooks/useUsers';
 import { Loader2 } from 'lucide-react';
 
@@ -88,6 +89,7 @@ export default function UsersTable() {
                       {user.checkInsQuantity}
                     </td>
                     <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                      <RemoveCheckInsFromUser userId={user.id} />
                       <AddMoreCheckInsToUser userId={user.id} />
                     </td>
                   </tr>

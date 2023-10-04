@@ -17,7 +17,8 @@
       "@pages/*": ["pages/*"],
       "@infra/*": ["infra/*"],
       "@models/*": ["models/*"],
-      "@errors/*": ["errors/*"]
+      "@errors/*": ["errors/*"],
+      "@env/*": ["env/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,
@@ -33,6 +34,21 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "src/infra/scripts/seed-database.js",
+    "src/infra/scripts/seed-database.js",
+    "src/infra/scripts/seed-database.js"
+  ],
+  "exclude": ["node_modules"],
+  "extends": "ts-node/node16/tsconfig.json",
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

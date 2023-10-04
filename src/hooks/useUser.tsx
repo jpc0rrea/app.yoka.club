@@ -117,7 +117,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }, []);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    // const storedUser = localStorage.getItem('user');
 
     if (
       publicRoutes.includes(router.pathname) ||
@@ -128,8 +128,8 @@ export function UserProvider({ children }: UserProviderProps) {
     }
 
     (async () => {
-      if (storedUser && isLoading && !isFetching) {
-        setUser(JSON.parse(storedUser));
+      if (isLoading && !isFetching) {
+        // setUser(JSON.parse(storedUser));
         setIsFetching(true);
         await fetchUser();
         setIsFetching(false);

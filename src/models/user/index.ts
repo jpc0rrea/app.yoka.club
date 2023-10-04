@@ -190,6 +190,8 @@ export default Object.freeze({
   create,
   findOneById,
   findOneByEmail,
+  generateUniqueUsernameFromEmail,
+  generateDisplayNameFromName,
   validateRegisterUserRequest,
   cleanUserToFrontend,
 });

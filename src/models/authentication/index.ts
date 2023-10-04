@@ -25,8 +25,8 @@ async function comparePasswords({
 
   if (!passwordMatches) {
     throw new UnauthorizedError({
-      message: `A senha informada não confere com a senha do usuário.`,
-      action: `Verifique se a senha informada está correta e tente novamente.`,
+      message: `a senha informada não confere com a senha do usuário.`,
+      action: `verifique se a senha informada está correta e tente novamente.`,
       errorLocationCode:
         'MODEL:AUTHENTICATION:COMPARE_PASSWORDS:PASSWORD_MISMATCH',
     });

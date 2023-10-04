@@ -5,7 +5,7 @@ import {
   ensureAuthenticatedWithRole,
 } from '@server/middlewares/ensureAuthenticated';
 
-interface AddCheckInsToUserRequest extends EnsureAuthenticatedRequest {
+interface RemoveCheckInsFromuserRequest extends EnsureAuthenticatedRequest {
   body: {
     userId: string;
     checkInsQuantity: number;
@@ -13,7 +13,7 @@ interface AddCheckInsToUserRequest extends EnsureAuthenticatedRequest {
 }
 
 const addCheckInsToUser = async (
-  req: AddCheckInsToUserRequest,
+  req: RemoveCheckInsFromuserRequest,
   res: NextApiResponse
 ) => {
   const { userId, checkInsQuantity } = req.body;
@@ -21,7 +21,7 @@ const addCheckInsToUser = async (
 
   if (!userId || !checkInsQuantity) {
     return res.status(400).json({
-      message: 'erro ao adicionar check-ins',
+      message: 'erro ao remover check-ins',
       description: 'userId e checkInsQuantity são obrigatórios',
       errorCode: 'missing-parameters',
     });
@@ -29,7 +29,7 @@ const addCheckInsToUser = async (
 
   if (checkInsQuantity < 0) {
     return res.status(400).json({
-      message: 'erro ao adicionar check-ins',
+      message: 'erro ao remover check-ins',
       description: 'checkInsQuantity não pode ser menor que zero',
       errorCode: 'invalid-check-ins-quantity',
     });
@@ -37,7 +37,7 @@ const addCheckInsToUser = async (
 
   if (checkInsQuantity > 100) {
     return res.status(400).json({
-      message: 'erro ao adicionar check-ins',
+      message: 'erro ao remover check-ins',
       description: 'checkInsQuantity não pode ser maior que 100',
       errorCode: 'invalid-check-ins-quantity',
     });
@@ -69,13 +69,21 @@ const addCheckInsToUser = async (
     });
   }
 
+  if (user.checkInsQuantity < checkInsQuantity) {
+    return res.status(400).json({
+      message: 'erro ao remover check-ins',
+      description: 'o usuário não possui check-ins suficientes',
+      errorCode: 'invalid-check-ins-quantity',
+    });
+  }
+
   const updateUser = prisma.user.update({
     where: {
       id: user.id,
     },
     data: {
       checkInsQuantity: {
-        increment: checkInsQuantity,
+        decrement: checkInsQuantity,
       },
     },
   });
@@ -83,9 +91,9 @@ const addCheckInsToUser = async (
   const createStatement = prisma.statement.create({
     data: {
       userId: user.id,
-      title: `check-ins adicionados por ${admin.name}`,
-      description: `${checkInsQuantity} check-ins adicionados por ${admin.name}`,
-      type: 'CREDIT',
+      title: `check-ins removidos por ${admin.name}`,
+      description: `${checkInsQuantity} check-ins removidos por ${admin.name}`,
+      type: 'DEBIT',
       checkInsQuantity,
     },
   });

@@ -49,7 +49,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           type={type}
           required={required}
           placeholder={placeholder}
-          className={`block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm sm:text-sm ${className} ${
+          className={`block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-0 sm:text-sm ${className} ${
             errorMessage
               ? 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500'
               : 'focus:border-brand-purple-900 focus:ring-brand-purple-900'
