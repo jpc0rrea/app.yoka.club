@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from '@errors/index';
+import { ValidationError } from '@errors/index';
 import { HandleStripeInvoicePaidParams, InsertPaymentParams } from './types';
 import { prisma } from '@server/db';
 import stripeUtils from '@lib/stripe/utils';
@@ -37,12 +37,17 @@ async function handleStripeInvoicePaid({
     });
   }
 
+  console.log({
+    subscription,
+    price,
+    userObject,
+  });
+
   // criar o pagamento
-  const payment = 
 
   // adicionar o check in
 
-  // atualizar o usuário 
+  // atualizar o usuário
 }
 
 async function insertPayment({
@@ -68,7 +73,12 @@ async function insertPayment({
       fee,
       currency,
     },
-  })
+  });
 
   return payment;
 }
+
+export default Object.freeze({
+  handleStripeInvoicePaid,
+  insertPayment,
+});
