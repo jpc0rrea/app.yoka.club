@@ -5,11 +5,17 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import '../styles/globals.css';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 import { SidebarProvider } from '@contexts/SidebarContext';
 import { queryClient } from '@lib/queryClient';
 import { UserProvider } from '@hooks/useUser';
 import theme from '@styles/mantine/theme';
+
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (

@@ -98,7 +98,7 @@ export default function EventInManageSection({
 
           <Menu.Dropdown>
             <Menu.Item
-              icon={<Pencil className="h-4 w-4" />}
+              leftSection={<Pencil className="h-4 w-4" />}
               onClick={() => {
                 setIsEditModalOpen(true);
               }}
@@ -113,7 +113,7 @@ export default function EventInManageSection({
               onClick={() => {
                 setIsDeleteModalOpen(true);
               }}
-              icon={<Trash2 className="h-4 w-4" />}
+              leftSection={<Trash2 className="h-4 w-4" />}
             >
               deletar evento
             </Menu.Item>

@@ -5,13 +5,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@components/ui/button';
-import {
-  NumberInput,
-  NumberInputHandlers,
-  ActionIcon,
-  createStyles,
-  rem,
-} from '@mantine/core';
+import { NumberInput, NumberInputHandlers, Group } from '@mantine/core';
 import {
   Form,
   FormControl,
@@ -33,48 +27,6 @@ import { errorToast } from '@components/Toast/ErrorToast';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { queryClient } from '@lib/queryClient';
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: `${rem(6)} ${theme.spacing.xs}`,
-    borderRadius: theme.radius.sm,
-    border: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[3]
-    }`,
-    backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-
-    '&:focus-within': {
-      borderColor: theme.colors[theme.primaryColor]?.[6],
-    },
-  },
-
-  control: {
-    backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    border: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[3]
-    }`,
-
-    '&:disabled': {
-      borderColor:
-        theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[3],
-      opacity: 0.8,
-      backgroundColor: 'transparent',
-    },
-  },
-
-  input: {
-    textAlign: 'center',
-    paddingRight: `${theme.spacing.sm} !important`,
-    paddingLeft: `${theme.spacing.sm} !important`,
-    height: rem(28),
-    flex: 1,
-  },
-}));
 
 export const createEventFormSchema = z
   .object({
@@ -122,7 +74,6 @@ export type CreateEventFormData = z.infer<typeof createEventFormSchema>;
 export default function CreateEventModal() {
   const [open, setOpen] = useState(false);
   const handlers = useRef<NumberInputHandlers>(null);
-  const { classes } = useStyles();
 
   const form = useForm<CreateEventFormData>({
     resolver: zodResolver(createEventFormSchema),
@@ -275,6 +226,7 @@ export default function CreateEventModal() {
                         value={form.watch('duration')}
                         onChange={(value) => {
                           if (value === '') return;
+                          if (typeof value === 'string') return;
                           form.setValue('duration', value);
                         }}
                         step={5}
@@ -312,7 +264,8 @@ export default function CreateEventModal() {
                                 label="dia e horário do evento"
                                 placeholder="dia e horário"
                                 mx="auto"
-                                date={form.watch('startDate')}
+                                // date={form.watch('startDate')}
+                                value={form.watch('startDate')}
                                 onChange={(date) => {
                                   if (!date) return;
                                   form.setValue('startDate', date);
@@ -326,62 +279,48 @@ export default function CreateEventModal() {
                               />
 
                               <div className="mt-4">
-                                <FormLabel>
-                                  quantidade máxima de checkins
-                                </FormLabel>
-                                <div className={classes.wrapper}>
-                                  <ActionIcon<'button'>
-                                    size={28}
-                                    variant="transparent"
+                                <NumberInput
+                                  label="quantidade máxima de checkins"
+                                  placeholder="Click the buttons"
+                                  min={MIN_CHECK_IN_AMOUNT}
+                                  max={MAX_CHECK_IN_AMOUNT}
+                                  handlersRef={handlers}
+                                  value={form.watch('maxCheckinsQuantity')}
+                                  onChange={(value) => {
+                                    if (value === '') return;
+                                    if (typeof value === 'string') return;
+                                    form.setValue('maxCheckinsQuantity', value);
+                                  }}
+                                  defaultValue={15}
+                                />
+
+                                <Group mt="md" justify="center">
+                                  <Button
                                     onClick={() =>
                                       handlers.current?.decrement()
                                     }
-                                    disabled={
-                                      form.watch('maxCheckinsQuantity') ===
-                                      MIN_CHECK_IN_AMOUNT
-                                    }
-                                    className={classes.control}
+                                    variant="default"
                                     onMouseDown={(event) =>
                                       event.preventDefault()
                                     }
+                                    type="button"
                                   >
                                     <Minus className="h-4 w-4" />
-                                  </ActionIcon>
+                                  </Button>
 
-                                  <NumberInput
-                                    variant="unstyled"
-                                    min={MIN_CHECK_IN_AMOUNT}
-                                    max={MAX_CHECK_IN_AMOUNT}
-                                    handlersRef={handlers}
-                                    value={form.watch('maxCheckinsQuantity')}
-                                    onChange={(value) => {
-                                      if (value === '') return;
-                                      form.setValue(
-                                        'maxCheckinsQuantity',
-                                        value
-                                      );
-                                    }}
-                                    classNames={{ input: classes.input }}
-                                  />
-
-                                  <ActionIcon<'button'>
-                                    size={28}
-                                    variant="transparent"
+                                  <Button
                                     onClick={() =>
                                       handlers.current?.increment()
                                     }
-                                    disabled={
-                                      form.watch('maxCheckinsQuantity') ===
-                                      MAX_CHECK_IN_AMOUNT
-                                    }
-                                    className={classes.control}
+                                    variant="default"
                                     onMouseDown={(event) =>
                                       event.preventDefault()
                                     }
+                                    type="button"
                                   >
                                     <Plus className="h-4 w-4" />
-                                  </ActionIcon>
-                                </div>
+                                  </Button>
+                                </Group>
                               </div>
                             </div>
                           )}
