@@ -2,6 +2,7 @@
 // import { api } from '@lib/api';
 import session from '@models/session';
 import user from '@models/user';
+import { prisma } from '@server/db';
 import { UserRole } from '@prisma/client';
 import {
   GetServerSideProps,
@@ -32,6 +33,7 @@ export function withSSREnsureWithRole<P extends { [key: string]: any }>(
 
     const userObject = await user.findOneById({
       userId: sessionObject.userId,
+      prismaInstance: prisma,
     });
 
     if (!allowedRoles.includes(userObject.role)) {

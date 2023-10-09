@@ -1,15 +1,10 @@
-const payments = [
-  {
-    id: 1,
-    date: '15/06/2023',
-    datetime: '2023-06-15',
-    description: 'assinatura mensal - plataforma',
-    amount: 'R$ 199,90',
-    href: '#',
-  },
-];
+import { usePayments } from '@hooks/usePayments';
+import { convertNumberToReal } from '@lib/utils';
+import { format } from 'date-fns';
 
 export default function UserPayments() {
+  const { data: payments } = usePayments();
+
   return (
     <div>
       <div className="mt-6">
@@ -68,18 +63,32 @@ export default function UserPayments() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {payments.map((payment) => (
+                      {payments?.map((payment) => (
                         <tr key={payment.id}>
                           <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-                            <time dateTime={payment.datetime}>
-                              {payment.date}
+                            <time
+                              dateTime={new Date(
+                                payment.createdAt
+                              ).toISOString()}
+                            >
+                              {format(
+                                new Date(payment.createdAt),
+                                "dd/MM/yyyy 'às' HH:mm"
+                              )}
                             </time>
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {payment.description}
+                            pagamento{' '}
+                            {payment.plan
+                              ? `da assinatura ${
+                                  payment.plan.recurrencePeriod === 'MONTHLY'
+                                    ? 'mensal'
+                                    : 'trimestral'
+                                }`
+                              : 'avulso'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {payment.amount}
+                            {convertNumberToReal(payment.grossValue)}
                           </td>
                           {/* <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <a

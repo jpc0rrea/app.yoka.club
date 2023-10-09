@@ -52,6 +52,7 @@ model User {
     payments              Payment[]
     statements            Statement[]
     activateAccountTokens ActivateAccountToken[]
+    eventLogs             EventLog[]
 
     @@map("users")
 }
@@ -171,6 +172,7 @@ model Plan {
     currency         String
     recurrencePeriod RecurrencePeriod @map("recurrence_period")
     isActive         Boolean          @default(true) @map("is_active")
+    stripePriceId    String           @map("stripe_price_id")
     createdAt        DateTime         @default(now()) @map("created_at")
     updatedAt        DateTime         @updatedAt @map("updated_at")
 
@@ -181,6 +183,18 @@ model Plan {
 
 enum RecurrencePeriod {
     MONTHLY
-    TRIMESTERLY
+    QUARTERLY
     YEARLY
+}
+
+model EventLog {
+    id        String   @id @default(cuid())
+    eventType String   @map("event_type")
+    userId    String   @map("user_id")
+    metadata  Json
+    createdAt DateTime @default(now()) @map("created_at")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("event_logs")
 }

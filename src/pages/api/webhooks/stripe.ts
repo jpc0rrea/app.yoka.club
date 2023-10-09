@@ -6,8 +6,10 @@ import { env } from '@env/server.mjs';
 import authentication from '@models/authentication';
 import cacheControl from '@models/cache-control';
 import controller from '@models/controller';
+import payment from '@models/payment';
 import { stripe } from '@lib/stripe';
 import { UnauthorizedError } from '@errors/index';
+import Stripe from 'stripe';
 
 async function buffer(readable: Readable) {
   const chunks = [];
@@ -44,6 +46,7 @@ async function postStripeWebhookHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log('cheguei no webhook');
   const buf = await buffer(req);
 
   const secret = req.headers['stripe-signature'];
@@ -65,10 +68,15 @@ async function postStripeWebhookHandler(
 
   const { type } = event;
 
-  console.log({
-    event,
-    type,
-  });
+  if (type === 'invoice.paid') {
+    await payment.handleStripeInvoicePaid({
+      stripeInvoice: event.data.object as Stripe.Invoice,
+    });
+  } else {
+    return res
+      .status(200)
+      .json({ received: true, message: 'event type not supported' });
+  }
 
   return res.status(200).json({ received: true });
 }

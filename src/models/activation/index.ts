@@ -87,7 +87,10 @@ async function activateUserUsingTokenId({
     });
   }
 
-  const userToActivate = await user.findOneById({ userId: tokenObject.userId });
+  const userToActivate = await user.findOneById({
+    userId: tokenObject.userId,
+    prismaInstance: prisma,
+  });
 
   const activateUserTransaction = prisma.user.update({
     where: {

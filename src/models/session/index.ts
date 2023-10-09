@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { NextApiResponse } from 'next';
 
 import { prisma } from '@server/db';
-import cacheControl from 'models/cache-control';
+import cacheControl from '@models/cache-control';
 import {
   CreateSessionParams,
   ExpireByIdParams,

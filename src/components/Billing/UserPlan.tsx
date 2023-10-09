@@ -33,6 +33,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function UserPlan() {
   const { data: userPlan, isLoading } = useUserPlan();
+
   return (
     <div>
       <div>
@@ -54,6 +55,11 @@ export default function UserPlan() {
             <div className="p-6">
               <h3 className="text-lg font-medium leading-6 text-gray-900">
                 plano {userPlan.name}
+                {userPlan.type === 'premium' && userPlan.cancelAtPeriodEnd && (
+                  <span className="ml-2 inline-flex items-center rounded-md bg-red-50 px-1 py-0.5 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                    cancelado
+                  </span>
+                )}
               </h3>
               {/* <div className="my-4 flex items-center">
               <CheckCircleIcon className="inline-block h-5 w-5 text-purple-800" />
@@ -90,13 +96,16 @@ export default function UserPlan() {
                   <p className="ml-1 text-sm text-gray-700">
                     plano expira em{' '}
                     <strong className="text-purple-800">
-                      {format(userPlan.expirationDate, "dd/MM/yyyy' às 'HH:mm")}
+                      {format(
+                        new Date(userPlan.expirationDate),
+                        "dd/MM/yyyy' às 'HH:mm"
+                      )}
                     </strong>
                   </p>
                 </div>
               )}
 
-              {userPlan.nextBillingDate && (
+              {userPlan.nextBillingDate && !userPlan.cancelAtPeriodEnd && (
                 <div className="mt-2 flex items-center">
                   <CreditCardIcon className="inline-block h-5 w-5 text-purple-800" />
 
@@ -104,25 +113,30 @@ export default function UserPlan() {
                     próximo pagamento será dia{' '}
                     <strong className="text-purple-800">
                       {format(
-                        userPlan.nextBillingDate,
+                        new Date(userPlan.nextBillingDate),
                         "dd/MM/yyyy' às 'HH:mm"
                       )}{' '}
                     </strong>
                     no valor de{' '}
                     <strong className="text-purple-800">
-                      {convertNumberToReal(userPlan.price)}
+                      {userPlan.nextBillingValue ||
+                        convertNumberToReal(userPlan.price)}
                     </strong>
                   </p>
                 </div>
               )}
 
               <div className="mt-4">
-                {userPlan.id === 'FREE' && <SubscribeModal />}
-                {userPlan.nextBillingDate && userPlan.expirationDate && (
-                  <CancelSubscriptionModal
-                    expirationDate={userPlan.expirationDate}
-                  />
+                {(userPlan.id === 'FREE' || userPlan.cancelAtPeriodEnd) && (
+                  <SubscribeModal />
                 )}
+                {userPlan.nextBillingDate &&
+                  userPlan.expirationDate &&
+                  !userPlan.cancelAtPeriodEnd && (
+                    <CancelSubscriptionModal
+                      expirationDate={userPlan.expirationDate}
+                    />
+                  )}
               </div>
             </div>
           )}

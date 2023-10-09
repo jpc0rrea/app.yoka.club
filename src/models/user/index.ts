@@ -10,7 +10,10 @@ import {
   CreateUserData,
   FindOneByEmailParams,
   FindOneByIdParams,
+  UpdateUserSubscriptionParams,
 } from './types';
+import { addMonths } from 'date-fns';
+import eventLogs from '@models/event-logs';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -186,6 +189,58 @@ function cleanUserToFrontend({ user }: CleanUserToFrontendParams) {
   return cleanUser;
 }
 
+async function updateUserSubscription({
+  userId,
+  subscriptionId,
+  recurrencePeriod,
+  checkInsQuantity,
+  prismaInstance,
+}: UpdateUserSubscriptionParams) {
+  const userObject = await findOneById({
+    userId,
+    prismaInstance,
+  });
+
+  const newExpirationDate = addMonths(
+    userObject.expirationDate
+      ? new Date(userObject.expirationDate)
+      : new Date(),
+    recurrencePeriod === 'MONTHLY'
+      ? 1
+      : recurrencePeriod === 'QUARTERLY'
+      ? 3
+      : 12
+  );
+
+  const updatedUser = prismaInstance.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      subscriptionId,
+      checkInsQuantity: {
+        increment: checkInsQuantity,
+      },
+      expirationDate: newExpirationDate,
+    },
+  });
+
+  await eventLogs.createEventLog({
+    userId,
+    eventType: 'USER.RENEW_SUBSCRIPTION',
+    metadata: {
+      subscriptionId,
+      oldCheckInsQuantity: userObject.checkInsQuantity,
+      newCheckInsQuantity: userObject.checkInsQuantity + checkInsQuantity,
+      oldExpirationDate: userObject.expirationDate,
+      newExpirationDate,
+    },
+    prismaInstance,
+  });
+
+  return updatedUser;
+}
+
 export default Object.freeze({
   create,
   findOneById,
@@ -194,4 +249,5 @@ export default Object.freeze({
   generateDisplayNameFromName,
   validateRegisterUserRequest,
   cleanUserToFrontend,
+  updateUserSubscription,
 });

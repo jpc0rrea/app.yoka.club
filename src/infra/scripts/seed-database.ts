@@ -1,6 +1,9 @@
-import { CreateUserData } from '@models/user/types';
-import { PrismaClient, UserRole } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
+
+import plan from '@models/plan';
+import { CreateUserData } from '@models/user/types';
+import { PLANS } from '@lib/stripe/plans';
+import { PrismaClient, RecurrencePeriod, UserRole } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -11,6 +14,7 @@ async function seedDatabase() {
 
   await seedDevelopmentUsers();
   await addInitialCheckInToUsers();
+  await seedPlans();
 
   console.log('\n> Database seeded!');
 }
@@ -49,8 +53,8 @@ async function addInitialCheckInToUsers() {
       data: {
         userId: user.id,
         checkInsQuantity: 1,
-        title: 'check-in inicial',
-        description: 'check-in inicial',
+        title: 'check-in de boas vindas',
+        description: 'check-in inicial para experimentar a plataforma :)',
         type: 'CREDIT',
       },
     });
@@ -66,6 +70,24 @@ async function addInitialCheckInToUsers() {
 
     await prisma.$transaction([createStatementPromise, updateUserPromise]);
   }
+}
+
+async function seedPlans() {
+  const createPlansPromises = PLANS.map((planObject) => {
+    return plan.create({
+      checkInsQuantity: planObject.checkInsQuantity,
+      price: planObject.fullPricePerBillingPeriod,
+      currency: 'brl',
+      recurrencePeriod:
+        planObject.billingPeriod.toUpperCase() as RecurrencePeriod,
+      isActive: true,
+      stripePriceId: planObject.stripePriceId,
+    });
+  });
+
+  await Promise.all(createPlansPromises);
+
+  console.log('> todos os planos foram cadastrados na plataforma!');
 }
 
 interface InsertUserData extends CreateUserData {

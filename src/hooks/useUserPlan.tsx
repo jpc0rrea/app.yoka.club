@@ -15,8 +15,10 @@ export interface UserPlan {
   checkinsQuantity: number;
   price: number;
   extra: string;
+  cancelAtPeriodEnd: boolean;
   expirationDate?: Date;
   nextBillingDate?: Date;
+  nextBillingValue?: string;
 }
 
 export interface Plan {
@@ -77,10 +79,10 @@ export function getFullPricePerBillingPeriod({
 
 export async function getUserPlan() {
   const { data } = await api.get<{
-    userPlan: UserPlan;
-  }>('/users/plan');
+    plan: UserPlan;
+  }>('/user/plan');
 
-  return data.userPlan;
+  return data.plan;
 }
 
 export function useUserPlan() {

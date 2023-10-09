@@ -1,10 +1,11 @@
 import user from '@models/user';
+import { prisma } from '@server/db';
 import { GiveTrialCheckinParams } from './types';
 import { ValidationError } from '@errors/index';
 import statement from '@models/statement';
 
 async function giveTrialCheckin({ userId }: GiveTrialCheckinParams) {
-  const userObject = await user.findOneById({ userId });
+  const userObject = await user.findOneById({ userId, prismaInstance: prisma });
 
   if (userObject.checkInsQuantity > 0) {
     throw new ValidationError({
@@ -41,8 +42,9 @@ async function giveTrialCheckin({ userId }: GiveTrialCheckinParams) {
   await statement.addCredits({
     userId,
     amount: 1,
-    title: 'boas vindas à plataforma :)',
+    title: 'check-in de boas vindas',
     description: 'check-in inicial para experimentar a plataforma :)',
+    prismaInstance: prisma,
   });
 }
 

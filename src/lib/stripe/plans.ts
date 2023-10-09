@@ -35,7 +35,7 @@ export const PLANS = [
     id: 'QUARTERLY_12',
     stripePriceId: webserver.isProduction
       ? 'price_1NZ06uEsKOl8ftVi9AGDDwvB'
-      : 'price_1NwU1MEsKOl8ftViFSld3EUV',
+      : 'price_1Nz25TEsKOl8ftViAvnpeLlB',
     billingPeriod: 'quarterly',
     checkInsQuantity: 12,
     fullPricePerBillingPeriod: 649.7,

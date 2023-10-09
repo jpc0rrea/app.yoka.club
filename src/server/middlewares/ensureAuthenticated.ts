@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import session from '@models/session';
 import user from '@models/user';
+import { prisma } from '@server/db';
 import { UserRole } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -40,6 +41,7 @@ export function ensureAuthenticatedWithRole(handler: any, roles: UserRole[]) {
 
       const userObject = await user.findOneById({
         userId: sessionObject.userId,
+        prismaInstance: prisma,
       });
 
       if (!roles.includes(userObject.role)) {

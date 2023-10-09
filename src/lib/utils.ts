@@ -12,3 +12,18 @@ export function convertNumberToReal(value: number) {
     currency: 'BRL',
   });
 }
+
+export function roundNumber({
+  value,
+  decimalPlaces,
+}: {
+  value: number;
+  decimalPlaces: number;
+}) {
+  const d = Math.pow(10, decimalPlaces);
+  return Math.round((value + Number.EPSILON) * d) / d;
+}
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

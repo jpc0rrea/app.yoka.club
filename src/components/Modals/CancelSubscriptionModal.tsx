@@ -2,6 +2,12 @@ import { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
+import { api } from '@lib/api';
+import { successToast } from '@components/Toast/SuccessToast';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { errorToast } from '@components/Toast/ErrorToast';
+import { Loader2 } from 'lucide-react';
+import { queryClient } from '@lib/queryClient';
 
 interface CancelSubscriptionModalProps {
   expirationDate: Date;
@@ -11,8 +17,38 @@ export default function CancelSubscriptionModal({
   expirationDate,
 }: CancelSubscriptionModalProps) {
   const [open, setOpen] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
 
   const cancelButtonRef = useRef(null);
+
+  const handleCancelSubscription = async () => {
+    setIsCanceling(true);
+
+    try {
+      await api.delete('/user/cancel-subscription');
+
+      successToast({
+        message: 'plano cancelado com sucesso',
+        description:
+          'você ainda terá acesso aos conteúdos exclusivos até ' +
+          format(new Date(expirationDate), "dd/MM/yyyy' às 'HH:mm") +
+          '.',
+      });
+
+      queryClient.invalidateQueries(['userPlan']);
+    } catch (err) {
+      const { message, description } = convertErrorMessage({
+        err,
+      });
+
+      errorToast({
+        message,
+        description,
+      });
+    }
+
+    setIsCanceling(false);
+  };
 
   return (
     <>
@@ -74,7 +110,10 @@ export default function CancelSubscriptionModal({
                           você tem certeza que deseja cancelar o seu plano? você
                           ainda terá acesso aos conteúdos exclusivos até{' '}
                           <strong className="text-gray-800">
-                            {format(expirationDate, "dd/MM/yyyy' às 'HH:mm")}
+                            {format(
+                              new Date(expirationDate),
+                              "dd/MM/yyyy' às 'HH:mm"
+                            )}
                           </strong>
                           .
                         </p>
@@ -91,9 +130,13 @@ export default function CancelSubscriptionModal({
                     <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                      onClick={() => setOpen(false)}
+                      onClick={handleCancelSubscription}
                     >
-                      sim, cancelar o meu plano
+                      {isCanceling ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        'sim, cancelar o meu plano'
+                      )}
                     </button>
                     <button
                       type="button"

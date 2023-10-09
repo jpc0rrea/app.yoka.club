@@ -2,6 +2,7 @@
 import { UnauthorizedError } from 'errors';
 import password from '@models/password';
 import session from '@models/session';
+import { prisma } from '@server/db';
 import {
   ComparePasswordsParams,
   CreateSessionAndSetCookiesParams,
@@ -54,6 +55,7 @@ async function injectAnonymousOrUser(
     });
     const userObject = await user.findOneById({
       userId: sessionObject.userId,
+      prismaInstance: prisma,
     });
 
     request.context = {

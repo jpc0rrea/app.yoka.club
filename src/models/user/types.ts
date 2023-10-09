@@ -1,4 +1,5 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma, RecurrencePeriod, User } from '@prisma/client';
+import { PrismaInstance } from '@server/db';
 
 export interface CreateUserData {
   email: string;
@@ -9,6 +10,7 @@ export interface CreateUserData {
 
 export interface FindOneByIdParams {
   userId: string;
+  prismaInstance: PrismaInstance;
 }
 
 export interface FindOneByEmailParams {
@@ -38,3 +40,11 @@ export const userWithProtectedFields =
 export type UserWithProtectedFields = Prisma.EventGetPayload<
   typeof userWithProtectedFields
 >;
+
+export interface UpdateUserSubscriptionParams {
+  userId: string;
+  recurrencePeriod: RecurrencePeriod;
+  subscriptionId: string;
+  checkInsQuantity: number;
+  prismaInstance: PrismaInstance;
+}

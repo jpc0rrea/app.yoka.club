@@ -127,7 +127,10 @@ export default function UserCheckInExtract() {
                             )}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {statementItem.description}
+                            <p className="font-semibold">
+                              {statementItem.title}
+                            </p>
+                            <p>{statementItem.description}</p>
                           </td>
                           <td
                             className={`whitespace-nowrap px-6 py-4 text-sm ${

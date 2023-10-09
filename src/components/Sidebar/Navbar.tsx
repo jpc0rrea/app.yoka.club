@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   CalendarIcon,
-  // CreditCardIcon,
+  CreditCardIcon,
   LockClosedIcon,
   // UserIcon,
 } from '@heroicons/react/24/outline';
@@ -18,12 +18,12 @@ export const navigationItems = [
     icon: CalendarIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
-  // {
-  //   name: 'plano',
-  //   href: '/billing',
-  //   icon: CreditCardIcon,
-  //   role: ['ADMIN', 'USER', 'INSTRUCTOR'],
-  // },
+  {
+    name: 'plano',
+    href: '/billing',
+    icon: CreditCardIcon,
+    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  },
   {
     name: 'extrato de check-ins',
     href: '/extract',

@@ -1,7 +1,10 @@
 import { NotFoundError, ServiceError } from '@errors/index';
+import { prisma } from '@server/db';
 import Stripe from 'stripe';
 import { stripe } from '.';
 import user from '@models/user';
+import { convertNumberToReal } from '@lib/utils';
+import { PLANS } from './plans';
 
 interface GetInvoiceInfoParams {
   invoice: Stripe.Invoice;
@@ -20,7 +23,7 @@ async function getInvoicePrice({ invoice }: GetInvoiceInfoParams) {
   if (
     !invoice.lines.data[0] ||
     !invoice.lines.data[0].price ||
-    !!invoice.lines.data[0].price.id
+    !invoice.lines.data[0].price.id
   ) {
     throw new NotFoundError({
       message: `o item da fatura não possui preço.`,
@@ -131,6 +134,7 @@ async function getInvoiceUser({ invoice }: GetInvoiceInfoParams) {
 
   const userObject = await user.findOneById({
     userId,
+    prismaInstance: prisma,
   });
 
   if (userObject.stripeId !== stripeCustomer.id) {
@@ -179,9 +183,113 @@ async function getInvoiceBalanceTransaction({ invoice }: GetInvoiceInfoParams) {
   return balanceTransaction;
 }
 
+async function getPriceByPriceId(stripePriceId: string) {
+  const price = await stripe.prices.retrieve(stripePriceId);
+
+  if (!price) {
+    throw new NotFoundError({
+      message: `o preço não foi encontrado.`,
+      action: `verifique se o preço existe e tente novamente.`,
+      errorLocationCode: 'MODEL:STRIPE:UTILS:GET_PRICE:MISSING_PRICE',
+    });
+  }
+
+  return price;
+}
+
+interface GetSubscriptionDetailsParams {
+  stripeSubscriptionId: string;
+  stripeCustomerId: string;
+}
+
+async function getSubscriptionDetails({
+  stripeSubscriptionId,
+  stripeCustomerId,
+}: GetSubscriptionDetailsParams) {
+  const subscription = await stripe.subscriptions.retrieve(
+    stripeSubscriptionId
+  );
+
+  if (!subscription) {
+    throw new NotFoundError({
+      message: `a assinatura não foi encontrada.`,
+      action: `verifique se a assinatura existe e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SUBSCRIPTION_DETAILS:MISSING_SUBSCRIPTION',
+    });
+  }
+
+  if (!subscription.current_period_end) {
+    throw new NotFoundError({
+      message: `a assinatura não possui um período de término.`,
+      action: `verifique se a assinatura possui um período de término e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SUBSCRIPTION_DETAILS:MISSING_SUBSCRIPTION_CURRENT_PERIOD_END',
+    });
+  }
+
+  if (
+    !subscription.items.data ||
+    !subscription.items.data.length ||
+    !subscription.items.data[0]
+  ) {
+    throw new NotFoundError({
+      message: `a assinatura não possui itens.`,
+      action: `verifique se a assinatura possui itens e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SUBSCRIPTION_DETAILS:MISSING_SUBSCRIPTION_ITEMS',
+    });
+  }
+
+  const price = await stripe.prices.retrieve(
+    subscription.items.data[0].price.id
+  );
+
+  const plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+
+  if (!plan) {
+    throw new NotFoundError({
+      message: `o plano não foi encontrado.`,
+      action: `verifique se o plano existe e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SUBSCRIPTION_DETAILS:MISSING_PLAN',
+    });
+  }
+
+  const nextBillingTime = new Date(
+    subscription.current_period_end * 1000
+  ).toISOString();
+
+  if (subscription.cancel_at_period_end) {
+    return {
+      plan,
+      nextBillingTime,
+      nextBillingValue: undefined,
+      cancelAtPeriodEnd: true,
+    };
+  }
+
+  const nextInvoice = await stripe.invoices.retrieveUpcoming({
+    customer: stripeCustomerId,
+  });
+
+  const nextBillingValue = convertNumberToReal(
+    (nextInvoice.amount_due || nextInvoice.total) / 100
+  );
+
+  return {
+    plan,
+    nextBillingTime,
+    nextBillingValue,
+    cancelAtPeriodEnd: false,
+  };
+}
+
 export default Object.freeze({
   getInvoicePrice,
   getInvoiceSubscription,
   getInvoiceUser,
   getInvoiceBalanceTransaction,
+  getPriceByPriceId,
+  getSubscriptionDetails,
 });

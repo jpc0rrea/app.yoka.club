@@ -35,6 +35,7 @@ async function addCredits({
 
   await user.findOneById({
     userId,
+    prismaInstance: prisma,
   });
 
   const createdCreditStatementTransaction = prisma.statement.create({
@@ -65,7 +66,46 @@ async function addCredits({
   ]);
 }
 
+async function createCreditStatement({
+  userId,
+  amount,
+  title,
+  description,
+  paymentId,
+  prismaInstance,
+}: AddCreditsParams) {
+  if (!amount || amount <= 0) {
+    throw new ValidationError({
+      message: `o campo 'amout' está inválido.`,
+      action: `informe um valor válido.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:STATEMENT:CREATE_CREDIT_STATEMENT:INVALID_AMOUNT',
+      key: 'amount',
+    });
+  }
+
+  await user.findOneById({
+    userId,
+    prismaInstance,
+  });
+
+  const statement = await prismaInstance.statement.create({
+    data: {
+      userId,
+      title,
+      description,
+      type: 'CREDIT',
+      checkInsQuantity: amount,
+      paymentId,
+    },
+  });
+
+  return statement;
+}
+
 export default Object.freeze({
   findAllCreditsByUserId,
   addCredits,
+  createCreditStatement,
 });

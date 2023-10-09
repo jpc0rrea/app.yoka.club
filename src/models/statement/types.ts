@@ -1,3 +1,5 @@
+import { PrismaInstance } from '@server/db';
+
 export interface FindAllCreditsByUserIdParams {
   userId: string;
 }
@@ -8,4 +10,5 @@ export interface AddCreditsParams {
   title: string;
   description: string;
   paymentId?: string;
+  prismaInstance: PrismaInstance;
 }

@@ -13,7 +13,7 @@
     "services:stop": "docker-compose -f src/infra/docker-compose.development.yml stop || docker compose -f src/infra/docker-compose.development.yml stop",
     "services:down": "docker-compose -f src/infra/docker-compose.development.yml down || docker compose -f src/infra/docker-compose.development.yml down",
     "migration:run": "npx prisma db push",
-    "migration:seed": "ts-node -r tsconfig-paths/register --project tsconfig.json src/infra/scripts/seed-database.ts"
+    "migration:seed": "ts-node -r dotenv-expand/config -r tsconfig-paths/register --project tsconfig.json src/infra/scripts/seed-database.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -82,6 +82,8 @@
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
     "autoprefixer": "^10.4.7",
+    "dotenv": "^16.3.1",
+    "dotenv-expand": "^10.0.0",
     "eslint": "^8.30.0",
     "eslint-config-next": "^13.4.12",
     "eslint-config-prettier": "^8.1.0",
