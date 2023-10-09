@@ -75,7 +75,7 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
   const plan: UserPlan = {
     id: 'FREE',
     type: 'free',
-    name: 'yogi iniciante',
+    name: 'yogini iniciante',
     price: 0,
     checkinsQuantity: 0,
     extra: 'acesso aos conteúdos gratuitos',
@@ -101,7 +101,7 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
   plan.nextBillingValue = subscriptionDetails.nextBillingValue;
   plan.nextBillingDate = new Date(subscriptionDetails.nextBillingTime);
   plan.id = subscriptionDetails.plan.id as PlanIds;
-  plan.name = 'yogi premium';
+  plan.name = 'yogini premium';
   plan.checkinsQuantity = subscriptionDetails.plan.checkInsQuantity;
   plan.price = subscriptionDetails.plan.fullPricePerBillingPeriod;
   plan.extra = 'acesso a todas as aulas gravadas e a conteúdos extras';

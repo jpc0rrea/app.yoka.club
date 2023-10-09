@@ -8,14 +8,14 @@ export const plans = [
   },
   {
     id: 'newbie',
-    name: 'yogi iniciante',
+    name: 'yogini iniciante',
     checkinsQuantity: 8,
     price: 199.9,
     extra: 'acesso a conteúdos exclusivos',
   },
   {
     id: 'experienced',
-    name: 'yogi experiente',
+    name: 'yogini experiente',
     checkinsQuantity: 12,
     price: 276.9,
     extra: 'acesso a conteúdos exclusivos',

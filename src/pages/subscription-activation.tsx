@@ -41,7 +41,7 @@ export default function SubscriptionActivation() {
 
       if (response.status === 200 && response.data.plan.type === 'premium') {
         setIsSuccess(true);
-        setGlobalMessage('sua conta foi ativada com sucesso!');
+        setGlobalMessage('sua assinatura foi feita com sucesso!');
         setGlobalDescription(
           'você já está com acesso a todos os conteúdos exclusivos. aproveite!'
         );

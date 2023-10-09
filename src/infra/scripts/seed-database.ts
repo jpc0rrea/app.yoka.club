@@ -76,7 +76,7 @@ async function seedPlans() {
   const createPlansPromises = PLANS.map((planObject) => {
     return plan.create({
       checkInsQuantity: planObject.checkInsQuantity,
-      price: planObject.fullPricePerBillingPeriod,
+      price: planObject.fullPricePerBillingPeriod * 100,
       currency: 'brl',
       recurrencePeriod:
         planObject.billingPeriod.toUpperCase() as RecurrencePeriod,

@@ -33,7 +33,7 @@ const Profile: NextPage = () => {
                         </h3>
                         <p className="mt-1 text-sm text-gray-500">
                           essas informações vão estar disponíveis para outras
-                          yogis :)
+                          yoginis :)
                         </p>
                       </div>
 
