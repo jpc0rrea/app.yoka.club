@@ -62,7 +62,7 @@ export default function SubscribeModal() {
         }}
         className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
       >
-        assinar plano
+        ver opções de plano
       </button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
