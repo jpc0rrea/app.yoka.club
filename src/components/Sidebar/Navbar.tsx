@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { HistoryIcon, UsersIcon } from 'lucide-react';
 import useUser from '@hooks/useUser';
+import { UserIcon } from 'lucide-react';
 
 export const navigationItems = [
   {
@@ -19,9 +20,9 @@ export const navigationItems = [
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
-    name: 'plano',
-    href: '/billing',
-    icon: CreditCardIcon,
+    name: 'perfil',
+    href: '/profile',
+    icon: UserIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
@@ -30,12 +31,12 @@ export const navigationItems = [
     icon: HistoryIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
-  // {
-  //   name: 'perfil',
-  //   href: '/profile',
-  //   icon: UserIcon,
-  //   role: ['ADMIN', 'USER', 'INSTRUCTOR'],
-  // },
+  {
+    name: 'plano',
+    href: '/billing',
+    icon: CreditCardIcon,
+    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  },
   {
     name: 'gerenciar eventos',
     href: '/events/manage',

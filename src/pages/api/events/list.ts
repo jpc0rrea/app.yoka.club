@@ -32,6 +32,7 @@ export const eventSelect = {
         select: {
           displayName: true,
           imageUrl: true,
+          username: true,
         },
       },
     },

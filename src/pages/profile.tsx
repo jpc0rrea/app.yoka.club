@@ -1,13 +1,126 @@
-import Header from '@components/Header';
 import { type NextPage } from 'next';
 import Head from 'next/head';
+import { z } from 'zod';
+import { UploadButton } from '@lib/uploadthing';
+// You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
+import '@uploadthing/react/styles.css';
+
+import Header from '@components/Header';
 import Sidebar from '@components/Sidebar';
-import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
+import { withSSREnsureSubscribed } from '@server/middlewares/withSSREnsureSubscribed';
 import { Input } from '@components/Form/Input';
-import { CheckIcon } from '@heroicons/react/20/solid';
+import useUser from '@hooks/useUser';
+import { TextArea } from '@components/Form/TextArea';
+import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useEffect } from 'react';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { errorToast } from '@components/Toast/ErrorToast';
+import { api } from '@lib/api';
+import { successToast } from '@components/Toast/SuccessToast';
+import { Loader2 } from 'lucide-react';
+
+const updateProfileFormSchema = z.object({
+  displayName: z.string({
+    required_error: 'nome é obrigatório',
+  }),
+  username: z
+    .string({
+      required_error: 'username é obrigatório',
+    })
+    .min(3, {
+      message: 'username deve ter no mínimo 3 caracteres',
+    })
+    .refine((value) => /^[a-zA-Z0-9_.-]+$/.test(value), {
+      message: 'username deve ser alfanumérico',
+    }),
+  bio: z.string().nullable(),
+  name: z
+    .string({
+      required_error: 'nome completo é obrigatório',
+    })
+    .min(6, {
+      message: 'nome completo deve ter no mínimo 6 caracteres',
+    }),
+  email: z
+    .string({
+      required_error: 'e-mail é obrigatório',
+    })
+    .email('e-mail inválido'),
+});
+
+export type UpdateProfileFormData = z.infer<typeof updateProfileFormSchema>;
 
 const Profile: NextPage = () => {
-  const hasConnectedAgenda = false;
+  const { user, fetchUser } = useUser();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateProfileFormData>({
+    resolver: zodResolver(updateProfileFormSchema),
+    defaultValues: {
+      displayName: user?.displayName,
+      username: user?.username,
+      bio: user?.bio,
+      name: user?.name,
+      email: user?.email,
+    },
+  });
+
+  const usernameValue = useWatch({ control, name: 'username' });
+
+  useEffect(() => {
+    if (user) {
+      setValue('displayName', user.displayName);
+      setValue('username', user.username);
+      setValue('bio', user.bio);
+      setValue('name', user.name);
+      setValue('email', user.email);
+    }
+  }, [user, setValue]);
+
+  const handleUpdateProfile = async (data: UpdateProfileFormData) => {
+    try {
+      console.log(data);
+      await api.put('/user/profile', {
+        displayName: data.displayName,
+        username: data.username,
+        bio: data.bio,
+        name: data.name,
+        email: data.email,
+      });
+
+      await fetchUser();
+
+      successToast({
+        message: 'perfil atualizado com sucesso',
+        description: 'suas informações foram atualizadas :)',
+      });
+    } catch (err) {
+      const { message, description } = convertErrorMessage({
+        err,
+      });
+
+      errorToast({
+        message,
+        description,
+      });
+    }
+  };
+
+  const handleCancelUpdateProfile = useCallback(() => {
+    if (user) {
+      setValue('displayName', user.displayName);
+      setValue('username', user.username);
+      setValue('bio', user.bio);
+      setValue('name', user.name);
+      setValue('email', user.email);
+    }
+  }, [user, setValue]);
 
   return (
     <>
@@ -20,12 +133,15 @@ const Profile: NextPage = () => {
         <div className="flex flex-1 flex-col md:pl-64">
           <Header />
 
-          <main className="flex-1">
+          <main className="flex-1 bg-white">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
-                <form className="space-y-8 divide-y divide-gray-200">
-                  <div className="space-y-8 divide-y divide-gray-200">
+                <form
+                  className="space-y-8 divide-y divide-gray-200"
+                  onSubmit={handleSubmit(handleUpdateProfile)}
+                >
+                  <div className="max-w-2xl space-y-8 divide-y divide-gray-200">
                     <div>
                       <div>
                         <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -40,9 +156,26 @@ const Profile: NextPage = () => {
                       <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
                         <div className="sm:col-span-4">
                           <Input
-                            name="nome"
                             label="nome"
                             helperText="esse é o nome que ficará disponível para os outros usuários"
+                            {...register('displayName')}
+                          />
+                        </div>
+
+                        <div className="sm:col-span-4">
+                          <Input
+                            label="username"
+                            helperText={`esse é o nome que ficará na url para acessar seu perfil: yogacomkaka.com/@${usernameValue}`}
+                            errorMessage={errors.username?.message}
+                            {...register('username')}
+                          />
+                        </div>
+
+                        <div className="sm:col-span-6">
+                          <TextArea
+                            label="bio"
+                            helperText="fale um pouquinho sobre você"
+                            {...register('bio')}
                           />
                         </div>
 
@@ -96,21 +229,65 @@ const Profile: NextPage = () => {
                             foto
                           </label>
                           <div className="mt-1 flex items-center">
-                            <span className="h-12 w-12 overflow-hidden rounded-full bg-gray-100">
-                              <svg
-                                className="h-full w-full text-gray-300"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                              </svg>
-                            </span>
-                            <button
+                            <img
+                              className="h-20 w-20 rounded-full"
+                              src={
+                                user?.imageUrl || '/images/default-avatar.png'
+                              }
+                              alt=""
+                            />
+                            {/* <button
                               type="button"
                               className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                               atualizar
-                            </button>
+                            </button> */}
+                            <UploadButton
+                              className="ml-2 ut-button:h-8 ut-button:bg-purple-800 ut-button:text-sm ut-button:after:bg-purple-900 ut-button:ut-readying:bg-purple-800/50 ut-uploading:cursor-not-allowed"
+                              endpoint="imageUploader"
+                              onClientUploadComplete={async (res) => {
+                                // Do something with the response
+                                console.log('Files: ', res);
+
+                                await fetchUser();
+                                successToast({
+                                  message: 'foto atualizada com sucesso',
+                                  description:
+                                    'sua foto de perfil foi atualizada :)',
+                                });
+                              }}
+                              onUploadError={(error: Error) => {
+                                // Do something with the error.
+                                console.log(error);
+                                errorToast({
+                                  message: 'erro ao atualizar foto',
+                                  description:
+                                    'ocorreu um erro ao atualizar sua foto de perfil :(',
+                                });
+                              }}
+                              content={{
+                                button({ ready, uploadProgress, isUploading }) {
+                                  if (isUploading)
+                                    return (
+                                      <div>
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                      </div>
+                                    );
+                                  if (ready) return <div>atualizar</div>;
+
+                                  return `${uploadProgress}%`;
+                                },
+                                allowedContent({
+                                  ready,
+                                  isUploading,
+                                  uploadProgress,
+                                }) {
+                                  if (!ready) return 'Checking what you allow';
+                                  if (isUploading) return `${uploadProgress}%`;
+                                  return `escolha a sua foto nova :)`;
+                                },
+                              }}
+                            />
                           </div>
                         </div>
                       </div>
@@ -122,22 +299,21 @@ const Profile: NextPage = () => {
                           informações pessoais
                         </h3>
                         <p className="mt-1 text-sm text-gray-500">
-                          usaremos seu endereço de e-mail para enviar
-                          notificações
+                          essas informações são privadas :)
                         </p>
                       </div>
                       <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
                         <div className="sm:col-span-4">
-                          <Input name="" label="nome completo" />
+                          <Input label="nome completo" {...register('name')} />
                         </div>
 
                         <div className="sm:col-span-4">
-                          <Input name="" label="e-mail" />
+                          <Input label="e-mail" {...register('email')} />
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-8">
+                    {/* <div className="pt-8">
                       <div>
                         <h3 className="text-lg font-medium leading-6 text-gray-900">
                           notificações
@@ -217,22 +393,27 @@ const Profile: NextPage = () => {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="pt-5">
                     <div className="flex justify-end">
                       <button
                         type="button"
+                        onClick={handleCancelUpdateProfile}
                         className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
                       >
                         cancelar
                       </button>
                       <button
                         type="submit"
-                        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
+                        className="ml-3 inline-flex w-16 justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
                       >
-                        salvar
+                        {isSubmitting ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          'salvar'
+                        )}
                       </button>
                     </div>
                   </div>

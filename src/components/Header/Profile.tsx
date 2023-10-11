@@ -7,6 +7,7 @@ import {
   HomeIcon,
 } from '@heroicons/react/24/outline';
 import useUser from '@hooks/useUser';
+import { UserIcon } from 'lucide-react';
 
 interface UserNavigation {
   name: string;
@@ -24,12 +25,17 @@ interface UserNavigation {
 export default function Profile() {
   const { logout, isLoading, user } = useUser();
   const userNavigation: UserNavigation[] = [
-    // { name: 'perfil', href: '/profile', type: 'link', icon: UserIcon },
     {
-      name: user?.displayName || '',
+      name: 'home',
       href: '/',
       type: 'link',
       icon: HomeIcon,
+    },
+    {
+      name: user?.displayName || '',
+      href: '/profile',
+      type: 'link',
+      icon: UserIcon,
     },
     {
       name: 'sair',

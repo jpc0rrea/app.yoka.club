@@ -31,6 +31,7 @@ export interface UserInContext {
   email: string;
   imageUrl: string | null;
   username: string;
+  bio: string;
   role: UserRole;
   checkInsQuantity: number;
 }
@@ -85,6 +86,7 @@ export function UserProvider({ children }: UserProviderProps) {
           email: fetchedUser.email,
           imageUrl: fetchedUser.imageUrl,
           username: fetchedUser.username,
+          bio: fetchedUser.bio,
           role: fetchedUser.role,
           checkInsQuantity: fetchedUser.checkInsQuantity,
           cacheTime: Date.now(),

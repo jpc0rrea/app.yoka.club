@@ -18,6 +18,7 @@ import { successToast } from '@components/Toast/SuccessToast';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import useUser from '@hooks/useUser';
+import Link from 'next/link';
 
 const Event: NextPage = () => {
   const router = useRouter();
@@ -330,9 +331,12 @@ const Event: NextPage = () => {
                                           />
                                         </div>
                                         <div className="text-xs font-medium leading-5 text-gray-500 ">
-                                          <p className="whitespace-nowrap text-sm text-gray-800">
+                                          <Link
+                                            className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
+                                            href={`/@${checkIn.user.username}`}
+                                          >
                                             {checkIn.user.displayName}
-                                          </p>
+                                          </Link>
                                           <p className="truncate">
                                             check-in feito em{' '}
                                             {format(

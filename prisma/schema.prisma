@@ -37,6 +37,7 @@ model User {
     imageUrl         String?   @map("image_url")
     password         String
     username         String    @unique
+    bio              String?
     phoneNumber      String    @map("phone_number")
     role             UserRole  @default(USER)
     checkInsQuantity Int       @default(0) @map("check_ins_quantity")
