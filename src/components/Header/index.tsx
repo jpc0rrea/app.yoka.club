@@ -7,6 +7,7 @@ import { useSidebar } from '@hooks/useSidebar';
 import Profile from './Profile';
 // import ConfirmEmailAlert from './ConfirmEmailAlert';
 import useUser from '@hooks/useUser';
+import Link from 'next/link';
 
 export default function Header() {
   const { setIsSidebarOpen } = useSidebar();
@@ -31,16 +32,18 @@ export default function Header() {
           </div>
           <div className="ml-4 flex items-center md:ml-6">
             {user && (
-              <div className="font-semi flex flex-col items-center text-xs text-gray-500">
-                <CheckCircleIcon className="inline-block h-5 w-5 text-purple-800" />
-                <p>
-                  <strong className="font-bold text-purple-800">
-                    {user.checkInsQuantity}
-                  </strong>{' '}
-                  check-in{user.checkInsQuantity !== 1 && 's'}
-                </p>
-                {/* <p className="text-[9px]">restantes</p> */}
-              </div>
+              <Link href="/extract">
+                <div className="font-semi flex flex-col items-center text-xs text-gray-500">
+                  <CheckCircleIcon className="inline-block h-5 w-5 text-purple-800" />
+                  <p>
+                    <strong className="font-bold text-purple-800">
+                      {user.checkInsQuantity}
+                    </strong>{' '}
+                    check-in{user.checkInsQuantity !== 1 && 's'}
+                  </p>
+                  {/* <p className="text-[9px]">restantes</p> */}
+                </div>
+              </Link>
             )}
             <Profile />
           </div>

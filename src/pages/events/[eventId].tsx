@@ -153,7 +153,7 @@ const Event: NextPage = () => {
                                 }
                                 alt=""
                               />
-                              <div className="mx-1 text-sm font-medium text-purple-800">
+                              <div className="mx-1 min-w-max text-sm font-medium text-purple-800">
                                 {event.instructor.displayName}
                               </div>
                             </a>
@@ -250,19 +250,21 @@ const Event: NextPage = () => {
                             infelizmente não há mais vagas para esse evento :(
                           </p>
                         )}
-                        <CheckInButton event={event} />
-                        {canCancelCheckIn && (
-                          <button
-                            onClick={handleCancelCheckIn}
-                            className="mt-4 flex w-32 items-center justify-center rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100"
-                          >
-                            {isCancellingCheckIn ? (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                              'cancelar check-in'
-                            )}
-                          </button>
-                        )}
+                        <div className="flex">
+                          <CheckInButton event={event} />
+                          {canCancelCheckIn && (
+                            <button
+                              onClick={handleCancelCheckIn}
+                              className="ml-4 flex w-32 items-center justify-center rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100"
+                            >
+                              {isCancellingCheckIn ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                'cancelar check-in'
+                              )}
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <aside className="mt-8 xl:hidden">
                         <h2 className="sr-only">Details</h2>
@@ -464,9 +466,12 @@ const Event: NextPage = () => {
                                     />
                                   </div>
                                   <div className="text-xs font-medium leading-5 text-gray-500">
-                                    <p className="whitespace-nowrap text-sm text-gray-800">
+                                    <Link
+                                      className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
+                                      href={`/@${checkIn.user.username}`}
+                                    >
                                       {checkIn.user.displayName}
-                                    </p>
+                                    </Link>
 
                                     <p className="truncate">
                                       check-in feito em{' '}

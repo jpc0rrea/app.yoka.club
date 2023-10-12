@@ -99,14 +99,14 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
             href={recordedUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
           >
             ver aula gravada
           </a>
         ) : (
           <button
             disabled
-            className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
           >
             link ainda não disponível
           </button>
@@ -117,14 +117,14 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
             href={liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-24 justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
           >
             ir para aula
           </a>
         ) : (
           <button
             disabled
-            className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
           >
             link ainda não disponível
           </button>
@@ -132,7 +132,7 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
       ) : stillHasVacancy ? (
         <button
           onClick={handleCheckIn}
-          className="flex h-7 w-20 justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+          className="flex h-7 min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
         >
           {isCheckingIn ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -143,7 +143,7 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
       ) : (
         <button
           disabled
-          className="flex justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+          className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
         >
           evento esgotado :(
         </button>

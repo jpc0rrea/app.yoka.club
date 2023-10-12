@@ -26,10 +26,10 @@ export default function EventItem({ event }: EventProps) {
         alt=""
         className="h-10 w-10 flex-none rounded-full"
       />
-      <div className="flex-auto">
+      <div className="max-w-full flex-auto">
         <Link
           href={`/events/${event.id}`}
-          className="truncate text-sm font-medium text-brand-purple-900 hover:text-brand-purple-800 hover:underline"
+          className="max-w-full break-words text-sm font-medium text-brand-purple-900 hover:text-brand-purple-800 hover:underline"
         >
           {event.title}
         </Link>

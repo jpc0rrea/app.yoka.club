@@ -53,15 +53,15 @@ export default function Sidebar() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute right-0 top-0 -mr-12 pt-2">
+                  <div className="absolute right-0 top-0  pt-2">
                     <button
                       type="button"
-                      className="ml-1 flex h-10 w-10 items-center justify-center rounded-full"
+                      className="flex h-10 w-10 items-center justify-center rounded-full"
                       onClick={() => setIsSidebarOpen(false)}
                     >
                       <span className="sr-only">Close sidebar</span>
                       <XMarkIcon
-                        className="h-6 w-6 text-white"
+                        className="h-6 w-6 text-gray-500"
                         aria-hidden="true"
                       />
                     </button>

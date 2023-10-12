@@ -4,6 +4,7 @@ import {
   CheckCircleIcon,
   MinusIcon,
   PlusIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { convertNumberToReal } from '@lib/utils';
 import { CHECK_IN_PRICE } from '@lib/constants';
@@ -62,6 +63,19 @@ export default function BuyMoreCheckIns() {
                         aria-hidden="true"
                       />
                     </div> */}
+                    <div className="absolute right-0 top-0  pt-2">
+                      <button
+                        type="button"
+                        className="flex h-10 w-10 items-center justify-center rounded-full"
+                        onClick={() => setOpen(false)}
+                      >
+                        <span className="sr-only">Close sidebar</span>
+                        <XMarkIcon
+                          className="h-6 w-6 text-gray-500"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
                     <div className="mt text-center sm:mt-5">
                       <Dialog.Title
                         as="h3"

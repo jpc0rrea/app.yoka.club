@@ -49,13 +49,9 @@ export default function getCheckInStatuses({
     new Date()
   );
 
-  console.log(timeToEventInMinutes);
-
   const canEnterTheEvent = event.startDate
     ? timeToEventInMinutes > -TOLERANCE_MINUTES_TO_ENTER_EVENT
     : false;
-
-  console.log(canEnterTheEvent);
 
   const canCheckIn =
     !alreadyCheckedIn &&
