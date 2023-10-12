@@ -35,7 +35,7 @@ async function getHandler(
     paymentId: req.query.payment_id,
   });
 
-  return res.status(201).json({
+  return res.status(200).json({
     status: paymentObject.status,
   });
 }
