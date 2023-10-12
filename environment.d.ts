@@ -19,6 +19,9 @@ declare global {
       NEXT_PUBLIC_STRIPE_PUBLIC_KEY: string;
       STRIPE_SUCCESS_URL: string;
       STRIPE_CANCEL_URL: string;
+
+      // Mercado Pago
+      MERCADO_PAGO_ACCESS_TOKEN: string;
     }
   }
 }

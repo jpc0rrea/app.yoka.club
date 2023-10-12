@@ -46,7 +46,6 @@ async function postStripeWebhookHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('cheguei no webhook');
   const buf = await buffer(req);
 
   const secret = req.headers['stripe-signature'];

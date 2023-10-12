@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useCallback, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   CheckCircleIcon,
@@ -8,12 +8,42 @@ import {
 } from '@heroicons/react/24/outline';
 import { convertNumberToReal } from '@lib/utils';
 import { CHECK_IN_PRICE } from '@lib/constants';
+import { api } from '@lib/api';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { errorToast } from '@components/Toast/ErrorToast';
+import { Loader2 } from 'lucide-react';
 
 export default function BuyMoreCheckIns() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(4);
 
   const cancelButtonRef = useRef(null);
+
+  const handleCreatePaymentWithPix = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const checkoutResponse = await api.post<{
+        checkoutUrl: string;
+      }>('mercadopago/checkout', {
+        checkInsQuantity,
+      });
+
+      // redirecionar usuário para o checkoutUrl
+      window.location.href = checkoutResponse.data.checkoutUrl;
+    } catch (err) {
+      console.log(err);
+
+      const { message } = convertErrorMessage({
+        err,
+      });
+
+      errorToast({
+        message,
+      });
+    }
+    setIsLoading(false);
+  }, [checkInsQuantity]);
 
   return (
     <>
@@ -145,9 +175,13 @@ export default function BuyMoreCheckIns() {
                     <button
                       type="button"
                       className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-2"
-                      onClick={() => setOpen(false)}
+                      onClick={handleCreatePaymentWithPix}
                     >
-                      pagar com pix
+                      {isLoading ? (
+                        <Loader2 className="h-5 w-5 text-white" />
+                      ) : (
+                        'pagar com pix'
+                      )}
                     </button>
                     <button
                       type="button"

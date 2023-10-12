@@ -28,3 +28,7 @@ export interface CleanPaymentsToFrontendParams {
     plan: Plan | null;
   })[];
 }
+
+export interface HandleMercadoPagoPaymentParams {
+  paymentId: string;
+}

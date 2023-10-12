@@ -46,33 +46,31 @@ async function injectAnonymousOrUser(
     injectAnonymousUser(request);
     return next();
   }
+}
 
-  async function injectAuthenticatedUser({
-    request,
-  }: InjectAuthenticatedUserParams) {
-    const sessionObject = await session.findOneValidFromRequest({
-      req: request,
-    });
-    const userObject = await user.findOneById({
-      userId: sessionObject.userId,
-      prismaInstance: prisma,
-    });
+async function injectAuthenticatedUser({
+  request,
+}: InjectAuthenticatedUserParams) {
+  const sessionObject = await session.findOneValidFromRequest({
+    req: request,
+  });
+  const userObject = await user.findOneById({
+    userId: sessionObject.userId,
+    prismaInstance: prisma,
+  });
 
-    request.context = {
-      ...request.context,
-      user: userObject,
-      session: sessionObject,
-    };
-  }
+  request.context = {
+    ...request.context,
+    user: userObject,
+    session: sessionObject,
+  };
+}
 
-  function injectAnonymousUser(
-    request: NextApiRequest & { [key: string]: any }
-  ) {
-    request.context = {
-      ...request.context,
-      user: undefined,
-    };
-  }
+function injectAnonymousUser(request: NextApiRequest & { [key: string]: any }) {
+  request.context = {
+    ...request.context,
+    user: undefined,
+  };
 }
 
 // //TODO: this should be here or inside the session model?
@@ -100,10 +98,29 @@ async function createSessionAndSetCookies({
   return sessionObject;
 }
 
+async function ensureAuthenticatedAndInjectUser(
+  request: NextApiRequest,
+  response: NextApiResponse,
+  next: () => void
+) {
+  if (!request.cookies?.session_id) {
+    throw new UnauthorizedError({
+      message: `você não está autenticado.`,
+      action: `faça login e tente novamente.`,
+      errorLocationCode:
+        'MODEL:AUTHENTICATION:ENSURE_AUTHENTICATED:UNAUTHENTICATED',
+    });
+  }
+
+  await injectAuthenticatedUser({ request });
+  return next();
+}
+
 export default Object.freeze({
   hashPassword,
   comparePasswords,
   injectAnonymousOrUser,
   // parseSetCookies,
   createSessionAndSetCookies,
+  ensureAuthenticatedAndInjectUser,
 });

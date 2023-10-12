@@ -4,7 +4,9 @@ export type EventLogType =
   | 'USER.RENEW_SUBSCRIPTION'
   | 'USER.CANCEL_SUBSCRIPTION'
   | 'USER.UPDATE_PROFILE'
-  | 'USER.UPDATE_PROFILE_PICTURE';
+  | 'USER.UPDATE_PROFILE_PICTURE'
+  | 'USER.CREATE_MERCADOPAGO_CHECKOUT'
+  | 'USER.PURCHASED_CHECK_INS';
 
 export interface CreateEventLogParams {
   prismaInstance: PrismaInstance;
