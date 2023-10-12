@@ -160,8 +160,10 @@ async function handleMercadoPagoPayment({
     return 'PAYMENT-NOT-APPROVED';
   }
 
-  const userId = paymentObject.metadata.userId;
-  const checkInsQuantity = paymentObject.metadata.checkInsQuantity;
+  console.log(paymentObject);
+
+  const userId = paymentObject.metadata.user_id;
+  const checkInsQuantity = paymentObject.metadata.check_ins_quantity;
 
   if (!userId) {
     return 'USERID-NOT-FOUND';
