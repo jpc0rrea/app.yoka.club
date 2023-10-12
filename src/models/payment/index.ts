@@ -40,8 +40,6 @@ async function handleStripeInvoicePaid({
   const fee = balanceTransaction.fee;
   const currency = stripeInvoice.currency;
 
-  console.log({ grossValue, netValue, fee, currency });
-
   if (!grossValue || !netValue || !fee || !currency) {
     throw new ValidationError({
       message: `a fatura não possui valores.`,
@@ -159,8 +157,6 @@ async function handleMercadoPagoPayment({
   if (!paymentStatus || paymentStatus !== 'approved') {
     return 'PAYMENT-NOT-APPROVED';
   }
-
-  console.log(paymentObject);
 
   const userId = paymentObject.metadata.user_id;
   const checkInsQuantity = paymentObject.metadata.check_ins_quantity;

@@ -47,17 +47,12 @@ async function postMercadoPagoWebhookHandler(
   const { action, data } = req.body;
 
   if (action === 'payment.created' || action === 'payment.updated') {
-    console.log({
-      action,
-      data,
-    });
     const message = await payment.handleMercadoPagoPayment({
       paymentId: data.id,
     });
 
     return res.status(200).json({ received: true, message });
   } else {
-    console.log('action type not supported');
     return res
       .status(200)
       .json({ received: true, message: 'action type not supported' });
