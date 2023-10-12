@@ -64,7 +64,7 @@ export default function PaymentDone() {
           message?: string;
           description?: string;
           action?: string;
-        }>('/mercadopago/payment', {
+        }>('/mercadopago/check-payment', {
           params: {
             payment_id,
           },
