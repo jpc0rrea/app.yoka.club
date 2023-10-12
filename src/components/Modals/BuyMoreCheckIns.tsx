@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useRef, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   CheckCircleIcon,
@@ -18,7 +18,7 @@ export default function BuyMoreCheckIns() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(4);
 
-  const cancelButtonRef = useRef(null);
+  // const cancelButtonRef = useRef(null);
 
   const handleCreatePaymentWithPix = useCallback(async () => {
     setIsLoading(true);
@@ -171,7 +171,7 @@ export default function BuyMoreCheckIns() {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                  <div className="mt-5 sm:mt-6">
                     <button
                       type="button"
                       className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-2"
@@ -180,17 +180,17 @@ export default function BuyMoreCheckIns() {
                       {isLoading ? (
                         <Loader2 className="h-5 w-5 text-white" />
                       ) : (
-                        'pagar com pix'
+                        `comprar ${checkInsQuantity} check-ins`
                       )}
                     </button>
-                    <button
+                    {/* <button
                       type="button"
                       className="mt-3 inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-1 sm:mt-0"
                       onClick={() => setOpen(false)}
                       ref={cancelButtonRef}
                     >
                       pagar com cartão de crédito
-                    </button>
+                    </button> */}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
