@@ -41,6 +41,7 @@ export default function Calendar() {
   const { data: events } = useEvents({
     isLive: true,
     enabled: true,
+    pageSize: 1000,
   });
 
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', today, {

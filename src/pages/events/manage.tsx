@@ -12,7 +12,7 @@ import useUser from '@hooks/useUser';
 const Event: NextPage = () => {
   const { user } = useUser();
   const { data: events, isLoading } = useEvents({
-    pageSize: 100,
+    pageSize: 1000,
     instructorId: user && user.role === 'ADMIN' ? undefined : user?.id,
     enabled: !!user,
   });
