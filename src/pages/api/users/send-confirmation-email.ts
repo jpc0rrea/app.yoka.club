@@ -28,7 +28,7 @@ const sendMailConfirmation = async (
 
   const emailConfirmationToken = sign(
     { featCode: 'email-confirmation' },
-    process.env.NEXTAUTH_SECRET,
+    process.env.AUTH_SECRET,
     {
       expiresIn: '3h',
     }
