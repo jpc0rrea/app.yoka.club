@@ -119,6 +119,18 @@ async function activateUserUsingTokenId({
 
   await checkin.giveTrialCheckin({ userId: userToActivate.id });
 
+  // enviar email de boas vindas
+  const mailService = new SendGridMailService();
+
+  await mailService.send({
+    template: 'welcomeEmail',
+    to: userToActivate.email,
+    templateData: {
+      userName: userToActivate.displayName,
+      buttonLink: webserver.host,
+    },
+  });
+
   return tokenObject;
 }
 

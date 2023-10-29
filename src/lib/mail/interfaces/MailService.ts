@@ -1,10 +1,11 @@
-import { MailTemplates } from '../mailTemplateMapper';
+import { MailTemplates, TemplateParams } from '../mailTemplateMapper';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+interface SendMailParams<T extends MailTemplates> {
+  to: string;
+  template: MailTemplates;
+  templateData: TemplateParams[T];
+}
+
 export interface MailService {
-  send(message: {
-    to: string;
-    template: MailTemplates;
-    templateData: any;
-  }): Promise<void>;
+  send<T extends MailTemplates>(message: SendMailParams<T>): Promise<void>;
 }
