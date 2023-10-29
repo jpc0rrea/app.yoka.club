@@ -26,10 +26,7 @@ const verifyEmail = async (req: VerifyEmailRequest, res: NextApiResponse) => {
     return res.status(400).json({ code: 'invalid-token' });
   }
 
-  const { featCode } = verify(
-    token,
-    process.env.NEXTAUTH_SECRET
-  ) as TokenPayload;
+  const { featCode } = verify(token, process.env.AUTH_SECRET) as TokenPayload;
 
   if (featCode !== 'email-confirmation') {
     return res.status(400).json({ code: 'invalid-token' });

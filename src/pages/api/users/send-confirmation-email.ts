@@ -5,6 +5,7 @@ import ensureAuthenticated, {
   EnsureAuthenticatedRequest,
 } from '@server/middlewares/ensureAuthenticated';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
+import webserver from '@infra/webserver';
 
 const sendMailConfirmation = async (
   req: EnsureAuthenticatedRequest,
@@ -42,7 +43,7 @@ const sendMailConfirmation = async (
     },
   });
 
-  const url = `${process.env.NEXTAUTH_URL}/verify-email?token=${token.token}`;
+  const url = `${webserver.host}/verify-email?token=${token.token}`;
 
   const mailService = new SendGridMailService();
 
