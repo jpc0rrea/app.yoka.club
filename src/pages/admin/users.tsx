@@ -19,7 +19,7 @@ const ManageUsers: NextPage = () => {
 
           <main className="flex-1">
             <div className="p-8 xl:p-10">
-              <main className="max-w-4xl">
+              <main className="">
                 <header className="flex items-center justify-between border-b border-black/5 py-4 sm:py-6">
                   <h1 className="text-base font-semibold leading-7">
                     usuários

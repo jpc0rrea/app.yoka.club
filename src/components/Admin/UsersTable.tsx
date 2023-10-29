@@ -2,6 +2,7 @@ import AddMoreCheckInsToUser from '@components/Modals/AddMoreCheckInsToUser';
 import RemoveCheckInsFromUser from '@components/Modals/RemoveCheckInsFromUser';
 import { useUsers } from '@hooks/useUsers';
 import { Loader2 } from 'lucide-react';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
 export default function UsersTable() {
   const { data: users } = useUsers();
@@ -21,9 +22,15 @@ export default function UsersTable() {
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  className="min-w-max px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                 >
                   check-ins restantes
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  celular
                 </th>
                 {/* <th
                   scope="col"
@@ -87,6 +94,9 @@ export default function UsersTable() {
                     </td> */}
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       {user.checkInsQuantity}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                      {formatPhoneNumberIntl(user.phoneNumber)}
                     </td>
                     <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <RemoveCheckInsFromUser userId={user.id} />
