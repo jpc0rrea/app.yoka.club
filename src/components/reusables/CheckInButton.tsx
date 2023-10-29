@@ -5,8 +5,8 @@ import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { queryClient } from '@lib/queryClient';
 import getCheckInStatuses from '@lib/utilities/getCheckInStatuses';
+import { EventFromAPI } from '@models/events/types';
 import { Loader2 } from 'lucide-react';
-import { EventFromAPI } from 'pages/api/events/list';
 import { useState } from 'react';
 
 interface CheckInButtonProps {
