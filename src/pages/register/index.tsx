@@ -15,6 +15,7 @@ import PhoneNumberInput from '@components/Form/PhoneNumberInput';
 import { Value, isValidPhoneNumber } from 'react-phone-number-input';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import useUser from '@hooks/useUser';
+import { PasswordInput } from '@components/Form/PasswordInput';
 
 const registerFormSchema = z
   .object({
@@ -235,16 +236,14 @@ export default function Login() {
                 // hoverBackgroundColor={inputHoverBackgroundColor}
               />
 
-              <Input
+              <PasswordInput
                 label="sua senha"
-                type="password"
                 errorMessage={errors.password?.message}
                 {...register('password')}
               />
 
-              <Input
+              <PasswordInput
                 label="confirme sua senha"
-                type="password"
                 errorMessage={errors.passwordConfirmation?.message}
                 {...register('passwordConfirmation')}
               />

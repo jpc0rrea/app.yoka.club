@@ -1,11 +1,16 @@
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
-import { forwardRef, ForwardRefRenderFunction, LegacyRef } from 'react';
+import {
+  forwardRef,
+  ForwardRefRenderFunction,
+  LegacyRef,
+  useState,
+} from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
-interface InputProps {
+interface PasswordInputProps {
   name: string;
   label?: string;
-  type?: string;
   id?: string;
   htmlFor?: string;
   placeholder?: string;
@@ -15,11 +20,13 @@ interface InputProps {
   required?: boolean;
 }
 
-const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
+const PasswordInputBase: ForwardRefRenderFunction<
+  HTMLInputElement,
+  PasswordInputProps
+> = (
   {
     name,
     label,
-    type,
     id,
     htmlFor,
     placeholder,
@@ -32,6 +39,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   ref
 ) => {
   const [parent] = useAutoAnimate();
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div ref={parent as LegacyRef<HTMLDivElement>}>
@@ -43,13 +51,13 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           {label}
         </label>
       )}
-      <div className="relative mt-1 rounded-md shadow-sm">
+      <div className="relative mt-1 flex flex-grow items-stretch rounded-md shadow-sm focus-within:z-10">
         <input
           id={id}
-          type={type}
+          type={showPassword ? 'text' : 'password'}
           required={required}
           placeholder={placeholder}
-          className={`block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-0 sm:text-sm ${className} ${
+          className={`block w-full appearance-none rounded-none rounded-l-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-0 sm:text-sm ${className} ${
             errorMessage
               ? 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-red-500 focus:ring-red-500'
               : 'focus:border-brand-purple-900 focus:ring-brand-purple-900'
@@ -58,8 +66,28 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           ref={ref}
           {...rest}
         />
+        <button
+          type="button"
+          className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        >
+          {showPassword ? (
+            <EyeSlashIcon
+              className="-ml-0.5 h-5 w-5 text-gray-400"
+              onClick={() => {
+                setShowPassword(false);
+              }}
+            />
+          ) : (
+            <EyeIcon
+              className="-ml-0.5 h-5 w-5 text-gray-400"
+              onClick={() => {
+                setShowPassword(true);
+              }}
+            />
+          )}
+        </button>
         {errorMessage && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <div className="pointer-events-none absolute inset-y-0 right-[10%] flex items-center pr-3">
             <ExclamationCircleIcon
               className="h-5 w-5 text-red-500"
               aria-hidden="true"
@@ -80,4 +108,4 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   );
 };
 
-export const Input = forwardRef(InputBase);
+export const PasswordInput = forwardRef(PasswordInputBase);

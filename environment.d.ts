@@ -10,9 +10,8 @@ declare global {
       DATABASE_URL: string;
       SHADOW_DATABASE_URL: string;
 
-      // NextAuth
-      NEXTAUTH_URL: string;
-      NEXTAUTH_SECRET: string;
+      // Auth
+      AUTH_SECRET: string;
 
       // Stripe
       STRIPE_API_KEY: string;

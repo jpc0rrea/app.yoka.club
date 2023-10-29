@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@server/db';
 import { sign } from 'jsonwebtoken';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
+import webserver from '@infra/webserver';
 
 interface ForgotPasswordRequest extends NextApiRequest {
   body: {
@@ -46,7 +47,7 @@ const forgotPassword = async (
 
   const passwordResetToken = sign(
     { featCode: 'password-reset' },
-    process.env.NEXTAUTH_SECRET,
+    process.env.AUTH_SECRET,
     {
       expiresIn: '3h',
     }
@@ -60,7 +61,7 @@ const forgotPassword = async (
     },
   });
 
-  const url = `${process.env.NEXTAUTH_URL}/reset-password?token=${token.token}`;
+  const url = `${webserver.host}/reset-password?token=${token.token}`;
 
   const mailService = new SendGridMailService();
 

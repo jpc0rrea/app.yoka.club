@@ -12,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 import useUser from '@hooks/useUser';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { PasswordInput } from '@components/Form/PasswordInput';
 
 const loginFormSchema = z.object({
   email: z
@@ -134,21 +135,22 @@ export default function Login() {
                 {...register('email')}
               />
 
-              <Input
-                label="sua senha"
-                type="password"
-                errorMessage={errors.password?.message}
-                {...register('password')}
-              />
+              <div>
+                <PasswordInput
+                  label="sua senha"
+                  errorMessage={errors.password?.message}
+                  {...register('password')}
+                />
 
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
-                  <Link
-                    href="/forgot-password"
-                    className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
-                  >
-                    esqueceu sua senha?
-                  </Link>
+                <div className="mt-1 flex items-center justify-between">
+                  <div className="text-sm">
+                    <Link
+                      href="/forgot-password"
+                      className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
+                    >
+                      esqueceu sua senha?
+                    </Link>
+                  </div>
                 </div>
               </div>
 

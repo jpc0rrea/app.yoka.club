@@ -24,10 +24,7 @@ const resetPassword = async (
     });
   }
 
-  const { featCode } = verify(
-    token,
-    process.env.NEXTAUTH_SECRET
-  ) as TokenPayload;
+  const { featCode } = verify(token, process.env.AUTH_SECRET) as TokenPayload;
 
   if (featCode !== 'password-reset') {
     return res.status(400).json({

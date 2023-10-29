@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 input {
-  @apply ring-0 transition-all duration-300 ease-in-out;
+  @apply ring-0 transition-all duration-300 ease-in-out focus-visible:outline-1 focus-visible:outline-brand-purple-800 focus-visible:ring-0;
 }
 
 button {
-  @apply transition-all duration-300 ease-in-out;
+  @apply transition-all duration-300 ease-in-out focus-visible:outline-1 focus-visible:outline-brand-purple-800 focus-visible:ring-0;
 }
 
 span {
