@@ -24,11 +24,59 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
     startDate,
     maxCheckinsQuantity,
     duration,
+    instructorId: instructorIdFromRequest,
   } = req.body;
 
   try {
     validateEventData(req.body);
     // createEventFormSchema.parse(req.body);
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.userId,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'usuário não encontrado',
+        action: 'tente fazer login novamente',
+      });
+    }
+
+    if (user.role !== 'ADMIN' && user.role !== 'INSTRUCTOR') {
+      return res.status(403).json({
+        message: 'você não tem permissão para criar um evento',
+        action: 'tente fazer login novamente',
+      });
+    }
+
+    if (user.role === 'INSTRUCTOR' && instructorIdFromRequest) {
+      return res.status(403).json({
+        message:
+          'você não tem permissão para criar um evento para outro instrutor',
+        action: 'tente novamente',
+      });
+    }
+
+    let instructorId = user.id;
+
+    if (user.role === 'ADMIN' && instructorIdFromRequest) {
+      const instructor = await prisma.user.findUnique({
+        where: {
+          id: instructorIdFromRequest,
+        },
+      });
+
+      if (!instructor) {
+        return res.status(404).json({
+          message: 'instrutor não encontrado',
+          action: 'tente novamente',
+        });
+      }
+
+      instructorId = instructor.id;
+    }
 
     const event = await prisma.event.create({
       data: {
@@ -39,7 +87,7 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
         recordedUrl,
         checkInsMaxQuantity: isLive ? maxCheckinsQuantity : null,
         startDate: isLive && startDate ? new Date(startDate) : null,
-        instructorId: req.userId,
+        instructorId,
       },
     });
 

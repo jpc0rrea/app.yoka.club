@@ -3,9 +3,9 @@ import EditEventModal from '@components/Modals/EditEventModal';
 import EditRecordedEventUrlModal from '@components/Modals/EditRecordedEventUrlModal';
 import { classNames } from '@lib/utils';
 import { ActionIcon, Menu } from '@mantine/core';
+import { EventFromAPI } from '@models/events/types';
 import { isAfter, format } from 'date-fns';
 import { Settings, Pencil, Trash2 } from 'lucide-react';
-import { EventFromAPI } from 'pages/api/events/list';
 import { useState } from 'react';
 
 interface EventInManageSectionProps {
@@ -91,7 +91,7 @@ export default function EventInManageSection({
         )}
         <Menu shadow="md" position="bottom-end">
           <Menu.Target>
-            <ActionIcon>
+            <ActionIcon className="bg-purple-700 hover:bg-purple-800">
               <Settings className="h-4 w-4" />
             </ActionIcon>
           </Menu.Target>

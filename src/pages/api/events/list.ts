@@ -1,84 +1,40 @@
 import { NextApiResponse } from 'next';
+import { createRouter } from 'next-connect';
 
-import ensureAuthenticated, {
-  EnsureAuthenticatedRequest,
-} from '@server/middlewares/ensureAuthenticated';
-import { prisma } from '@server/db';
-import { Prisma } from '@prisma/client';
+import { ListEventsQueryParams } from '@models/events/types';
+import { AuthenticatedRequest } from '@models/controller/types';
+import controller from '@models/controller';
+import authentication from '@models/authentication';
+import cacheControl from '@models/cache-control';
+import events from '@models/events';
 
-export const eventSelect = {
-  id: true,
-  title: true,
-  duration: true,
-  isLive: true,
-  checkInsMaxQuantity: true,
-  startDate: true,
-  createdAt: true,
-  liveUrl: true,
-  recordedUrl: true,
-  instructor: {
-    select: {
-      displayName: true,
-      imageUrl: true,
-      id: true,
-    },
-  },
-  checkIns: {
-    select: {
-      createdAt: true,
-      userId: true,
-      id: true,
-      user: {
-        select: {
-          displayName: true,
-          imageUrl: true,
-          username: true,
-        },
-      },
-    },
-  },
-};
-
-export const eventFromAPI = Prisma.validator<Prisma.EventDefaultArgs>()({
-  select: eventSelect,
-});
-
-export type EventFromAPI = Prisma.EventGetPayload<typeof eventFromAPI>;
-
-interface ListEventsRequest extends EnsureAuthenticatedRequest {
-  query: {
-    isLive: string;
-  };
+interface ListEventsRequest extends AuthenticatedRequest {
+  query: ListEventsQueryParams;
 }
 
-const listEvents = async (req: ListEventsRequest, res: NextApiResponse) => {
-  try {
-    const { isLive: isLiveInString } = req.query;
+const router = createRouter<ListEventsRequest, NextApiResponse>();
 
-    const isLive =
-      isLiveInString === 'true'
-        ? true
-        : isLiveInString === 'false'
-        ? false
-        : undefined;
+router
+  .use(controller.injectRequestMetadata)
+  .use(authentication.ensureAuthenticatedAndInjectUser)
+  .use(controller.logRequest)
+  .use(cacheControl.noCache)
+  .get(getEventsHandler);
 
-    const events = await prisma.event.findMany({
-      where: {
-        isLive,
-      },
-      select: eventSelect,
-    });
+export default router.handler({
+  // attachParams: true,
+  onNoMatch: controller.onNoMatchHandler,
+  onError: controller.onErrorHandler,
+});
 
-    return res.status(200).json({
-      events,
-    });
-  } catch (err) {
-    console.log(err);
+async function getEventsHandler(req: ListEventsRequest, res: NextApiResponse) {
+  const listEventsParams = await events.convertQueryParamsInListEventsParams(
+    req.query
+  );
 
-    return res.status(500).json({
-      message: 'Internal server error',
-    });
-  }
-};
+  const eventsArray = await events.listEvents(listEventsParams);
 
-export default ensureAuthenticated(listEvents);
+  return res.status(200).json({
+    events: eventsArray,
+  });
+}

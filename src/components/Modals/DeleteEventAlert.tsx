@@ -6,10 +6,10 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
-import { EventFromAPI } from 'pages/api/events/list';
 import { queryClient } from '@lib/queryClient';
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
 import { Loader2 } from 'lucide-react';
+import { EventFromAPI } from '@models/events/types';
 
 interface DeleteEventModalProps {
   event: EventFromAPI;

@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { UsersIcon, ClockIcon } from '@heroicons/react/20/solid';
-import { EventFromAPI } from 'pages/api/events/list';
 import CheckInButton from '@components/reusables/CheckInButton';
+import { EventFromAPI } from '@models/events/types';
 // import { ClockIcon } from '@heroicons/react/24/outline';
 
 interface EventProps {

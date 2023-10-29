@@ -1,28 +1,35 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@lib/api';
-import { EventFromAPI } from 'pages/api/events/list';
+import { EventFromAPI, ListEventsParams } from '@models/events/types';
+import convertParamsInQueryParams from '@lib/utilities/convertParamsInQueryParams';
 
-interface GetEventsParams {
-  isLive?: boolean;
-}
+export async function listEvents(listEventParams: ListEventsParams) {
+  const queryString = convertParamsInQueryParams(listEventParams);
 
-export async function listEvents({ isLive }: GetEventsParams) {
+  console.log(queryString);
+
   const eventsResponse = await api.get<{
     events: EventFromAPI[];
-  }>(`/events/list${isLive !== undefined ? `?isLive=${isLive}` : ''}`);
+  }>(`/events/list${queryString}`);
 
   return eventsResponse.data.events;
 }
 
-export function useEvents({ isLive }: GetEventsParams) {
+interface UseEventsParams extends ListEventsParams {
+  enabled: boolean;
+}
+
+export function useEvents({ enabled, ...listEventParams }: UseEventsParams) {
   return useQuery({
     queryKey: [
       'events',
       {
-        isLive,
+        listEventParams,
+        enabled,
       },
     ],
-    queryFn: () => listEvents({ isLive }),
+    queryFn: () => listEvents(listEventParams),
+    enabled,
   });
 }
 

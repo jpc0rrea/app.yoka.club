@@ -29,6 +29,38 @@ const editEvent = async (req: EditEventRequest, res: NextApiResponse) => {
   try {
     validateEventData(req.body);
 
+    const eventObject = await prisma.event.findUnique({
+      where: {
+        id: req.query.id,
+      },
+    });
+
+    if (!eventObject) {
+      return res.status(404).json({
+        message: 'evento não encontrado',
+        action: 'tente criar um novo evento',
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.userId,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'usuário não encontrado',
+        action: 'tente fazer login novamente',
+      });
+    }
+
+    if (user.role !== 'ADMIN' && eventObject.instructorId !== user.id) {
+      return res.status(403).json({
+        message: 'você não tem permissão para editar este evento',
+      });
+    }
+
     const event = await prisma.event.update({
       where: {
         id: req.query.id,

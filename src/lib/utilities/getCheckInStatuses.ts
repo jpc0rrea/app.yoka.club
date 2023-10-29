@@ -1,6 +1,6 @@
 import { TOLERANCE_MINUTES_TO_ENTER_EVENT } from '@lib/constants';
+import { EventFromAPI } from '@models/events/types';
 import { differenceInMinutes } from 'date-fns';
-import { EventFromAPI } from 'pages/api/events/list';
 
 interface GetCheckInStatusesParams {
   event: EventFromAPI;

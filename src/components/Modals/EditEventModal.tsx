@@ -26,9 +26,9 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
-import { EventFromAPI } from 'pages/api/events/list';
 import { createEventFormSchema } from './CreateEventModal';
 import { queryClient } from '@lib/queryClient';
+import { EventFromAPI } from '@models/events/types';
 
 export type EditEventFormData = z.infer<typeof createEventFormSchema>;
 

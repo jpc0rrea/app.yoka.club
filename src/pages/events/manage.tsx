@@ -7,9 +7,15 @@ import CreateEventModal from '@components/Modals/CreateEventModal';
 import { useEvents } from '@hooks/useEvents';
 import { Loader2 } from 'lucide-react';
 import EventInManageSection from '@components/Events/EventInManageSection';
+import useUser from '@hooks/useUser';
 
 const Event: NextPage = () => {
-  const { data: events, isLoading } = useEvents({});
+  const { user } = useUser();
+  const { data: events, isLoading } = useEvents({
+    pageSize: 100,
+    instructorId: user && user.role === 'ADMIN' ? undefined : user?.id,
+    enabled: !!user,
+  });
 
   return (
     <>
@@ -37,6 +43,10 @@ const Event: NextPage = () => {
                 <ul className="divide-y divide-gray-100">
                   {!events || isLoading ? (
                     <Loader2 className="mr-2 mt-4 h-4 w-4 animate-spin" />
+                  ) : events.length === 0 ? (
+                    <p className="mt-4 text-sm text-gray-500">
+                      nenhum evento encontrado
+                    </p>
                   ) : (
                     events.map((event) => {
                       return (

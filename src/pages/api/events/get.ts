@@ -4,7 +4,7 @@ import ensureAuthenticated, {
   EnsureAuthenticatedRequest,
 } from '@server/middlewares/ensureAuthenticated';
 import { prisma } from '@server/db';
-import { eventSelect } from './list';
+import { eventSelect } from '@models/events/types';
 
 interface ListEventsRequest extends EnsureAuthenticatedRequest {
   query: {

@@ -29,7 +29,7 @@ export default function UserCheckIns() {
               </p>
             </div>
             <p className="text-sm text-gray-500">
-              fique tranquilo, seus check-ins não expiram :)
+              fique tranquila, seus check-ins não expiram :)
             </p>
 
             <div className="mt-4">

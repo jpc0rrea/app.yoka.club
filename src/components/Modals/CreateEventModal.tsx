@@ -1,11 +1,16 @@
 import 'dayjs/locale/pt-br';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@components/ui/button';
-import { NumberInput, NumberInputHandlers, Group } from '@mantine/core';
+import {
+  NumberInput,
+  NumberInputHandlers,
+  Group,
+  Autocomplete,
+} from '@mantine/core';
 import {
   Form,
   FormControl,
@@ -27,6 +32,8 @@ import { errorToast } from '@components/Toast/ErrorToast';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { queryClient } from '@lib/queryClient';
+import useUser from '@hooks/useUser';
+import { useInstructors } from '@hooks/useInstructors';
 
 export const createEventFormSchema = z
   .object({
@@ -51,6 +58,7 @@ export const createEventFormSchema = z
     liveUrl: z.string().url('url inválida :(').optional(),
     recordedUrl: z.string().url('url inválida :(').optional(),
     duration: z.number(),
+    instructorId: z.string().optional(),
   })
   .refine((data) => (data.isLive ? data.startDate : true), {
     message: 'data de início é obrigatória para eventos ao vivo',
@@ -72,8 +80,22 @@ export const createEventFormSchema = z
 export type CreateEventFormData = z.infer<typeof createEventFormSchema>;
 
 export default function CreateEventModal() {
+  const { user } = useUser();
   const [open, setOpen] = useState(false);
+  const [instructorSearch, setInstructorSearch] = useState('');
   const handlers = useRef<NumberInputHandlers>(null);
+
+  const { data: instructors, isLoading: isInstructorsLoading } =
+    useInstructors();
+
+  console.log(instructors);
+
+  const instructorsOptions = instructors
+    ? instructors.map((instructor) => ({
+        value: instructor.id,
+        label: instructor.name,
+      }))
+    : [];
 
   const form = useForm<CreateEventFormData>({
     resolver: zodResolver(createEventFormSchema),
@@ -83,6 +105,18 @@ export default function CreateEventModal() {
       duration: 60,
     },
   });
+
+  useEffect(() => {
+    if (user && user.role === 'ADMIN' && !form.watch('instructorId')) {
+      form.setValue('instructorId', user.id);
+      setInstructorSearch(user.name);
+    }
+
+    if (user && user.role === 'INSTRUCTOR') {
+      form.setValue('instructorId', undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleCreateEvent = async (data: CreateEventFormData) => {
     try {
@@ -231,6 +265,27 @@ export default function CreateEventModal() {
                         }}
                         step={5}
                       />
+
+                      {user?.role === 'ADMIN' && !isInstructorsLoading && (
+                        <Autocomplete
+                          label="instrutor do evento"
+                          value={instructorSearch}
+                          onChange={(value) => {
+                            setInstructorSearch(value);
+
+                            const instructor = instructors?.find(
+                              (instructor) => instructor.name === value
+                            );
+
+                            if (instructor) {
+                              form.setValue('instructorId', instructor.id);
+                            }
+                          }}
+                          data={instructorsOptions}
+                          error={form.formState.errors?.instructorId?.message}
+                        />
+                      )}
+
                       <div className="overflow-hidden rounded-lg border">
                         <div className="p-4">
                           <FormField
