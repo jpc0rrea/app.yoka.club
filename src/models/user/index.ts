@@ -16,7 +16,7 @@ import {
   UpdateUserSubscriptionParams,
   selectUserProfile,
 } from './types';
-import { addMonths } from 'date-fns';
+import { addMonths, isAfter } from 'date-fns';
 import eventLogs from '@models/event-logs';
 import { UpdateUserProfileRequest } from '@pages/api/user/profile';
 import { UpdateProfileFormData } from '@pages/profile';
@@ -270,8 +270,12 @@ function validateUpdateUserProfileRequest(req: UpdateUserProfileRequest) {
 }
 
 function cleanUserToFrontend({ user }: CleanUserToFrontendParams) {
+  const isSubscribed =
+    user.expirationDate && isAfter(user.expirationDate, new Date());
+
   const cleanUser = {
     ...user,
+    isSubscribed,
     password: undefined,
   };
 

@@ -128,7 +128,7 @@ export default function UserPlan() {
 
               <div className="mt-4">
                 {(userPlan.id === 'FREE' || userPlan.cancelAtPeriodEnd) && (
-                  <SubscribeModal />
+                  <SubscribeModal label="ver opções de plano" />
                 )}
                 {userPlan.nextBillingDate &&
                   userPlan.expirationDate &&

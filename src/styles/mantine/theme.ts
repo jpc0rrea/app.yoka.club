@@ -19,7 +19,7 @@ const theme = createTheme({
     'brand-purple': brandPurple,
     primaryColor: brandPurple,
   },
-  focusClassName: 'focus:border-brand-purple-900 focus:ring-brand-purple-900x',
+  focusClassName: 'focus:border-brand-purple-900 focus:ring-brand-purple-900',
 });
 
 export default theme;

@@ -36,6 +36,8 @@ export interface UserInContext {
   bio: string;
   role: UserRole;
   checkInsQuantity: number;
+  expirationDate: Date | null;
+  isSubscribed: boolean;
 }
 
 export interface ErrorInUserContext {

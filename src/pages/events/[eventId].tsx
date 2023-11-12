@@ -61,6 +61,7 @@ const Event: NextPage = () => {
     event,
     userId,
     userCheckInsQuantity,
+    isUserSubscribed: user?.isSubscribed || false,
   });
 
   const recordedUrl = event?.recordedUrl;

@@ -11,8 +11,17 @@ import { api } from '@lib/api';
 import { getStripeJs } from '@lib/stripe';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
+import { cn } from '@utils';
 
-export default function SubscribeModal() {
+interface SubscribeModalProps {
+  label: string;
+  className?: string;
+}
+
+export default function SubscribeModal({
+  label,
+  className,
+}: SubscribeModalProps) {
   const [open, setOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState<string>('quarterly');
   const [checkInsQuantity, setCheckInsQuantity] = useState<number>(8);
@@ -60,9 +69,12 @@ export default function SubscribeModal() {
         onClick={() => {
           setOpen(true);
         }}
-        className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
+        className={cn(
+          'rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800',
+          className
+        )}
       >
-        ver opções de plano
+        {label}
       </button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog

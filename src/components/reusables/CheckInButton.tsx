@@ -1,3 +1,4 @@
+import UserCantViewRecordedClassAlert from '@components/Modals/UserCantViewRecordedEventAlert';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { successToast } from '@components/Toast/SuccessToast';
 import useUser from '@hooks/useUser';
@@ -30,10 +31,12 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
     eventAlreadyStarted,
     canEnterTheEvent,
     stillHasVacancy,
+    canViewRecordedEvent,
   } = getCheckInStatuses({
     event,
     userId,
     userCheckInsQuantity,
+    isUserSubscribed: user?.isSubscribed || false,
   });
 
   const recordedUrl = event?.recordedUrl;
@@ -95,14 +98,18 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
     <>
       {eventAlreadyStarted && !canEnterTheEvent ? (
         recordedUrl ? (
-          <a
-            href={recordedUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-          >
-            ver aula gravada
-          </a>
+          canViewRecordedEvent ? (
+            <a
+              href={recordedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+            >
+              ver aula gravada
+            </a>
+          ) : (
+            <UserCantViewRecordedClassAlert />
+          )
         ) : (
           <button
             disabled

@@ -6,6 +6,7 @@ interface GetCheckInStatusesParams {
   event: EventFromAPI;
   userId: string;
   userCheckInsQuantity: number;
+  isUserSubscribed: boolean;
 }
 
 interface GetCheckInStatusesResponse {
@@ -15,12 +16,14 @@ interface GetCheckInStatusesResponse {
   stillHasVacancy: boolean;
   canCheckIn: boolean;
   canCancelCheckIn: boolean;
+  canViewRecordedEvent: boolean;
 }
 
 export default function getCheckInStatuses({
   event,
   userId,
   userCheckInsQuantity,
+  isUserSubscribed,
 }: GetCheckInStatusesParams): GetCheckInStatusesResponse {
   if (!event.startDate || !event.checkInsMaxQuantity) {
     return {
@@ -30,6 +33,7 @@ export default function getCheckInStatuses({
       canEnterTheEvent: false,
       canCheckIn: false,
       canCancelCheckIn: false,
+      canViewRecordedEvent: false,
     };
   }
 
@@ -63,6 +67,10 @@ export default function getCheckInStatuses({
   const canCancelCheckIn =
     alreadyCheckedIn && !eventAlreadyStarted && timeToEventInMinutes > 30;
 
+  // o usuário pode ver o evento gravado se a data de expiração dele for maior que hoje
+  // ou se ela fez check-in no evento
+  const canViewRecordedEvent = isUserSubscribed || alreadyCheckedIn;
+
   return {
     alreadyCheckedIn,
     eventAlreadyStarted,
@@ -70,5 +78,6 @@ export default function getCheckInStatuses({
     canEnterTheEvent,
     canCheckIn,
     canCancelCheckIn,
+    canViewRecordedEvent,
   };
 }
