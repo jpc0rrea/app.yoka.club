@@ -10,7 +10,7 @@ interface EventProps {
 }
 
 export default function EventItem({ event }: EventProps) {
-  if (!event.startDate || !event.checkInsMaxQuantity) {
+  if (!event.startDate) {
     return null;
   }
 
@@ -33,26 +33,28 @@ export default function EventItem({ event }: EventProps) {
         >
           {event.title}
         </Link>
-        <div className="mt-0.5 flex items-center">
-          <p className="flex items-center text-sm text-gray-400">
-            <ClockIcon
-              className="mr-1 h-5 w-5 flex-shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-            <time dateTime={new Date(event.startDate).toISOString()}>
-              {format(startDatetime, "HH'h'mm")}
-            </time>{' '}
-          </p>
-          <p className="ml-6 flex items-center text-sm text-gray-400">
-            <UsersIcon
-              className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-              aria-hidden="true"
-            />
-            <span>
-              {event.checkIns.length}/{event.checkInsMaxQuantity}
-            </span>{' '}
-          </p>
-        </div>
+        {event.checkInsMaxQuantity && (
+          <div className="mt-0.5 flex items-center">
+            <p className="flex items-center text-sm text-gray-400">
+              <ClockIcon
+                className="mr-1 h-5 w-5 flex-shrink-0 text-gray-400"
+                aria-hidden="true"
+              />
+              <time dateTime={new Date(event.startDate).toISOString()}>
+                {format(startDatetime, "HH'h'mm")}
+              </time>{' '}
+            </p>
+            <p className="ml-6 flex items-center text-sm text-gray-400">
+              <UsersIcon
+                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                aria-hidden="true"
+              />
+              <span>
+                {event.checkIns.length}/{event.checkInsMaxQuantity}
+              </span>{' '}
+            </p>
+          </div>
+        )}
       </div>
       <CheckInButton event={event} />
     </li>

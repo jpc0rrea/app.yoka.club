@@ -198,6 +198,25 @@ export default function EditEventModal({
                         step={5}
                       />
 
+                      <DateTimePicker
+                        valueFormat="DD [de] MMMM [de] YYYY [às] HH[h]mm"
+                        label="dia e horário do evento"
+                        placeholder="dia e horário"
+                        mx="auto"
+                        // date={
+                        //   startDate ? new Date(startDate) : undefined
+                        // }
+                        value={startDate ? new Date(startDate) : undefined}
+                        onChange={(date) => {
+                          if (!date) return;
+                          form.setValue('startDate', date);
+                        }}
+                        minDate={new Date()}
+                        locale="pt-br"
+                        weekendDays={[]}
+                        error={form.formState.errors?.startDate?.message}
+                      />
+
                       <div className="overflow-hidden rounded-lg border">
                         <div className="p-4">
                           <FormField
@@ -226,29 +245,6 @@ export default function EditEventModal({
 
                           {form.watch('isLive') && (
                             <div className="mt-4 flex-col space-y-2">
-                              <DateTimePicker
-                                valueFormat="DD [de] MMMM [de] YYYY [às] HH[h]mm"
-                                label="dia e horário do evento"
-                                placeholder="dia e horário"
-                                mx="auto"
-                                // date={
-                                //   startDate ? new Date(startDate) : undefined
-                                // }
-                                value={
-                                  startDate ? new Date(startDate) : undefined
-                                }
-                                onChange={(date) => {
-                                  if (!date) return;
-                                  form.setValue('startDate', date);
-                                }}
-                                minDate={new Date()}
-                                locale="pt-br"
-                                weekendDays={[]}
-                                error={
-                                  form.formState.errors?.startDate?.message
-                                }
-                              />
-
                               <div className="mt-4">
                                 <NumberInput
                                   label="quantidade máxima de checkins"

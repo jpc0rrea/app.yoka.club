@@ -39,7 +39,7 @@ export default function Calendar() {
   );
 
   const { data: events } = useEvents({
-    isLive: true,
+    // isLive: true,
     enabled: true,
     pageSize: 1000,
   });

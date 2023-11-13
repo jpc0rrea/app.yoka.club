@@ -6,8 +6,6 @@ import convertParamsInQueryParams from '@lib/utilities/convertParamsInQueryParam
 export async function listEvents(listEventParams: ListEventsParams) {
   const queryString = convertParamsInQueryParams(listEventParams);
 
-  console.log(queryString);
-
   const eventsResponse = await api.get<{
     events: EventFromAPI[];
   }>(`/events/list${queryString}`);

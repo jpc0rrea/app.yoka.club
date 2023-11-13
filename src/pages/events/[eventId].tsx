@@ -301,62 +301,65 @@ const Event: NextPage = () => {
                               </span>
                             </div> */}
                         {/* </div> */}
-                        <div className="space-y-8">
-                          <div>
-                            <h2 className="text-sm font-medium text-gray-500">
-                              alunos
-                            </h2>
-                            <ul className="mt-3 space-y-3">
-                              {event.checkIns.length === 0 ? (
-                                <li className="text-sm text-gray-700">
-                                  nenhum aluno fez check-in nessa aula ainda
-                                </li>
-                              ) : (
-                                event.checkIns.map((checkIn) => {
-                                  return (
-                                    <li
-                                      className="flex items-start justify-start"
-                                      key={checkIn.id}
-                                    >
-                                      {/* <a
+                        {event.checkInsMaxQuantity && (
+                          <div className="space-y-8">
+                            <div>
+                              <h2 className="text-sm font-medium text-gray-500">
+                                alunos
+                              </h2>
+                              <ul className="mt-3 space-y-3">
+                                {event.checkIns.length === 0 ? (
+                                  <li className="text-sm text-gray-700">
+                                    nenhum aluno fez check-in nessa aula ainda
+                                  </li>
+                                ) : (
+                                  event.checkIns.map((checkIn) => {
+                                    return (
+                                      <li
+                                        className="flex items-start justify-start"
+                                        key={checkIn.id}
+                                      >
+                                        {/* <a
                                         href={`/users/${checkIn.userId}`}
                                         className="flex items-center space-x-3"
                                       > */}
-                                      <p className="flex items-center space-x-3">
-                                        <div className="flex-shrink-0">
-                                          <img
-                                            className="h-5 w-5 rounded-full"
-                                            src={
-                                              checkIn.user.imageUrl ||
-                                              '/default-user-img.jpeg'
-                                            }
-                                            alt={checkIn.user.displayName}
-                                          />
-                                        </div>
-                                        <div className="text-xs font-medium leading-5 text-gray-500 ">
-                                          <Link
-                                            className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
-                                            href={`/@${checkIn.user.username}`}
-                                          >
-                                            {checkIn.user.displayName}
-                                          </Link>
-                                          <p className="truncate">
-                                            check-in feito em{' '}
-                                            {format(
-                                              new Date(checkIn.createdAt),
-                                              "dd/MM/yyyy' às 'HH:mm"
-                                            )}
-                                          </p>
-                                        </div>
-                                      </p>
-                                      {/* </a> */}
-                                    </li>
-                                  );
-                                })
-                              )}
-                            </ul>
+                                        <p className="flex items-center space-x-3">
+                                          <div className="flex-shrink-0">
+                                            <img
+                                              className="h-5 w-5 rounded-full"
+                                              src={
+                                                checkIn.user.imageUrl ||
+                                                '/default-user-img.jpeg'
+                                              }
+                                              alt={checkIn.user.displayName}
+                                            />
+                                          </div>
+                                          <div className="text-xs font-medium leading-5 text-gray-500 ">
+                                            <Link
+                                              className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
+                                              href={`/@${checkIn.user.username}`}
+                                            >
+                                              {checkIn.user.displayName}
+                                            </Link>
+                                            <p className="truncate">
+                                              check-in feito em{' '}
+                                              {format(
+                                                new Date(checkIn.createdAt),
+                                                "dd/MM/yyyy' às 'HH:mm"
+                                              )}
+                                            </p>
+                                          </div>
+                                        </p>
+                                        {/* </a> */}
+                                      </li>
+                                    );
+                                  })
+                                )}
+                              </ul>
+                            </div>
                           </div>
-                          {/* <div>
+                        )}
+                        {/* <div>
                               <h2 className="text-sm font-medium text-gray-500">
                                 Tags
                               </h2>
@@ -395,7 +398,6 @@ const Event: NextPage = () => {
                                 </li>
                               </ul>
                             </div> */}
-                        </div>
                       </aside>
                     </div>
                   </div>
@@ -434,63 +436,64 @@ const Event: NextPage = () => {
                         </span>
                       </div> */}
                   {/* </div> */}
-                  <div className="space-y-8">
-                    <div>
-                      <h2 className="text-sm font-medium text-gray-500">
-                        alunos
-                      </h2>
-                      <ul className="mt-3 space-y-3">
-                        {event.checkIns.length === 0 ? (
-                          <li className="text-sm text-gray-700">
-                            nenhum aluno fez check-in nessa aula ainda
-                          </li>
-                        ) : (
-                          event.checkIns.map((checkIn) => {
-                            return (
-                              <li
-                                className="flex items-start justify-start"
-                                key={checkIn.id}
-                              >
-                                {/* <a
+                  {event.checkInsMaxQuantity && (
+                    <div className="space-y-8">
+                      <div>
+                        <h2 className="text-sm font-medium text-gray-500">
+                          alunos
+                        </h2>
+                        <ul className="mt-3 space-y-3">
+                          {event.checkIns.length === 0 ? (
+                            <li className="text-sm text-gray-700">
+                              nenhum aluno fez check-in nessa aula ainda
+                            </li>
+                          ) : (
+                            event.checkIns.map((checkIn) => {
+                              return (
+                                <li
+                                  className="flex items-start justify-start"
+                                  key={checkIn.id}
+                                >
+                                  {/* <a
                                   href={`/users/${checkIn.userId}`}
                                   className="flex items-center space-x-3"
                                 > */}
-                                <p className="flex items-center space-x-3">
-                                  <div className="flex-shrink-0">
-                                    <img
-                                      className="h-5 w-5 rounded-full"
-                                      src={
-                                        checkIn.user.imageUrl ||
-                                        '/default-user-img.jpeg'
-                                      }
-                                      alt={checkIn.user.displayName}
-                                    />
-                                  </div>
-                                  <div className="text-xs font-medium leading-5 text-gray-500">
-                                    <Link
-                                      className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
-                                      href={`/@${checkIn.user.username}`}
-                                    >
-                                      {checkIn.user.displayName}
-                                    </Link>
+                                  <p className="flex items-center space-x-3">
+                                    <div className="flex-shrink-0">
+                                      <img
+                                        className="h-5 w-5 rounded-full"
+                                        src={
+                                          checkIn.user.imageUrl ||
+                                          '/default-user-img.jpeg'
+                                        }
+                                        alt={checkIn.user.displayName}
+                                      />
+                                    </div>
+                                    <div className="text-xs font-medium leading-5 text-gray-500">
+                                      <Link
+                                        className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
+                                        href={`/@${checkIn.user.username}`}
+                                      >
+                                        {checkIn.user.displayName}
+                                      </Link>
 
-                                    <p className="truncate">
-                                      check-in feito em{' '}
-                                      {format(
-                                        new Date(checkIn.createdAt),
-                                        "dd/MM/yyyy' às 'HH:mm"
-                                      )}
-                                    </p>
-                                  </div>
-                                </p>
-                                {/* </a> */}
-                              </li>
-                            );
-                          })
-                        )}
-                      </ul>
-                    </div>
-                    {/* <div>
+                                      <p className="truncate">
+                                        check-in feito em{' '}
+                                        {format(
+                                          new Date(checkIn.createdAt),
+                                          "dd/MM/yyyy' às 'HH:mm"
+                                        )}
+                                      </p>
+                                    </div>
+                                  </p>
+                                  {/* </a> */}
+                                </li>
+                              );
+                            })
+                          )}
+                        </ul>
+                      </div>
+                      {/* <div>
                         <h2 className="text-sm font-medium text-gray-500">
                           Tags
                         </h2>
@@ -529,7 +532,8 @@ const Event: NextPage = () => {
                           </li>
                         </ul>
                       </div> */}
-                  </div>
+                    </div>
+                  )}
                 </aside>
               </div>
             </div>

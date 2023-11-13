@@ -86,7 +86,7 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
         liveUrl,
         recordedUrl,
         checkInsMaxQuantity: isLive ? maxCheckinsQuantity : null,
-        startDate: isLive && startDate ? new Date(startDate) : null,
+        startDate: startDate ? new Date(startDate) : null,
         instructorId,
       },
     });

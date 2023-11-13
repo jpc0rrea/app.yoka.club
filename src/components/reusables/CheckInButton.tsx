@@ -22,9 +22,9 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
 
   const userCheckInsQuantity = user?.checkInsQuantity || 0;
 
-  if (!event.startDate || !event.checkInsMaxQuantity) {
-    return null;
-  }
+  // if (!event.startDate || !event.checkInsMaxQuantity) {
+  //   return null;
+  // }
 
   const {
     alreadyCheckedIn,

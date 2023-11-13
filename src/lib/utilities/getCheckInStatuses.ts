@@ -28,12 +28,12 @@ export default function getCheckInStatuses({
   if (!event.startDate || !event.checkInsMaxQuantity) {
     return {
       alreadyCheckedIn: false,
-      eventAlreadyStarted: false,
+      eventAlreadyStarted: true,
       stillHasVacancy: false,
       canEnterTheEvent: false,
       canCheckIn: false,
       canCancelCheckIn: false,
-      canViewRecordedEvent: false,
+      canViewRecordedEvent: isUserSubscribed,
     };
   }
 
