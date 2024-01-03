@@ -68,9 +68,9 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
       await queryClient.refetchQueries({
         queryKey: [
           'events',
-          {
-            isLive: true,
-          },
+          // {
+          //   isLive: true,
+          // },
         ],
       });
       await queryClient.refetchQueries({
