@@ -14,7 +14,7 @@ export default function NextEventsSection() {
       <div className="flex space-x-6 overflow-x-auto px-6 pb-6">
         {!nextEvents || isNextEventsLoading ? (
           Array.from({ length: 10 }, (_, index) => (
-            <Skeleton key={index} className="h-64 w-72" />
+            <Skeleton key={index} className="h-64 w-64" />
           ))
         ) : nextEvents.length === 0 ? (
           <p className="text-gray-500">Não há eventos cadastrados</p>

@@ -50,7 +50,7 @@ const sendMailConfirmation = async (
   try {
     await mailService.send({
       to: user.email,
-      template: 'emailConfirmation',
+      template: 'activateAccount',
       templateData: {
         buttonLink: url,
       },
