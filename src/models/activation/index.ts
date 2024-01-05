@@ -13,6 +13,7 @@ import { SendGridMailService } from '@lib/mail/SendGridMailService';
 import { NotFoundError, ValidationError } from '@errors/index';
 import user from '@models/user';
 import checkin from '@models/checkin';
+import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 
 async function createAndSendActivationEmail({
   user,
@@ -130,6 +131,16 @@ async function activateUserUsingTokenId({
       buttonLink: webserver.host,
     },
   });
+
+  await sendMessageToYogaComKakaTelegramGroup(
+    `
+🎉🎉🎉
+o usuário ${userToActivate.displayName} acabou de ativar sua conta!
+
+    email: ${userToActivate.email}
+    telefone: ${userToActivate.phoneNumber}
+`
+  );
 
   return tokenObject;
 }
