@@ -23,6 +23,7 @@ const publicRoutes = [
   '/register/activate',
   '/forgot-password',
   '/reset-password',
+  '/service-terms',
 ];
 const refreshInterval = 600000; // 10 minutes
 

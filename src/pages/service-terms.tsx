@@ -90,27 +90,47 @@ export default function PrivacyPolicy() {
           </p>
 
           <h2 className="mb-2 mt-4 text-left text-xl font-bold">
-            5. Responsabilidade:
+            5. Consentimento para Uso de Imagens e Compartilhamento de Conteúdo:
           </h2>
           <p className="mb-4 text-sm text-gray-600">
-            5.1. Não somos responsáveis por quaisquer lesões ou danos
+            5.1. Ao aceitar os termos de uso o usuário concorda que suas imagens
+            (fotos, vídeos, gravações) durante as aulas de yoga possam ser
+            utilizadas nas divulgações da plataforma em sites e redes sociais.
+          </p>
+          <p className="mb-4 text-sm text-gray-600">
+            5.2. Ao aceitar os termos de uso o usuário compreende e concorda que
+            as gravações das aulas ficam disponíveis dentro da plataforma para
+            que outras alunas possam acessá-las posteriormente.
+          </p>
+          <p className="mb-4 text-sm text-gray-600">
+            5.3. Ao aceitar os termos de uso o usuário aceita que mensagens e
+            textos enviados pelo mesmo dentro do grupo da comunidade no Whatsapp
+            possam ser utilizados como depoimentos e para divulgação nos sites e
+            redes sociais da plataforma.
+          </p>
+
+          <h2 className="mb-2 mt-4 text-left text-xl font-bold">
+            6. Responsabilidade:
+          </h2>
+          <p className="mb-4 text-sm text-gray-600">
+            6.1. Não somos responsáveis por quaisquer lesões ou danos
             decorrentes do uso de nossos serviços.
           </p>
 
           <h2 className="mb-2 mt-4 text-left text-xl font-bold">
-            6. Alterações nos Termos:
+            7. Alterações nos Termos:
           </h2>
           <p className="mb-4 text-sm text-gray-600">
-            6.1. Reservamo-nos o direito de atualizar esses termos
+            7.1. Reservamo-nos o direito de atualizar esses termos
             periodicamente, e as alterações serão comunicadas a você por meio da
             plataforma.
           </p>
 
           <h2 className="mb-2 mt-4 text-left text-xl font-bold">
-            7. Lei Aplicável:
+            8. Lei Aplicável:
           </h2>
           <p className="mb-4 text-sm text-gray-600">
-            7.1. Estes termos são regidos pelas leis do seu país.
+            8.1. Estes termos são regidos pelas leis do seu país.
           </p>
         </div>
       </div>
