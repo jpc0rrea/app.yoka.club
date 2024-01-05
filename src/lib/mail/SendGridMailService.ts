@@ -3,6 +3,7 @@ import sendGridMail from '@sendgrid/mail';
 import {
   type MailTemplates,
   sendGridTemplatesMapper,
+  TemplateParams,
 } from '@lib/mail/mailTemplateMapper';
 import { type MailService } from './interfaces/MailService';
 
@@ -14,7 +15,7 @@ export class SendGridMailService implements MailService {
   async send(message: {
     to: string;
     template: MailTemplates;
-    templateData: any;
+    templateData: TemplateParams[MailTemplates];
   }) {
     const { to, template, templateData } = message;
     const messageFormatted: sendGridMail.MailDataRequired = {

@@ -20,6 +20,7 @@ import { addMonths, isAfter } from 'date-fns';
 import eventLogs from '@models/event-logs';
 import { UpdateUserProfileRequest } from '@pages/api/user/profile';
 import { UpdateProfileFormData } from '@pages/profile';
+import { SendGridMailService } from '@lib/mail/SendGridMailService';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -304,6 +305,36 @@ async function updateUserSubscription({
       ? 3
       : 12
   );
+
+  const isSubscribing =
+    !userObject.subscriptionId || userObject.subscriptionId !== subscriptionId;
+
+  if (isSubscribing) {
+    const mailService = new SendGridMailService();
+
+    const checkInsPerMonth =
+      checkInsQuantity /
+      (recurrencePeriod === 'MONTHLY'
+        ? 1
+        : recurrencePeriod === 'QUARTERLY'
+        ? 3
+        : 12);
+
+    await mailService.send({
+      template: 'userSubscribedToPlanWithCheckIns',
+      to: userObject.email,
+      templateData: {
+        userName: userObject.displayName,
+        planName: `${
+          recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
+        } - ${checkInsPerMonth} check-ins/ mês${
+          recurrencePeriod === 'MONTHLY'
+            ? ''
+            : ` (${checkInsQuantity} ao total)`
+        }`,
+      },
+    });
+  }
 
   const updatedUser = prismaInstance.user.update({
     where: {
