@@ -51,3 +51,18 @@ export function useEventById({ eventId }: GetEventByIdParams) {
     queryFn: () => getEventById({ eventId }),
   });
 }
+
+export async function getNextEvents(): Promise<EventFromAPI[]> {
+  const eventsResponse = await api.get<{
+    nextEvents: EventFromAPI[];
+  }>('/events/next');
+
+  return eventsResponse.data.nextEvents;
+}
+
+export function useNextEvents() {
+  return useQuery({
+    queryKey: ['events', 'next'],
+    queryFn: () => getNextEvents(),
+  });
+}

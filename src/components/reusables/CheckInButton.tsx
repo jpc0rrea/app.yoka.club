@@ -66,15 +66,11 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
       });
 
       await queryClient.refetchQueries({
-        queryKey: [
-          'events',
-          // {
-          //   isLive: true,
-          // },
-        ],
+        queryKey: ['events'],
       });
+
       await queryClient.refetchQueries({
-        queryKey: ['events', 'byId', event.id],
+        queryKey: ['events', 'next'],
       });
 
       successToast({

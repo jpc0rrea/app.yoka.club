@@ -89,17 +89,11 @@ const Event: NextPage = () => {
       queryClient.invalidateQueries({
         queryKey: ['events', 'byId', event.id],
       });
-
       await queryClient.refetchQueries({
-        queryKey: [
-          'events',
-          {
-            isLive: true,
-          },
-        ],
+        queryKey: ['events'],
       });
-      await queryClient.refetchQueries({
-        queryKey: ['events', 'byId', event.id],
+      queryClient.invalidateQueries({
+        queryKey: ['events', 'next'],
       });
 
       successToast({
