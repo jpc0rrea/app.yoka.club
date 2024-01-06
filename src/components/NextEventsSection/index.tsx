@@ -17,7 +17,7 @@ export default function NextEventsSection() {
             <Skeleton key={index} className="h-64 w-64 min-w-[16rem]" />
           ))
         ) : nextEvents.length === 0 ? (
-          <p className="text-gray-500">Não há eventos cadastrados</p>
+          <p className="text-gray-500">não há eventos cadastrados</p>
         ) : (
           nextEvents.map((event) => (
             <div key={event.id} className="flex-none">
