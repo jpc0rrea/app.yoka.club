@@ -1,6 +1,7 @@
 import { PrismaInstance } from '@server/db';
 
 export type EventLogType =
+  | 'USER.SUBSCRIBED_TO_PLAN'
   | 'USER.RENEW_SUBSCRIPTION'
   | 'USER.CANCEL_SUBSCRIPTION'
   | 'USER.UPDATE_PROFILE'

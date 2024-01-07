@@ -321,17 +321,23 @@ async function updateUserSubscription({
         : 12);
 
     await mailService.send({
-      template: 'userSubscribedToPlanWithCheckIns',
+      template:
+        checkInsPerMonth === 0
+          ? 'userSubscribedToPlanWithoutCheckIns'
+          : 'userSubscribedToPlanWithCheckIns',
       to: userObject.email,
       templateData: {
         userName: userObject.displayName,
-        planName: `${
-          recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
-        } - ${checkInsPerMonth} check-ins/ mês${
-          recurrencePeriod === 'MONTHLY'
-            ? ''
-            : ` (${checkInsQuantity} ao total)`
-        }`,
+        planName:
+          checkInsPerMonth === 0
+            ? undefined
+            : `${
+                recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
+              } - ${checkInsPerMonth} check-ins/ mês${
+                recurrencePeriod === 'MONTHLY'
+                  ? ''
+                  : ` (${checkInsQuantity} ao total)`
+              }`,
       },
     });
   }
@@ -351,7 +357,9 @@ async function updateUserSubscription({
 
   await eventLogs.createEventLog({
     userId,
-    eventType: 'USER.RENEW_SUBSCRIPTION',
+    eventType: isSubscribing
+      ? 'USER.SUBSCRIBED_TO_PLAN'
+      : 'USER.RENEW_SUBSCRIPTION',
     metadata: {
       subscriptionId,
       oldCheckInsQuantity: userObject.checkInsQuantity,
