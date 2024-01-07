@@ -20,13 +20,13 @@ export default async function sendMessageToYogaComKakaTelegramGroup(
       message +
       '&parse_mode=HTML';
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'production') {
       console.log(message);
-      // send message to telegram using the fetch API
       await fetch(encodeURI(url));
     } else {
       console.log(message);
-      await fetch(encodeURI(url));
+      // send message to telegram using the fetch API
+      // await fetch(encodeURI(url));
     }
   }
 }
