@@ -34,7 +34,6 @@ interface UserSubscribedToPlanParams {
 
 interface UserSubscribedToPlanWithoutCheckInsParams {
   userName: string;
-  planName: string;
 }
 
 export type TemplateParams = {

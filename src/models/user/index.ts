@@ -328,13 +328,16 @@ async function updateUserSubscription({
       to: userObject.email,
       templateData: {
         userName: userObject.displayName,
-        planName: `${
-          recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
-        } - ${checkInsPerMonth} check-ins/ mês${
-          recurrencePeriod === 'MONTHLY'
-            ? ''
-            : ` (${checkInsQuantity} ao total)`
-        }`,
+        planName:
+          checkInsPerMonth === 0
+            ? undefined
+            : `${
+                recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
+              } - ${checkInsPerMonth} check-ins/ mês${
+                recurrencePeriod === 'MONTHLY'
+                  ? ''
+                  : ` (${checkInsQuantity} ao total)`
+              }`,
       },
     });
   }
