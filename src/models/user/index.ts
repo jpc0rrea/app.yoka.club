@@ -321,7 +321,10 @@ async function updateUserSubscription({
         : 12);
 
     await mailService.send({
-      template: 'userSubscribedToPlanWithCheckIns',
+      template:
+        checkInsPerMonth === 0
+          ? 'userSubscribedToPlanWithoutCheckIns'
+          : 'userSubscribedToPlanWithCheckIns',
       to: userObject.email,
       templateData: {
         userName: userObject.displayName,
@@ -351,7 +354,9 @@ async function updateUserSubscription({
 
   await eventLogs.createEventLog({
     userId,
-    eventType: 'USER.RENEW_SUBSCRIPTION',
+    eventType: isSubscribing
+      ? 'USER.SUBSCRIBED_TO_PLAN'
+      : 'USER.RENEW_SUBSCRIPTION',
     metadata: {
       subscriptionId,
       oldCheckInsQuantity: userObject.checkInsQuantity,
