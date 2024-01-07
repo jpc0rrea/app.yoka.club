@@ -104,7 +104,7 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
   plan.name = 'yogini premium';
   plan.checkinsQuantity = subscriptionDetails.plan.checkInsQuantity;
   plan.price = subscriptionDetails.plan.fullPricePerBillingPeriod;
-  plan.extra = 'acesso a todas as aulas gravadas e a conteúdos extras';
+  plan.extra = 'acesso a todas as aulas gravadas e a conteúdos exclusivos';
   plan.cancelAtPeriodEnd = subscriptionDetails.cancelAtPeriodEnd;
 
   return plan;
