@@ -41,4 +41,24 @@ export const PLANS = [
     fullPricePerBillingPeriod: 649.7,
     pricePerMonth: 216.57,
   },
+  {
+    id: 'MONTHLY_0',
+    stripePriceId: webserver.isProduction
+      ? 'price_1OVd8eEsKOl8ftVij3bhjzsO'
+      : 'price_1OVbxAEsKOl8ftVi0NJ5ySnl',
+    billingPeriod: 'monthly',
+    checkInsQuantity: 0,
+    fullPricePerBillingPeriod: 59.9,
+    pricePerMonth: 59.9,
+  },
+  {
+    id: 'QUARTERLY_0',
+    stripePriceId: webserver.isProduction
+      ? 'price_1OVd99EsKOl8ftVi8fDCrCmI'
+      : 'price_1OVc0VEsKOl8ftVibQaym1qP',
+    billingPeriod: 'quarterly',
+    checkInsQuantity: 0,
+    fullPricePerBillingPeriod: 149.7,
+    pricePerMonth: 49.9,
+  },
 ];

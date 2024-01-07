@@ -6,7 +6,9 @@ export type PlanIds =
   | 'MONTHLY_8'
   | 'MONTHLY_12'
   | 'QUARTERLY_8'
-  | 'QUARTERLY_12';
+  | 'QUARTERLY_12'
+  | 'MONTHLY_0'
+  | 'QUARTERLY_0';
 
 export interface UserPlan {
   id: PlanIds;
@@ -47,6 +49,16 @@ export const planPrices: Plan[] = [
     id: 'QUARTERLY_12',
     fullPricePerBillingPeriod: 649.7,
     pricePerMonth: 216.57,
+  },
+  {
+    id: 'MONTHLY_0',
+    fullPricePerBillingPeriod: 59.9,
+    pricePerMonth: 59.9,
+  },
+  {
+    id: 'QUARTERLY_0',
+    fullPricePerBillingPeriod: 149.7,
+    pricePerMonth: 49.9,
   },
 ];
 

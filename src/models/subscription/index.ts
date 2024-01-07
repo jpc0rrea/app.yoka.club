@@ -25,19 +25,21 @@ async function renewSubscription({
 
   const checkInsQuantity = planObject.checkInsQuantity * multiplier;
 
-  // criar o statement
-  await statement.createCreditStatement({
-    amount: checkInsQuantity,
-    description: `${checkInsQuantity} check-ins adicionados. ${
-      planObject.checkInsQuantity
-    } check-ins por mês no plano ${
-      planObject.recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
-    }.`,
-    title: `renovação da assinatura da plataforma`,
-    userId,
-    paymentId,
-    prismaInstance,
-  });
+  // criar o statement se a quantidade de check-ins for maior que 0
+  if (checkInsQuantity > 0) {
+    await statement.createCreditStatement({
+      amount: checkInsQuantity,
+      description: `${checkInsQuantity} check-ins adicionados. ${
+        planObject.checkInsQuantity
+      } check-ins por mês no plano ${
+        planObject.recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
+      }.`,
+      title: `renovação da assinatura da plataforma`,
+      userId,
+      paymentId,
+      prismaInstance,
+    });
+  }
 
   // atualizar o usuário: checkins, data de expiração e assinatura
   await user.updateUserSubscription({
