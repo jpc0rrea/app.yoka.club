@@ -1,6 +1,7 @@
 import { CreateEventFormData } from '@components/Modals/CreateEventModal';
 import { MAX_CHECK_IN_AMOUNT, MIN_CHECK_IN_AMOUNT } from '@lib/constants';
 import { AppError } from '@lib/error';
+import { intensityPossibleValues } from '@models/events/types';
 
 export default function validateEventData({
   title,
@@ -10,6 +11,7 @@ export default function validateEventData({
   recordedUrl,
   maxCheckinsQuantity,
   startDate,
+  intensity,
 }: CreateEventFormData) {
   if (!title || title.length < 6) {
     throw new AppError({
@@ -64,5 +66,12 @@ export default function validateEventData({
         description: `a quantidade de checkins deve ser entre ${MIN_CHECK_IN_AMOUNT} e ${MAX_CHECK_IN_AMOUNT}`,
       });
     }
+  }
+
+  if (intensity && !intensityPossibleValues.includes(intensity)) {
+    throw new AppError({
+      title: 'intensidade inválida',
+      description: 'a intensidade deve ser preenchida',
+    });
   }
 }

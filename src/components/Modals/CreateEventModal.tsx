@@ -25,7 +25,7 @@ import { Input } from '@components/ui/input';
 import { Switch } from '@components/ui/switch';
 
 import { DateTimePicker } from '@mantine/dates';
-import { Loader2, Minus, Plus } from 'lucide-react';
+import { Loader2, Minus, Plus, XIcon } from 'lucide-react';
 import { MAX_CHECK_IN_AMOUNT, MIN_CHECK_IN_AMOUNT } from '@lib/constants';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
@@ -34,6 +34,17 @@ import { successToast } from '@components/Toast/SuccessToast';
 import { queryClient } from '@lib/queryClient';
 import useUser from '@hooks/useUser';
 import { useInstructors } from '@hooks/useInstructors';
+import {
+  intensityOptions,
+  intensityPossibleValues,
+} from '@models/events/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@components/ui/select';
 
 export const createEventFormSchema = z
   .object({
@@ -58,6 +69,13 @@ export const createEventFormSchema = z
     liveUrl: z.string().url('url inválida :(').optional(),
     recordedUrl: z.string().url('url inválida :(').optional(),
     duration: z.number(),
+    intensity: z
+      .string()
+      // check if the string is in the intensityPossibleValues array
+      .refine((value) => {
+        return intensityPossibleValues.includes(value);
+      }, 'intensidade inválida')
+      .optional(),
     instructorId: z.string().optional(),
   })
   .refine((data) => (data.isLive ? data.startDate : true), {
@@ -215,24 +233,7 @@ export default function CreateEventModal() {
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="liveUrl"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel>url ao vivo do evento</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="https://youtube.com"
-                                error={fieldState.error}
-                                {...field}
-                              />
-                            </FormControl>
-                            {/* <FormDescription>descreva o evento</FormDescription> */}
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+
                       <FormField
                         control={form.control}
                         name="recordedUrl"
@@ -262,6 +263,58 @@ export default function CreateEventModal() {
                           form.setValue('duration', value);
                         }}
                         step={5}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="intensity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              intensidade
+                              {field.value && (
+                                <Button
+                                  variant="outline"
+                                  type="button"
+                                  onClick={() => {
+                                    form.setValue('intensity', undefined);
+                                  }}
+                                  className="ml-2 h-5 px-1"
+                                >
+                                  <XIcon className="h-3 w-3" />
+                                </Button>
+                              )}
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  {field.value ? (
+                                    <SelectValue placeholder="selecione a intensidade" />
+                                  ) : (
+                                    'selecione a intensidade'
+                                  )}
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {intensityOptions.map((option) => {
+                                  return (
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
 
                       {user?.role === 'ADMIN' && !isInstructorsLoading && (
@@ -373,6 +426,25 @@ export default function CreateEventModal() {
                                   </Button>
                                 </Group>
                               </div>
+
+                              <FormField
+                                control={form.control}
+                                name="liveUrl"
+                                render={({ field, fieldState }) => (
+                                  <FormItem>
+                                    <FormLabel>url ao vivo do evento</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="https://youtube.com"
+                                        error={fieldState.error}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    {/* <FormDescription>descreva o evento</FormDescription> */}
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                             </div>
                           )}
                         </div>

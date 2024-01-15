@@ -10,6 +10,7 @@ export const eventSelect = {
   createdAt: true,
   liveUrl: true,
   recordedUrl: true,
+  intensity: true,
   instructor: {
     select: {
       displayName: true,
@@ -53,3 +54,22 @@ export interface ListEventsQueryParams
   pageSize?: string;
   instructorId?: string;
 }
+
+export interface ListRecordedEventsQueryParams
+  extends Partial<{ [key: string]: string | string[] }> {
+  searchInString?: string;
+  pageInString?: string;
+  pageSizeInString?: string;
+  durationInString?: string;
+  intensityInString?: string;
+}
+
+export const intensityOptions = [
+  { label: 'leve', value: 'leve' },
+  { label: 'moderado', value: 'moderado' },
+  { label: 'intenso', value: 'intenso' },
+];
+
+export const intensityPossibleValues = intensityOptions.map(
+  (option) => option.value
+);

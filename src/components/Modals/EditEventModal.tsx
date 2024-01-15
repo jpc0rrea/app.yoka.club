@@ -20,7 +20,7 @@ import { Input } from '@components/ui/input';
 import { Switch } from '@components/ui/switch';
 
 import { DateTimePicker } from '@mantine/dates';
-import { Loader2, Minus, Plus } from 'lucide-react';
+import { Loader2, Minus, Plus, XIcon } from 'lucide-react';
 import { MAX_CHECK_IN_AMOUNT, MIN_CHECK_IN_AMOUNT } from '@lib/constants';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
@@ -28,7 +28,14 @@ import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { createEventFormSchema } from './CreateEventModal';
 import { queryClient } from '@lib/queryClient';
-import { EventFromAPI } from '@models/events/types';
+import { EventFromAPI, intensityOptions } from '@models/events/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@components/ui/select';
 
 export type EditEventFormData = z.infer<typeof createEventFormSchema>;
 
@@ -57,6 +64,7 @@ export default function EditEventModal({
       recordedUrl: event.recordedUrl || undefined,
       liveUrl: event.liveUrl || undefined,
       startDate: event.startDate ? new Date(event.startDate) : undefined,
+      intensity: event.intensity || undefined,
     },
   });
 
@@ -151,23 +159,7 @@ export default function EditEventModal({
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="liveUrl"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel>url ao vivo do evento</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="https://youtube.com"
-                                error={fieldState.error}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+
                       <FormField
                         control={form.control}
                         name="recordedUrl"
@@ -196,6 +188,58 @@ export default function EditEventModal({
                           form.setValue('duration', value);
                         }}
                         step={5}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="intensity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              intensidade
+                              {field.value && (
+                                <Button
+                                  variant="outline"
+                                  type="button"
+                                  onClick={() => {
+                                    form.setValue('intensity', undefined);
+                                  }}
+                                  className="ml-2 h-5 px-1"
+                                >
+                                  <XIcon className="h-3 w-3" />
+                                </Button>
+                              )}
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  {field.value ? (
+                                    <SelectValue placeholder="selecione a intensidade" />
+                                  ) : (
+                                    'selecione a intensidade'
+                                  )}
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {intensityOptions.map((option) => {
+                                  return (
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
 
                       <DateTimePicker
@@ -289,6 +333,24 @@ export default function EditEventModal({
                                   </Button>
                                 </Group>
                               </div>
+
+                              <FormField
+                                control={form.control}
+                                name="liveUrl"
+                                render={({ field, fieldState }) => (
+                                  <FormItem>
+                                    <FormLabel>url ao vivo do evento</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="https://youtube.com"
+                                        error={fieldState.error}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                             </div>
                           )}
                         </div>
