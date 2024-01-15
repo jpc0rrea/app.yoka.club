@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "next build && npx prisma generate",
     "next": "next dev",
     "dev": "kill-port 3000 && npm run services:up && npm run migration:run && npm run next && npm run services:stop",
     "postinstall": "prisma generate",
