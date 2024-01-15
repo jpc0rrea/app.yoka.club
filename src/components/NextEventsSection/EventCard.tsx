@@ -14,6 +14,12 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import UserCantViewRecordedClassAlert from '@components/Modals/UserCantViewRecordedEventAlert';
 import { Loader2 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@components/ui/tooltip';
 
 interface EventCardProps {
   event: EventFromAPI;
@@ -144,11 +150,20 @@ export default function EventCard({ event }: EventCardProps) {
       <div className="flex flex-1 flex-col justify-between p-4">
         <div>
           <div className="flex items-center justify-between">
-            <Link href={`/events/${event.id}`}>
-              <h3 className="cursor-pointer text-lg font-semibold text-brand-purple-800 transition-all hover:text-brand-purple-900 hover:underline dark:text-white">
-                {event.title}
-              </h3>
-            </Link>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Link href={`/events/${event.id}`}>
+                    <h3 className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left text-lg font-semibold text-brand-purple-900 transition-all hover:text-brand-purple-900 hover:underline dark:text-white">
+                      {event.title}
+                    </h3>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{event.title}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           {/* <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
             instrutor:{' '}

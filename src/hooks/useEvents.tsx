@@ -66,3 +66,68 @@ export function useNextEvents() {
     queryFn: () => getNextEvents(),
   });
 }
+
+interface GetRecordedEventsParams {
+  search?: string;
+  duration?: string[];
+  intensity?: string[];
+  page?: number;
+  pageSize?: number;
+}
+
+export async function getRecordedEvents({
+  search,
+  duration,
+  intensity,
+  page,
+  pageSize,
+}: GetRecordedEventsParams): Promise<{
+  events: EventFromAPI[];
+  eventsCount: number;
+  totalPages: number;
+}> {
+  const queryString = convertParamsInQueryParams({
+    search,
+    duration,
+    intensity,
+    page,
+    pageSize,
+  });
+
+  const eventsResponse = await api.get<{
+    events: EventFromAPI[];
+    eventsCount: number;
+    totalPages: number;
+  }>(`/events/recorded${queryString}`);
+
+  return eventsResponse.data;
+}
+
+export function useRecordedEvents({
+  search,
+  duration,
+  intensity,
+  page,
+  pageSize,
+}: GetRecordedEventsParams) {
+  return useQuery({
+    queryKey: [
+      'recordedEvents',
+      {
+        search,
+        duration,
+        intensity,
+        page,
+        pageSize,
+      },
+    ],
+    queryFn: () =>
+      getRecordedEvents({
+        search,
+        duration,
+        intensity,
+        page,
+        pageSize,
+      }),
+  });
+}
