@@ -18,6 +18,7 @@ export interface UserPlan {
   price: number;
   extra: string;
   cancelAtPeriodEnd: boolean;
+  canSeeExclusiveContents: boolean;
   expirationDate?: Date;
   nextBillingDate?: Date;
   nextBillingValue?: string;

@@ -14,6 +14,11 @@ const durationOptions = [
   { label: '60 min', value: '60' },
 ];
 
+const premiumOptions = [
+  { label: 'exclusiva', value: 'exclusiva' },
+  { label: 'gratuita', value: 'gratuita' },
+];
+
 interface ToolbarProps {
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
@@ -21,6 +26,8 @@ interface ToolbarProps {
   setDurationFilter: Dispatch<SetStateAction<string[]>>;
   intensityFilter: string[];
   setIntensityFilter: Dispatch<SetStateAction<string[]>>;
+  premiumFilter: string[];
+  setPremiumFilter: Dispatch<SetStateAction<string[]>>;
 }
 
 export default function Toolbar({
@@ -30,6 +37,8 @@ export default function Toolbar({
   setDurationFilter,
   intensityFilter,
   setIntensityFilter,
+  premiumFilter,
+  setPremiumFilter,
 }: ToolbarProps) {
   const router = useRouter();
   const [searchToShowOnInput, setSearchToShowOnInput] = useState(search);
@@ -81,14 +90,24 @@ export default function Toolbar({
             options={intensityOptions}
             queryParamName="intensity"
           />
+          <Filter
+            filteredValues={premiumFilter}
+            setFilteredValues={setPremiumFilter}
+            label="tipo"
+            options={premiumOptions}
+            queryParamName="premium"
+          />
         </div>
-        {(durationFilter.length > 0 || intensityFilter.length > 0) && (
+        {(durationFilter.length > 0 ||
+          intensityFilter.length > 0 ||
+          premiumFilter.length > 0) && (
           <div>
             <Button
               variant="ghost"
               onClick={() => {
                 setDurationFilter([]);
                 setIntensityFilter([]);
+                setPremiumFilter([]);
 
                 // get the url query params
                 const searchParams = convertQueryToSearchParams(router.query);
@@ -96,6 +115,7 @@ export default function Toolbar({
                 // Clear previous filter parameters
                 searchParams.delete('duration');
                 searchParams.delete('intensity');
+                searchParams.delete('premium');
 
                 router.push(
                   {

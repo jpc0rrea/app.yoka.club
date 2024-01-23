@@ -58,7 +58,7 @@ export default function BuyMoreCheckIns() {
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="4-10 relative"
           // initialFocus={cancelButtonRef}
           onClose={setOpen}
         >

@@ -29,6 +29,14 @@ export default function RecordedClassesSection() {
       ? [query.intensity]
       : [];
   });
+  const [premiumFilter, setPremiumFilter] = useState<string[]>(() => {
+    const query = router.query;
+    return Array.isArray(query.premium)
+      ? query.premium
+      : typeof query.premium === 'string'
+      ? [query.premium]
+      : [];
+  });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
@@ -42,11 +50,14 @@ export default function RecordedClassesSection() {
     search: debounceSearch,
     duration: durationFilter,
     intensity: intensityFilter,
+    premium: premiumFilter,
     page,
     pageSize,
   });
 
   const { events, totalPages } = data || {};
+
+  console.log(events);
 
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -70,6 +81,8 @@ export default function RecordedClassesSection() {
         setDurationFilter={setDurationFilter}
         intensityFilter={intensityFilter}
         setIntensityFilter={setIntensityFilter}
+        premiumFilter={premiumFilter}
+        setPremiumFilter={setPremiumFilter}
       />
       <ClassesSection events={events} isLoading={isLoading} />
       <Pagination

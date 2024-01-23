@@ -71,6 +71,7 @@ interface GetRecordedEventsParams {
   search?: string;
   duration?: string[];
   intensity?: string[];
+  premium?: string[];
   page?: number;
   pageSize?: number;
 }
@@ -79,6 +80,7 @@ export async function getRecordedEvents({
   search,
   duration,
   intensity,
+  premium,
   page,
   pageSize,
 }: GetRecordedEventsParams): Promise<{
@@ -90,6 +92,7 @@ export async function getRecordedEvents({
     search,
     duration,
     intensity,
+    premium,
     page,
     pageSize,
   });
@@ -107,6 +110,7 @@ export function useRecordedEvents({
   search,
   duration,
   intensity,
+  premium,
   page,
   pageSize,
 }: GetRecordedEventsParams) {
@@ -117,6 +121,7 @@ export function useRecordedEvents({
         search,
         duration,
         intensity,
+        premium,
         page,
         pageSize,
       },
@@ -126,6 +131,7 @@ export function useRecordedEvents({
         search,
         duration,
         intensity,
+        premium,
         page,
         pageSize,
       }),

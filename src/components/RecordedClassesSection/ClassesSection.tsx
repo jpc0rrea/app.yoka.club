@@ -12,13 +12,15 @@ export default function ClassesSection({
   isLoading,
 }: ClassesSectionProps) {
   return (
-    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
       {isLoading || !events ? (
         Array.from({ length: 10 }, (_, index) => (
           <Skeleton key={index} className="h-64 flex-1" />
         ))
       ) : events.length === 0 ? (
-        <p>Nenhum evento foi encontrado com esses filtros :(</p>
+        <p className="col-span-2">
+          nenhum evento foi encontrado com esses filtros :(
+        </p>
       ) : (
         events.map((event) => {
           return (

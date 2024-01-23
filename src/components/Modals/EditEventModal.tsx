@@ -36,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@components/ui/select';
+import { Checkbox } from '@components/ui/checkbox';
 
 export type EditEventFormData = z.infer<typeof createEventFormSchema>;
 
@@ -65,6 +66,7 @@ export default function EditEventModal({
       liveUrl: event.liveUrl || undefined,
       startDate: event.startDate ? new Date(event.startDate) : undefined,
       intensity: event.intensity || undefined,
+      isPremium: event.isPremium,
     },
   });
 
@@ -102,7 +104,7 @@ export default function EditEventModal({
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="relative z-40"
           // initialFocus={cancelButtonRef}
           onClose={setOpen}
         >
@@ -241,6 +243,30 @@ export default function EditEventModal({
                           </FormItem>
                         )}
                       />
+
+                      {!form.watch('isLive') && (
+                        <FormField
+                          control={form.control}
+                          name="isPremium"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <div className="space-y-1 leading-none">
+                                <FormLabel>é uma aula exclusiva?</FormLabel>
+                                <FormDescription>
+                                  somente alunas com plano podem ver aulas
+                                  exclusivas
+                                </FormDescription>
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
                       <DateTimePicker
                         valueFormat="DD [de] MMMM [de] YYYY [às] HH[h]mm"
