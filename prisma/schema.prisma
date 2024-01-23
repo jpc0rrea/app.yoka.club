@@ -91,6 +91,7 @@ model Event {
     updatedAt           DateTime  @updatedAt @map("updated_at")
     instructorId        String    @map("instructor_id")
     intensity           String?
+    isPremium           Boolean   @default(true) @map("is_premium")
 
     instructor User      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
     checkIns   CheckIn[]

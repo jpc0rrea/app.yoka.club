@@ -91,6 +91,7 @@ function convertQueryParamsInListRecordedEventsParams({
   pageSizeInString,
   durationInString,
   intensityInString,
+  premiumInString,
 }: ListRecordedEventsQueryParams) {
   const page = pageInString ? parseInt(pageInString) : 1;
 
@@ -123,8 +124,30 @@ function convertQueryParamsInListRecordedEventsParams({
     });
   }
 
+  if (typeof premiumInString !== 'string') {
+    throw new ValidationError({
+      message: `o parâmetro 'premium' deve ser uma string.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:LIST_EVENTS:INVALID_PREMIUM_PARAM',
+      key: 'premium',
+    });
+  }
+
   const durationArray = durationInString
     ? durationInString.split(',').map((duration) => parseInt(duration.trim()))
+    : undefined;
+
+  const premiumArray = premiumInString
+    ? premiumInString.split(',').map((premium) => premium.trim())
+    : undefined;
+
+  // só vai ser premium se no premium array tiver o valor 'exclusiva' e não tiver o valor 'gratuita'
+  const isPremium = premiumArray
+    ? premiumArray.includes('exclusiva') && !premiumArray.includes('gratuita')
+      ? true
+      : premiumArray.includes('exclusiva') && premiumArray.includes('gratuita')
+      ? undefined
+      : false
     : undefined;
 
   const maxDuration = durationArray
@@ -141,6 +164,7 @@ function convertQueryParamsInListRecordedEventsParams({
     pageSize,
     maxDuration,
     intensity,
+    isPremium,
   };
 }
 

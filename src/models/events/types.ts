@@ -11,6 +11,7 @@ export const eventSelect = {
   liveUrl: true,
   recordedUrl: true,
   intensity: true,
+  isPremium: true,
   instructor: {
     select: {
       displayName: true,
@@ -62,6 +63,7 @@ export interface ListRecordedEventsQueryParams
   pageSizeInString?: string;
   durationInString?: string;
   intensityInString?: string;
+  premiumInString?: string;
 }
 
 export const intensityOptions = [

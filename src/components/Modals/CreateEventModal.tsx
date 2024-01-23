@@ -45,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@components/ui/select';
+import { Checkbox } from '@components/ui/checkbox';
 
 export const createEventFormSchema = z
   .object({
@@ -69,6 +70,7 @@ export const createEventFormSchema = z
     liveUrl: z.string().url('url inválida :(').optional(),
     recordedUrl: z.string().url('url inválida :(').optional(),
     duration: z.number(),
+    isPremium: z.boolean().optional(),
     intensity: z
       .string()
       // check if the string is in the intensityPossibleValues array
@@ -119,6 +121,7 @@ export default function CreateEventModal() {
       isLive: false,
       maxCheckinsQuantity: 15,
       duration: 60,
+      isPremium: true,
     },
   });
 
@@ -175,7 +178,7 @@ export default function CreateEventModal() {
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="relative z-40"
           // initialFocus={cancelButtonRef}
           onClose={setOpen}
         >
@@ -316,6 +319,30 @@ export default function CreateEventModal() {
                           </FormItem>
                         )}
                       />
+
+                      {!form.watch('isLive') && (
+                        <FormField
+                          control={form.control}
+                          name="isPremium"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <div className="space-y-1 leading-none">
+                                <FormLabel>é uma aula exclusiva?</FormLabel>
+                                <FormDescription>
+                                  somente alunas com plano podem ver aulas
+                                  exclusivas
+                                </FormDescription>
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
                       {user?.role === 'ADMIN' && !isInstructorsLoading && (
                         <Autocomplete

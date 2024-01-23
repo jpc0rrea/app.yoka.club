@@ -26,6 +26,7 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
     duration,
     intensity,
     instructorId: instructorIdFromRequest,
+    isPremium,
   } = req.body;
 
   try {
@@ -90,6 +91,7 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
         startDate: startDate ? new Date(startDate) : null,
         instructorId,
         intensity,
+        isPremium: isLive ? true : isPremium,
       },
     });
 

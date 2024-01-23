@@ -77,9 +77,13 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
     type: 'free',
     name: 'yogini iniciante',
     price: 0,
-    checkinsQuantity: 0,
+    checkinsQuantity: userObject.checkInsQuantity,
     extra: 'acesso aos conteúdos gratuitos',
     cancelAtPeriodEnd: false,
+    expirationDate: userObject.expirationDate || undefined,
+    canSeeExclusiveContents: userObject.expirationDate
+      ? isAfter(userObject.expirationDate, new Date())
+      : false,
   };
 
   if (

@@ -12,6 +12,7 @@ export default function validateEventData({
   maxCheckinsQuantity,
   startDate,
   intensity,
+  isPremium,
 }: CreateEventFormData) {
   if (!title || title.length < 6) {
     throw new AppError({
@@ -72,6 +73,20 @@ export default function validateEventData({
     throw new AppError({
       title: 'intensidade inválida',
       description: 'a intensidade deve ser preenchida',
+    });
+  }
+
+  if (typeof isPremium !== 'boolean') {
+    throw new AppError({
+      title: 'tipo de evento inválido',
+      description: 'o tipo de evento deve ser preenchido',
+    });
+  }
+
+  if (isLive && !isPremium) {
+    throw new AppError({
+      title: 'evento inválido',
+      description: 'eventos ao vivo devem ser premium',
     });
   }
 }
