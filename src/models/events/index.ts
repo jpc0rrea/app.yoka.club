@@ -163,6 +163,7 @@ function convertQueryParamsInListRecordedEventsParams({
     page,
     pageSize,
     maxDuration,
+    durationArray,
     intensity,
     isPremium,
   };

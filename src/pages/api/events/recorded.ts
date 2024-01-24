@@ -34,7 +34,7 @@ const listRecordedEvents = async (
       premium: premiumInString,
     } = req.query;
 
-    const { search, page, pageSize, maxDuration, intensity, isPremium } =
+    const { search, page, pageSize, durationArray, intensity, isPremium } =
       events.convertQueryParamsInListRecordedEventsParams({
         searchInString,
         pageInString,
@@ -58,7 +58,7 @@ const listRecordedEvents = async (
           mode: 'insensitive',
         },
         duration: {
-          lte: maxDuration,
+          in: durationArray,
         },
         intensity: {
           in: intensity,
