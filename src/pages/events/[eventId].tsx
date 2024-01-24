@@ -19,6 +19,7 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import useUser from '@hooks/useUser';
 import Link from 'next/link';
+import RecordedClass from '@components/RecordedClass';
 
 const Event: NextPage = () => {
   const router = useRouter();
@@ -32,7 +33,47 @@ const Event: NextPage = () => {
 
   const { data: event } = useEventById({ eventId });
 
-  if (!event || !event.startDate) {
+  if (!event) {
+    return (
+      <>
+        <Head>
+          <title>plataforma yoga com kaká</title>
+        </Head>
+
+        <div>
+          <Sidebar />
+
+          <div className="flex flex-1 flex-col md:pl-64">
+            <Header />
+
+            <Loader2 className="m-2 mt-4 h-4 w-4 animate-spin" />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!event.isLive) {
+    return (
+      <>
+        <Head>
+          <title>plataforma yoga com kaká</title>
+        </Head>
+
+        <div>
+          <Sidebar />
+
+          <div className="flex flex-1 flex-col md:pl-64">
+            <Header />
+
+            <RecordedClass event={event} />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!event.startDate) {
     return (
       <>
         <Head>

@@ -24,7 +24,9 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
     startDate,
     maxCheckinsQuantity,
     duration,
+    intensity,
     instructorId: instructorIdFromRequest,
+    isPremium,
   } = req.body;
 
   try {
@@ -88,6 +90,8 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
         checkInsMaxQuantity: isLive ? maxCheckinsQuantity : null,
         startDate: startDate ? new Date(startDate) : null,
         instructorId,
+        intensity,
+        isPremium: isLive ? true : isPremium,
       },
     });
 

@@ -20,7 +20,7 @@ import { Input } from '@components/ui/input';
 import { Switch } from '@components/ui/switch';
 
 import { DateTimePicker } from '@mantine/dates';
-import { Loader2, Minus, Plus } from 'lucide-react';
+import { Loader2, Minus, Plus, XIcon } from 'lucide-react';
 import { MAX_CHECK_IN_AMOUNT, MIN_CHECK_IN_AMOUNT } from '@lib/constants';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
@@ -28,7 +28,15 @@ import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { createEventFormSchema } from './CreateEventModal';
 import { queryClient } from '@lib/queryClient';
-import { EventFromAPI } from '@models/events/types';
+import { EventFromAPI, intensityOptions } from '@models/events/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@components/ui/select';
+import { Checkbox } from '@components/ui/checkbox';
 
 export type EditEventFormData = z.infer<typeof createEventFormSchema>;
 
@@ -57,6 +65,8 @@ export default function EditEventModal({
       recordedUrl: event.recordedUrl || undefined,
       liveUrl: event.liveUrl || undefined,
       startDate: event.startDate ? new Date(event.startDate) : undefined,
+      intensity: event.intensity || undefined,
+      isPremium: event.isPremium,
     },
   });
 
@@ -94,7 +104,7 @@ export default function EditEventModal({
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="relative z-40"
           // initialFocus={cancelButtonRef}
           onClose={setOpen}
         >
@@ -151,23 +161,7 @@ export default function EditEventModal({
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="liveUrl"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel>url ao vivo do evento</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="https://youtube.com"
-                                error={fieldState.error}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+
                       <FormField
                         control={form.control}
                         name="recordedUrl"
@@ -197,6 +191,82 @@ export default function EditEventModal({
                         }}
                         step={5}
                       />
+
+                      <FormField
+                        control={form.control}
+                        name="intensity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              intensidade
+                              {field.value && (
+                                <Button
+                                  variant="outline"
+                                  type="button"
+                                  onClick={() => {
+                                    form.setValue('intensity', undefined);
+                                  }}
+                                  className="ml-2 h-5 px-1"
+                                >
+                                  <XIcon className="h-3 w-3" />
+                                </Button>
+                              )}
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  {field.value ? (
+                                    <SelectValue placeholder="selecione a intensidade" />
+                                  ) : (
+                                    'selecione a intensidade'
+                                  )}
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {intensityOptions.map((option) => {
+                                  return (
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {!form.watch('isLive') && (
+                        <FormField
+                          control={form.control}
+                          name="isPremium"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <div className="space-y-1 leading-none">
+                                <FormLabel>é uma aula exclusiva?</FormLabel>
+                                <FormDescription>
+                                  somente alunas com plano podem ver aulas
+                                  exclusivas
+                                </FormDescription>
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
                       <DateTimePicker
                         valueFormat="DD [de] MMMM [de] YYYY [às] HH[h]mm"
@@ -289,6 +359,24 @@ export default function EditEventModal({
                                   </Button>
                                 </Group>
                               </div>
+
+                              <FormField
+                                control={form.control}
+                                name="liveUrl"
+                                render={({ field, fieldState }) => (
+                                  <FormItem>
+                                    <FormLabel>url ao vivo do evento</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="https://youtube.com"
+                                        error={fieldState.error}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                             </div>
                           )}
                         </div>

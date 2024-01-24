@@ -1,22 +1,34 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
-  CalendarIcon,
-  CreditCardIcon,
+  // CalendarIcon,
+  // CreditCardIcon,
   LockClosedIcon,
   // UserIcon,
 } from '@heroicons/react/24/outline';
 import { classNames } from '@lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { HistoryIcon, UsersIcon } from 'lucide-react';
+import {
+  HistoryIcon,
+  HomeIcon,
+  UsersIcon,
+  UserIcon,
+  CreditCardIcon,
+  PlayCircleIcon,
+} from 'lucide-react';
 import useUser from '@hooks/useUser';
-import { UserIcon } from 'lucide-react';
 
 export const navigationItems = [
   {
-    name: 'calendário',
+    name: 'início',
     href: '/',
-    icon: CalendarIcon,
+    icon: HomeIcon,
+    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  },
+  {
+    name: 'aulas gravadas',
+    href: '/recorded-classes',
+    icon: PlayCircleIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {

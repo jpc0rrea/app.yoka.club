@@ -24,6 +24,8 @@ const editEvent = async (req: EditEventRequest, res: NextApiResponse) => {
     startDate,
     maxCheckinsQuantity,
     duration,
+    intensity,
+    isPremium,
   } = req.body;
 
   try {
@@ -72,6 +74,8 @@ const editEvent = async (req: EditEventRequest, res: NextApiResponse) => {
         recordedUrl,
         checkInsMaxQuantity: isLive ? maxCheckinsQuantity : undefined,
         startDate: isLive && startDate ? new Date(startDate) : undefined,
+        intensity,
+        isPremium: isLive ? true : isPremium,
       },
     });
 
