@@ -183,7 +183,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center bg-white py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-full flex-col justify-center bg-white py-8 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
             className="mx-auto h-12 w-auto"
@@ -194,12 +194,9 @@ export default function Login() {
           />
         </div>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-            <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-              crie sua conta
-            </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mb-2 text-center text-sm text-gray-600">
               já possui uma conta?{' '}
               <Link
                 href="/login"
@@ -208,8 +205,18 @@ export default function Login() {
                 entre
               </Link>
             </p>
+            <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
+              crie sua conta
+            </h2>
+            <p className="mt-2 text-center text-gray-600">
+              ganhe seu{' '}
+              <strong className="text-brand-purple-800">
+                check-in gratuito
+              </strong>{' '}
+              e comece a praticar
+            </p>
             <form
-              className="mt-6 space-y-6"
+              className="mt-6 space-y-4"
               onSubmit={handleSubmit(handleRegister)}
             >
               <Input
