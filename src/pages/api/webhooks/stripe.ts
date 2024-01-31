@@ -25,6 +25,7 @@ export const config = {
   api: {
     bodyParser: false,
   },
+  maxDuration: 35,
 };
 
 const router = createRouter<NextApiRequest, NextApiResponse>();

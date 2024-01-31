@@ -19,30 +19,21 @@ import eventLogs from '@models/event-logs';
 async function handleStripeInvoicePaid({
   stripeInvoice,
 }: HandleStripeInvoicePaidParams) {
-  console.log('começando o handleStripeInvoicePaid');
   const subscription = await stripeUtils.getInvoiceSubscription({
     invoice: stripeInvoice,
   });
-
-  console.log({ subscription });
 
   const price = await stripeUtils.getInvoicePrice({
     invoice: stripeInvoice,
   });
 
-  console.log({ price });
-
   const userObject = await stripeUtils.getInvoiceUser({
     invoice: stripeInvoice,
   });
 
-  console.log({ userObject });
-
   const balanceTransaction = await stripeUtils.getInvoiceBalanceTransaction({
     invoice: stripeInvoice,
   });
-
-  console.log({ balanceTransaction });
 
   const grossValue = balanceTransaction.amount;
   const netValue = balanceTransaction.net;
@@ -62,8 +53,6 @@ async function handleStripeInvoicePaid({
   const planObject = await plan.getPlanByStripePriceId(price.id);
 
   const planId = planObject.id;
-
-  console.log('vai começar a transaction');
 
   await prisma.$transaction(
     async (tx) => {
@@ -94,8 +83,6 @@ async function handleStripeInvoicePaid({
       timeout: 10000, // default: 5000
     }
   );
-
-  console.log('terminou a transaction');
 }
 
 async function insertPayment({
