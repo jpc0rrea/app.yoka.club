@@ -79,8 +79,8 @@ async function handleStripeInvoicePaid({
       });
     },
     {
-      maxWait: 7000, // default: 2000
-      timeout: 10000, // default: 5000
+      maxWait: 20000, // default: 2000
+      timeout: 25000, // default: 5000
     }
   );
 }
