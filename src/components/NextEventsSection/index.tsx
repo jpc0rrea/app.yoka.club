@@ -5,7 +5,6 @@ import EventCard from './EventCard';
 export default function NextEventsSection() {
   const { data: nextEvents, isLoading: isNextEventsLoading } = useNextEvents();
 
-  console.log(nextEvents);
   return (
     <div className="mt-6 w-full">
       <h2 className="mb-4 px-6 text-2xl font-semibold text-gray-900 dark:text-white">
