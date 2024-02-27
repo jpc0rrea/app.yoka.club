@@ -47,16 +47,16 @@ export default function HappeningNowEventCard({
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-gray-500 dark:text-gray-400 md:text-sm">
             <ClockIcon className="mb-0.5 mr-1 inline-block h-4 w-4" />
             {isAfter(new Date(event.startDate), new Date())
-              ? 'começa às'
-              : 'começou às'}
-            : {format(new Date(event.startDate), "HH'h'mm")}
+              ? 'começa às '
+              : 'começou às '}
+            {format(new Date(event.startDate), "HH'h'mm")}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-gray-500 dark:text-gray-400 md:text-sm">
             <TimerIcon className="mb-1 mr-0.5 inline-block h-4 w-4" />
-            {event.duration} minutos
+            dura {event.duration} minutos
           </div>
         </div>
         {/* <p className="text-sm">
