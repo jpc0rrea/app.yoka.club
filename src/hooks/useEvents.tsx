@@ -137,3 +137,18 @@ export function useRecordedEvents({
       }),
   });
 }
+
+export async function getHappeningNowEvents(): Promise<EventFromAPI[]> {
+  const eventsResponse = await api.get<{
+    events: EventFromAPI[];
+  }>('/events/happening-now');
+
+  return eventsResponse.data.events;
+}
+
+export function useHappeningNowEvents() {
+  return useQuery({
+    queryKey: ['events', 'happeningNow'],
+    queryFn: () => getHappeningNowEvents(),
+  });
+}
