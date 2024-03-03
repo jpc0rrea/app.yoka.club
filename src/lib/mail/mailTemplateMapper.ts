@@ -5,6 +5,7 @@ export const sendGridTemplatesMapper = {
   welcomeEmail: 'd-8478a87026b54101867e96e6b36dc520',
   userSubscribedToPlanWithCheckIns: 'd-135b7a420b234edc8a04fa2e92ad700d',
   userSubscribedToPlanWithoutCheckIns: 'd-fab48ab89e30401d8ac08b976208d379',
+  userPurchasedCheckIns: 'd-d7e06fd987de4e659133a04aaab65877',
 };
 
 export type MailTemplates = keyof typeof sendGridTemplatesMapper;
@@ -36,6 +37,11 @@ interface UserSubscribedToPlanWithoutCheckInsParams {
   userName: string;
 }
 
+interface UserPurchasedCheckInsParams {
+  userName: string;
+  checkInsQuantity: number;
+}
+
 export type TemplateParams = {
   emailConfirmation: EmailConfirmationParams;
   forgotPassword: ResetPasswordParams;
@@ -43,4 +49,5 @@ export type TemplateParams = {
   welcomeEmail: WelcomeEmailParams;
   userSubscribedToPlanWithCheckIns: UserSubscribedToPlanParams;
   userSubscribedToPlanWithoutCheckIns: UserSubscribedToPlanWithoutCheckInsParams;
+  userPurchasedCheckIns: UserPurchasedCheckInsParams;
 };
