@@ -75,13 +75,14 @@ export default function Toolbar({
           className="h-8 w-[150px] lg:w-[250px]"
           error={undefined}
         />
-        <div className="space-x-2">
+        <div className="space-y-2 lg:space-y-0">
           <Filter
             filteredValues={durationFilter}
             setFilteredValues={setDurationFilter}
             label="duração"
             options={durationOptions}
             queryParamName="duration"
+            className="mr-2"
           />
           <Filter
             filteredValues={intensityFilter}
@@ -89,6 +90,7 @@ export default function Toolbar({
             label="intensidade"
             options={intensityOptions}
             queryParamName="intensity"
+            className="mr-2"
           />
           <Filter
             filteredValues={premiumFilter}
@@ -96,6 +98,7 @@ export default function Toolbar({
             label="tipo"
             options={premiumOptions}
             queryParamName="premium"
+            className="ml-0"
           />
         </div>
         {(durationFilter.length > 0 ||
