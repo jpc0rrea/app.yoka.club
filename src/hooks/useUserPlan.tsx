@@ -13,7 +13,7 @@ export type PlanIds =
 export interface UserPlan {
   id: PlanIds;
   type: 'free' | 'premium';
-  name: 'yogini iniciante' | 'yogini premium';
+  name: 'plano gratuito' | 'plano zen' | 'plano lótus' | 'plano flow';
   checkinsQuantity: number;
   price: number;
   extra: string;
