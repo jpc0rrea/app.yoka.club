@@ -1,4 +1,8 @@
-import { TOLERANCE_MINUTES_TO_ENTER_EVENT } from '@lib/constants';
+import {
+  MINUTES_TO_CANCEL_CHECK_IN,
+  MINUTES_TO_CHECK_IN,
+  TOLERANCE_MINUTES_TO_ENTER_EVENT,
+} from '@lib/constants';
 import { EventFromAPI } from '@models/events/types';
 import { differenceInMinutes } from 'date-fns';
 
@@ -62,10 +66,12 @@ export default function getCheckInStatuses({
     !eventAlreadyStarted &&
     stillHasVacancy &&
     userCheckInsQuantity > 0 &&
-    timeToEventInMinutes > 30;
+    timeToEventInMinutes > MINUTES_TO_CHECK_IN;
 
   const canCancelCheckIn =
-    alreadyCheckedIn && !eventAlreadyStarted && timeToEventInMinutes > 30;
+    alreadyCheckedIn &&
+    !eventAlreadyStarted &&
+    timeToEventInMinutes > MINUTES_TO_CANCEL_CHECK_IN;
 
   // o usuário pode ver o evento gravado se a data de expiração dele for maior que hoje
   // ou se ela fez check-in no evento

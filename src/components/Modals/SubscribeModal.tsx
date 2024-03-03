@@ -131,6 +131,9 @@ export default function SubscribeModal({
                             onChange={setBillingPeriod}
                             size="xs"
                             className="mt-1"
+                            classNames={{
+                              label: '!text-[10px] md:!text-xs',
+                            }}
                             data={[
                               { label: 'Mensal', value: 'monthly' },
                               { label: 'Trimestral', value: 'quarterly' },
@@ -147,6 +150,9 @@ export default function SubscribeModal({
                               setCheckInsQuantity(Number(value));
                             }}
                             className="ml-2 mt-1"
+                            classNames={{
+                              label: '!text-[10px] md:!text-xs',
+                            }}
                             size="xs"
                             data={[
                               { label: '0 check-ins/mês', value: '0' },
@@ -191,14 +197,17 @@ export default function SubscribeModal({
                         </p>
                       </div>
                       <div className="mt-3">
-                        <p className="text-left text-sm text-gray-500">
+                        <p className="text-left text-xs text-gray-500">
+                          assinatura com renovação automática.
+                        </p>
+                        <p className="text-left text-xs text-gray-500">
                           você pode cancelar a qualquer momento :)
                         </p>
                       </div>
                       {billingPeriod === 'quarterly' && (
                         <div className="mt-1 flex items-center">
                           <p className="text-left text-sm text-gray-500">
-                            * pagamento único de{' '}
+                            * pagamento de{' '}
                             {convertNumberToReal(
                               getFullPricePerBillingPeriod({
                                 billingPeriod: billingPeriod as
@@ -206,7 +215,8 @@ export default function SubscribeModal({
                                   | 'quarterly',
                                 checkInsQuantity,
                               })
-                            )}
+                            )}{' '}
+                            a cada trimestre
                           </p>
                         </div>
                       )}

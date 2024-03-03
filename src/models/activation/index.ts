@@ -14,6 +14,7 @@ import { NotFoundError, ValidationError } from '@errors/index';
 import user from '@models/user';
 import checkin from '@models/checkin';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
+import mailLists from '@lib/mail/mailLists';
 
 async function createAndSendActivationEmail({
   user,
@@ -122,6 +123,12 @@ async function activateUserUsingTokenId({
 
   // enviar email de boas vindas
   const mailService = new SendGridMailService();
+
+  await mailService.addContact({
+    email: userToActivate.email,
+    firstName: userToActivate.displayName,
+    listIds: [mailLists['user-onboarding']],
+  });
 
   await mailService.send({
     template: 'welcomeEmail',

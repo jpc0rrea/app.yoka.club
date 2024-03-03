@@ -54,7 +54,7 @@ export default function UserPlan() {
           ) : (
             <div className="p-6">
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                plano {userPlan.name}
+                {userPlan.name}
                 {userPlan.type === 'premium' && userPlan.cancelAtPeriodEnd && (
                   <span className="ml-2 inline-flex items-center rounded-md bg-red-50 px-1 py-0.5 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
                     cancelado

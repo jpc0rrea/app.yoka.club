@@ -6,6 +6,7 @@ import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import Calendar from '@components/Calendar';
 import NextEventsSection from '@components/NextEventsSection';
+import HappeningNowEvents from '@components/HappeningNowEvents';
 
 const Home: NextPage = () => {
   return (
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
           <Header />
 
           <main className="flex-1 bg-white">
+            <HappeningNowEvents />
             <NextEventsSection />
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
