@@ -152,3 +152,88 @@ export function useHappeningNowEvents() {
     queryFn: () => getHappeningNowEvents(),
   });
 }
+
+interface GetEventsToManageParams {
+  search?: string;
+  duration?: string[];
+  intensity?: string[];
+  premium?: string[];
+  isLive?: string[];
+  page?: number;
+  pageSize?: number;
+}
+
+export async function getEventsToManage({
+  search,
+  duration,
+  intensity,
+  premium,
+  isLive,
+  page,
+  pageSize,
+}: GetEventsToManageParams): Promise<{
+  events: EventFromAPI[];
+  eventsCount: number;
+  totalPages: number;
+}> {
+  const queryString = convertParamsInQueryParams({
+    search,
+    duration,
+    intensity,
+    premium,
+    isLive,
+    page,
+    pageSize,
+  });
+
+  const eventsResponse = await api.get<{
+    events: EventFromAPI[];
+    eventsCount: number;
+    totalPages: number;
+  }>(`/events/to-manage${queryString}`);
+
+  return eventsResponse.data;
+}
+
+interface UseEventsToManageParams extends GetEventsToManageParams {
+  enabled: boolean;
+}
+
+export function useEventsToManage({
+  search,
+  duration,
+  intensity,
+  premium,
+  isLive,
+  page,
+  pageSize,
+  enabled,
+}: UseEventsToManageParams) {
+  return useQuery({
+    queryKey: [
+      'events',
+      'toManage',
+      {
+        search,
+        duration,
+        intensity,
+        premium,
+        isLive,
+        page,
+        pageSize,
+        enabled,
+      },
+    ],
+    queryFn: () =>
+      getEventsToManage({
+        search,
+        duration,
+        intensity,
+        premium,
+        isLive,
+        page,
+        pageSize,
+      }),
+    enabled,
+  });
+}

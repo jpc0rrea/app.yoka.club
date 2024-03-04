@@ -66,6 +66,11 @@ export interface ListRecordedEventsQueryParams
   premiumInString?: string;
 }
 
+export interface ListManageEventsQueryParams
+  extends ListRecordedEventsQueryParams {
+  isLiveInString?: string;
+}
+
 export const intensityOptions = [
   { label: 'leve', value: 'leve' },
   { label: 'moderado', value: 'moderado' },

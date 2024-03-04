@@ -26,6 +26,7 @@ interface FilterProps {
   options: { label: string; value: string }[];
   label: string;
   queryParamName: string;
+  className?: string;
 }
 
 export default function Filter({
@@ -34,6 +35,7 @@ export default function Filter({
   options,
   label,
   queryParamName,
+  className,
 }: FilterProps) {
   const router = useRouter();
 
@@ -89,7 +91,11 @@ export default function Filter({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button
+          variant="outline"
+          size="sm"
+          className={`h-8 border-dashed ${className}`}
+        >
           <PlusCircleIcon className="mr-2 h-4 w-4" />
           {label}
           {filteredValues.length > 0 && (

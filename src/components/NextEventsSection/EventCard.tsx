@@ -78,7 +78,10 @@ export default function EventCard({ event }: EventCardProps) {
         queryKey: ['events', 'byId', event.id],
       });
 
-      queryClient.invalidateQueries({
+      await queryClient.refetchQueries({
+        queryKey: ['events'],
+      });
+      await queryClient.refetchQueries({
         queryKey: ['events', 'next'],
       });
 
