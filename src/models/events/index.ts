@@ -2,6 +2,7 @@ import { ValidationError } from '@errors/index';
 import {
   ListEventsParams,
   ListEventsQueryParams,
+  ListManageEventsQueryParams,
   ListRecordedEventsQueryParams,
   eventSelect,
 } from './types';
@@ -169,8 +170,104 @@ function convertQueryParamsInListRecordedEventsParams({
   };
 }
 
+function convertQueryParamsInListManageEventsParams({
+  searchInString,
+  pageInString,
+  pageSizeInString,
+  durationInString,
+  intensityInString,
+  premiumInString,
+  isLiveInString,
+}: ListManageEventsQueryParams) {
+  const page = pageInString ? parseInt(pageInString) : 1;
+
+  if (isNaN(page) || page < 0) {
+    throw new ValidationError({
+      message: `o parâmetro 'page' deve ser um número inteiro positivo.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:LIST_EVENTS:INVALID_PAGE_PARAM',
+      key: 'page',
+    });
+  }
+
+  const pageSize = pageSizeInString ? parseInt(pageSizeInString) : 20;
+
+  if (isNaN(pageSize) || pageSize < 0) {
+    throw new ValidationError({
+      message: `o parâmetro 'pageSize' deve ser um número inteiro positivo.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:LIST_EVENTS:INVALID_PAGE_SIZE_PARAM',
+      key: 'pageSize',
+    });
+  }
+
+  if (typeof durationInString !== 'string') {
+    throw new ValidationError({
+      message: `o parâmetro 'duration' deve ser uma string.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:LIST_EVENTS:INVALID_DURATION_PARAM',
+      key: 'duration',
+    });
+  }
+
+  if (typeof premiumInString !== 'string') {
+    throw new ValidationError({
+      message: `o parâmetro 'premium' deve ser uma string.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:LIST_EVENTS:INVALID_PREMIUM_PARAM',
+      key: 'premium',
+    });
+  }
+
+  const durationArray = durationInString
+    ? durationInString.split(',').map((duration) => parseInt(duration.trim()))
+    : undefined;
+
+  const premiumArray = premiumInString
+    ? premiumInString.split(',').map((premium) => premium.trim())
+    : undefined;
+
+  // só vai ser premium se no premium array tiver o valor 'exclusiva' e não tiver o valor 'gratuita'
+  const isPremium = premiumArray
+    ? premiumArray.includes('exclusiva') && !premiumArray.includes('gratuita')
+      ? true
+      : premiumArray.includes('exclusiva') && premiumArray.includes('gratuita')
+      ? undefined
+      : false
+    : undefined;
+
+  // só vai ser live se no isLive array tiver o valor 'live' e não tiver o valor 'recorded'
+  const isLive = isLiveInString
+    ? isLiveInString.includes('live') && !isLiveInString.includes('recorded')
+      ? true
+      : isLiveInString.includes('live') && isLiveInString.includes('recorded')
+      ? undefined
+      : false
+    : undefined;
+
+  const maxDuration = durationArray
+    ? Math.max(...durationArray.filter((duration) => !isNaN(duration)))
+    : undefined;
+
+  const intensity = intensityInString
+    ? intensityInString.split(',').map((intensity) => intensity.trim())
+    : undefined;
+
+  return {
+    search: searchInString || undefined,
+    page,
+    pageSize,
+    maxDuration,
+    durationArray,
+    intensity,
+    isPremium,
+    isLive,
+  };
+}
+
 export default Object.freeze({
   listEvents,
   convertQueryParamsInListEventsParams,
   convertQueryParamsInListRecordedEventsParams,
+  convertQueryParamsInListManageEventsParams,
 });
