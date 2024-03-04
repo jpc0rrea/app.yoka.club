@@ -1,28 +1,16 @@
 import { Input } from '@components/ui/input';
 import { Dispatch, SetStateAction, useState } from 'react';
-import Filter from './Filter';
 import { XIcon } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import convertQueryToSearchParams from '@lib/utilities/convertQueryInSearchParams';
 import { useRouter } from 'next/router';
 import { intensityOptions } from '@models/events/types';
-
-export const durationOptions = [
-  { label: '15 min', value: '15' },
-  { label: '30 min', value: '30' },
-  { label: '45 min', value: '45' },
-  { label: '60 min', value: '60' },
-];
-
-export const premiumOptions = [
-  { label: 'exclusiva', value: 'exclusiva' },
-  { label: 'gratuita', value: 'gratuita' },
-];
-
-export const isLiveOptions = [
-  { label: 'ao vivo', value: 'live' },
-  { label: 'gravada', value: 'recorded' },
-];
+import Filter from '@components/RecordedClassesSection/Filter';
+import {
+  durationOptions,
+  isLiveOptions,
+  premiumOptions,
+} from '@components/RecordedClassesSection/Toolbar';
 
 interface ToolbarProps {
   search: string;
@@ -33,6 +21,8 @@ interface ToolbarProps {
   setIntensityFilter: Dispatch<SetStateAction<string[]>>;
   premiumFilter: string[];
   setPremiumFilter: Dispatch<SetStateAction<string[]>>;
+  isLiveFilter: string[];
+  setIsLiveFilter: Dispatch<SetStateAction<string[]>>;
 }
 
 export default function Toolbar({
@@ -44,6 +34,8 @@ export default function Toolbar({
   setIntensityFilter,
   premiumFilter,
   setPremiumFilter,
+  isLiveFilter,
+  setIsLiveFilter,
 }: ToolbarProps) {
   const router = useRouter();
   const [searchToShowOnInput, setSearchToShowOnInput] = useState(search);
@@ -103,6 +95,14 @@ export default function Toolbar({
             label="tipo"
             options={premiumOptions}
             queryParamName="premium"
+            className="ml-0 mr-2"
+          />
+          <Filter
+            filteredValues={isLiveFilter}
+            setFilteredValues={setIsLiveFilter}
+            label="ao vivo"
+            options={isLiveOptions}
+            queryParamName="isLive"
             className="ml-0"
           />
         </div>
@@ -124,6 +124,7 @@ export default function Toolbar({
                 searchParams.delete('duration');
                 searchParams.delete('intensity');
                 searchParams.delete('premium');
+                searchParams.delete('isLive');
 
                 router.push(
                   {

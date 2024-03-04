@@ -15,6 +15,7 @@ import mercadopago from '@lib/mercadopago';
 import user from '@models/user';
 import statement from '@models/statement';
 import eventLogs from '@models/event-logs';
+import { SendGridMailService } from '@lib/mail/SendGridMailService';
 
 async function handleStripeInvoicePaid({
   stripeInvoice,
@@ -231,6 +232,17 @@ async function handleMercadoPagoPayment({
         newCheckInsQuantity: userObject.checkInsQuantity + checkInsQuantity,
       },
       prismaInstance: tx,
+    });
+
+    const mailService = new SendGridMailService();
+
+    await mailService.send({
+      to: userObject.email,
+      template: 'userPurchasedCheckIns',
+      templateData: {
+        userName: userObject.name,
+        checkInsQuantity,
+      },
     });
   });
 
