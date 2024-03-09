@@ -73,7 +73,7 @@ const listRecordedEvents = async (
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        startDate: 'desc',
       },
       select: eventSelect,
     };
