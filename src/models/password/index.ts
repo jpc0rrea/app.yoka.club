@@ -11,6 +11,10 @@ async function compare({ providedPassword, storedPassword }: CompareParams) {
   return await bcryptjs.compare(providedPassword, storedPassword);
 }
 
+async function generate() {
+  return await bcryptjs.genSalt(getNumberOfSaltRounds());
+}
+
 function getNumberOfSaltRounds() {
   let saltRounds = 14;
 
@@ -24,4 +28,5 @@ function getNumberOfSaltRounds() {
 export default Object.freeze({
   hash,
   compare,
+  generate,
 });

@@ -9,6 +9,12 @@ export interface CreateUserData {
   phoneNumber: string;
 }
 
+export interface CreateWithoutPasswordUserData {
+  email: string;
+  phoneNumber: string;
+  name: string;
+}
+
 export interface FindOneByIdParams {
   userId: string;
   prismaInstance: PrismaInstance;

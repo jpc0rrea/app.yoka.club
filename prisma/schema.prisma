@@ -6,9 +6,9 @@ generator client {
 }
 
 datasource db {
-    provider          = "postgresql"
-    url               = env("DATABASE_URL")
-    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
 model Session {
@@ -38,7 +38,7 @@ model User {
     password         String
     username         String    @unique
     bio              String?
-    phoneNumber      String    @map("phone_number")
+    phoneNumber      String?   @map("phone_number")
     role             UserRole  @default(USER)
     checkInsQuantity Int       @default(0) @map("check_ins_quantity")
     stripeId         String?   @map("stripe_id")
