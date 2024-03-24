@@ -5,6 +5,7 @@ import controller from '@models/controller';
 import authentication from '@models/authentication';
 import cacheControl from '@models/cache-control';
 import user from '@models/user';
+import { NextResponse } from 'next/server';
 
 export interface RegisterWithoutPasswordRequest extends NextApiRequest {
   body: {
@@ -21,13 +22,29 @@ router
   .use(authentication.injectAnonymousOrUser)
   .use(controller.logRequest)
   .use(cacheControl.noCache)
-  .post(registerWithoutPasswordValidationHandler, register);
+  .post(registerWithoutPasswordValidationHandler, registerWithoutPassword);
 
 export default router.handler({
   // attachParams: true,
   onNoMatch: controller.onNoMatchHandler,
   onError: controller.onErrorHandler,
 });
+
+export async function OPTIONS(request: Request) {
+  const allowedOrigin = request.headers.get('origin');
+  const response = new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': allowedOrigin || '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
+
+  return response;
+}
 
 function registerWithoutPasswordValidationHandler(
   req: RegisterWithoutPasswordRequest,
@@ -41,7 +58,7 @@ function registerWithoutPasswordValidationHandler(
   return next();
 }
 
-async function register(
+async function registerWithoutPassword(
   req: RegisterWithoutPasswordRequest,
   res: NextApiResponse
 ) {
