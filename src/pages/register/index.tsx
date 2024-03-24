@@ -114,48 +114,6 @@ export default function Login() {
         message: 'usuário criado com sucesso',
         description: 'confirme seu e-mail para continuar',
       });
-
-      // router.push('/');
-
-      // const loginResponse = await signIn('credentials', {
-      //   email: data.email,
-      //   password: data.password,
-      //   callbackUrl: '/',
-      //   redirect: false,
-      // });
-
-      // console.log('LOGIN RESPONSE');
-      // console.log(loginResponse);
-
-      // if (!loginResponse) {
-      //   errorToast({
-      //     message: 'algum erro aconteceu',
-      //     description: 'tente novamente mais tarde',
-      //   });
-
-      //   return;
-      // }
-
-      // if (loginResponse.ok) {
-      //   successToast({
-      //     message: 'usuário criado com sucesso',
-      //     description: 'aproveite a plataforma :)',
-      //   });
-      //   router.push('/');
-      // } else if (loginResponse.error === 'invalid-credentials') {
-      //   errorToast({
-      //     message: 'e-mail ou senha incorretos',
-      //   });
-
-      //   return;
-      // } else if (loginResponse.error === 'invalid-login-method') {
-      //   errorToast({
-      //     message: 'método de login inválido',
-      //     description: 'tente fazer login usando o google',
-      //   });
-
-      //   return;
-      // }
     } catch (err) {
       const { description, message } = convertErrorMessage({ err });
       errorToast({

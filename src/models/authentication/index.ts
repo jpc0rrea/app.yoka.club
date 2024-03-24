@@ -34,6 +34,17 @@ async function comparePasswords({
   }
 }
 
+async function generateRandomPassword() {
+  const generatedPassword = await password.generate();
+
+  const hashedPassword = await password.hash(generatedPassword);
+
+  return {
+    generatedPassword,
+    hashedPassword,
+  };
+}
+
 async function injectAnonymousOrUser(
   request: NextApiRequest,
   response: NextApiResponse,
@@ -119,6 +130,7 @@ async function ensureAuthenticatedAndInjectUser(
 export default Object.freeze({
   hashPassword,
   comparePasswords,
+  generateRandomPassword,
   injectAnonymousOrUser,
   // parseSetCookies,
   createSessionAndSetCookies,
