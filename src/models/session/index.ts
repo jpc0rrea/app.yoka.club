@@ -72,6 +72,7 @@ function clearSessionIdCookie(response: NextApiResponse) {
       secure: process.env.NODE_ENV === 'production',
       path: '/',
       maxAge: -1,
+      domain: process.env.COOKIE_DOMAIN,
     }),
   ]);
 }
