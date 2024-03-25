@@ -45,6 +45,15 @@ async function generateRandomPassword() {
   };
 }
 
+async function injectAuthenticatedUserOnRequest(
+  request: NextApiRequest,
+  response: NextApiResponse,
+  next: () => void
+) {
+  await injectAuthenticatedUser({ request });
+  return next();
+}
+
 async function injectAnonymousOrUser(
   request: NextApiRequest,
   response: NextApiResponse,
@@ -65,6 +74,7 @@ async function injectAuthenticatedUser({
   const sessionObject = await session.findOneValidFromRequest({
     req: request,
   });
+
   const userObject = await user.findOneById({
     userId: sessionObject.userId,
     prismaInstance: prisma,
@@ -132,6 +142,7 @@ export default Object.freeze({
   comparePasswords,
   generateRandomPassword,
   injectAnonymousOrUser,
+  injectAuthenticatedUserOnRequest,
   // parseSetCookies,
   createSessionAndSetCookies,
   ensureAuthenticatedAndInjectUser,

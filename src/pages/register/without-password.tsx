@@ -6,10 +6,12 @@ import { Loader2 } from 'lucide-react';
 
 import Confetti from '@components/Confetti';
 import useUser from '@hooks/useUser';
+import { api } from '@lib/api';
 
 export default function ActiveUserWithoutPassword() {
   const router = useRouter();
-  const { user, isLoading } = useUser();
+  const { sessionToken } = router.query;
+  const { user, isLoading, fetchUser } = useUser();
 
   const [globalMessage, setGlobalMessage] = useState('ativando sua conta...');
   const [globalDescription, setGlobalDescription] = useState(
@@ -17,9 +19,26 @@ export default function ActiveUserWithoutPassword() {
   );
   const [buttonText, setButtonText] = useState('login');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
-    if (isLoading) {
+    if (sessionToken) {
+      const handleFetchUser = async () => {
+        await api.patch('/sessions', {
+          sessionToken,
+        });
+
+        await fetchUser();
+        setIsFetching(false);
+      };
+
+      handleFetchUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionToken]);
+
+  useEffect(() => {
+    if (isLoading || isFetching) {
       return;
     }
 
@@ -40,7 +59,7 @@ export default function ActiveUserWithoutPassword() {
     );
     setButtonText('ir para login');
     setIsSuccess(false);
-  }, [isLoading, user]);
+  }, [isLoading, user, isFetching]);
 
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -63,7 +82,7 @@ export default function ActiveUserWithoutPassword() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
         <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
           <div className="flex items-center justify-center">
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <Loader2 className="mr-2 mt-1 h-4 w-4 animate-spin" />
             ) : isSuccess ? (
               <CheckCircleIcon className="mt-1 h-5 w-5 text-green-400" />

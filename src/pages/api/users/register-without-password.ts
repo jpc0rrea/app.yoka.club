@@ -5,7 +5,8 @@ import controller from '@models/controller';
 import authentication from '@models/authentication';
 import cacheControl from '@models/cache-control';
 import user from '@models/user';
-import { NextResponse } from 'next/server';
+import { setCookie } from 'nookies';
+import { SESSION_EXPIRATION_IN_SECONDS } from '@models/session';
 
 export interface RegisterWithoutPasswordRequest extends NextApiRequest {
   body: {
@@ -24,27 +25,20 @@ router
   .use(cacheControl.noCache)
   .post(registerWithoutPasswordValidationHandler, registerWithoutPassword);
 
+// enable cors
+router.all((req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  return res.status(200).end();
+});
+
 export default router.handler({
   // attachParams: true,
   onNoMatch: controller.onNoMatchHandler,
   onError: controller.onErrorHandler,
 });
-
-export async function OPTIONS(request: Request) {
-  const allowedOrigin = request.headers.get('origin');
-  const response = new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': allowedOrigin || '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version',
-      'Access-Control-Max-Age': '86400',
-    },
-  });
-
-  return response;
-}
 
 function registerWithoutPasswordValidationHandler(
   req: RegisterWithoutPasswordRequest,
@@ -64,13 +58,22 @@ async function registerWithoutPassword(
 ) {
   const newUser = await user.createWithoutPassword(req.body);
 
-  await authentication.createSessionAndSetCookies({
+  const session = await authentication.createSessionAndSetCookies({
     userId: newUser.id,
     response: res,
   });
 
+  setCookie({ res }, 'session_id', session.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: SESSION_EXPIRATION_IN_SECONDS,
+    domain: process.env.COOKIE_DOMAIN,
+  });
+
   return res.status(201).json({
     code: 'user-created',
+    sessionToken: session.sessionToken,
   });
 }
 

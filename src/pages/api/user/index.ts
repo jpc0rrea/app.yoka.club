@@ -7,12 +7,13 @@ import controller from '@models/controller';
 import session from 'models/session';
 import { AuthenticatedRequest } from '@models/controller/types';
 import user from '@models/user';
+import { UnauthorizedError } from '@errors/index';
 
 const router = createRouter<AuthenticatedRequest, NextApiResponse>();
 
 router
   .use(controller.injectRequestMetadata)
-  .use(authentication.injectAnonymousOrUser)
+  .use(authentication.injectAuthenticatedUserOnRequest)
   .use(controller.logRequest)
   .use(cacheControl.noCache)
   .get(renewSessionIfNecessary, getHandler);
@@ -39,6 +40,13 @@ async function renewSessionIfNecessary(
   next: () => void
 ) {
   let sessionObject = request.context.session;
+
+  if (!sessionObject) {
+    throw new UnauthorizedError({
+      message: `usuário não possui sessão ativa.`,
+      action: `verifique se este usuário está logado.`,
+    });
+  }
 
   // Renew session if it expires in less than 3 weeks.
   if (

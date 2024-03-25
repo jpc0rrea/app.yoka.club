@@ -19,13 +19,20 @@ export interface CreateSessionRequest extends NextApiRequest {
   };
 }
 
+export interface PatchSessionRequest extends NextApiRequest {
+  body: {
+    sessionToken: string;
+  };
+}
+
 router
   .use(controller.injectRequestMetadata)
   .use(authentication.injectAnonymousOrUser)
   .use(controller.logRequest)
   .use(cacheControl.noCache)
   .delete(deleteSessionHandler)
-  .post(createSessionValidationHandler, createSessionHandler);
+  .post(createSessionValidationHandler, createSessionHandler)
+  .patch(updateSessionInRequest);
 
 export default router.handler({
   // attachParams: true,
@@ -107,6 +114,32 @@ async function createSessionHandler(
   return res.status(201).json({
     code: 'session-created',
     user: cleanUser,
+    session: sessionObject,
+  });
+}
+
+async function updateSessionInRequest(
+  req: PatchSessionRequest,
+  res: NextApiResponse
+) {
+  const sessionToken = req.body.sessionToken;
+  const sessionObject = await session.findOneValidByToken({ sessionToken });
+
+  if (!sessionObject) {
+    throw new UnauthorizedError({
+      message: `sessão inválida.`,
+      action: `verifique se o token de sessão enviado está correto.`,
+      errorLocationCode: `CONTROLLER:SESSIONS:PATCH_HANDLER:INVALID_SESSION`,
+    });
+  }
+
+  session.setSessionIdCookieInResponse({
+    response: res,
+    sessionToken: sessionObject.sessionToken,
+  });
+
+  return res.status(200).json({
+    code: 'session-updated',
     session: sessionObject,
   });
 }
