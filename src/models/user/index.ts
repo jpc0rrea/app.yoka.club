@@ -8,6 +8,7 @@ import authentication from '@models/authentication';
 import {
   CleanUserToFrontendParams,
   CreateUserData,
+  CreateWithoutPasswordUserData,
   FindOneByEmailParams,
   FindOneByIdParams,
   GetUserProfileByUsernameParams,
@@ -21,6 +22,11 @@ import eventLogs from '@models/event-logs';
 import { UpdateUserProfileRequest } from '@pages/api/user/profile';
 import { UpdateProfileFormData } from '@pages/profile';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
+import checkin from '@models/checkin';
+import mailLists from '@lib/mail/mailLists';
+import webserver from '@infra/webserver';
+import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
+import { RegisterWithoutPasswordRequest } from '@pages/api/users/register-without-password';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -43,6 +49,66 @@ async function create(userData: CreateUserData) {
       displayName,
     },
   });
+
+  return user;
+}
+
+async function createWithoutPassword(userData: CreateWithoutPasswordUserData) {
+  const { email, phoneNumber, name } = userData;
+
+  await validateUniqueEmail(email);
+
+  const username = await generateUniqueUsernameFromEmail(email);
+
+  const displayName = name
+    ? generateDisplayNameFromName(name)
+    : generateDisplayNameFromEmail(email);
+
+  const { generatedPassword, hashedPassword } =
+    await authentication.generateRandomPassword();
+
+  const user = await prisma.user.create({
+    data: {
+      email,
+      phoneNumber,
+      username,
+      displayName,
+      name: name || displayName,
+      password: hashedPassword,
+      isUserActivated: true,
+    },
+  });
+
+  await checkin.giveTrialCheckin({ userId: user.id });
+
+  // enviar email de boas vindas
+  const mailService = new SendGridMailService();
+
+  await mailService.addContact({
+    email: user.email,
+    firstName: user.displayName,
+    listIds: [mailLists['user-onboarding']],
+  });
+
+  await mailService.send({
+    template: 'userRegisteredWithoutPassword',
+    to: user.email,
+    templateData: {
+      userName: user.displayName,
+      buttonLink: `${webserver.host}/profile`,
+      password: generatedPassword,
+    },
+  });
+
+  await sendMessageToYogaComKakaTelegramGroup(
+    `
+🎉🎉🎉
+o usuário ${user.displayName} acabou de ativar sua conta!
+
+    email: ${user.email}
+    telefone: ${user.phoneNumber}
+`
+  );
 
   return user;
 }
@@ -83,6 +149,10 @@ async function generateUniqueUsernameFromEmail(email: string) {
 
 function generateDisplayNameFromName(name: string) {
   return name.split(' ')[0] || name;
+}
+
+function generateDisplayNameFromEmail(email: string) {
+  return email.split('@')[0] || email;
 }
 
 async function findOneById({ userId }: FindOneByIdParams) {
@@ -185,6 +255,58 @@ function validateRegisterUserRequest(req: RegisterRequest) {
     name: name.trim(),
     phoneNumber: phoneNumber.trim(),
   } as CreateUserData;
+}
+
+function validateRegisterUserWithoutPasswordRequest(
+  req: RegisterWithoutPasswordRequest
+) {
+  const { email, name, phoneNumber } = req.body;
+
+  if (!email || !name || !phoneNumber) {
+    throw new ValidationError({
+      message: `Os campos "email", "name" e "phoneNumber" são obrigatórios.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_WITHOUT_PASS_REQUEST:MISSING_FIELDS',
+      key: 'email',
+    });
+  }
+
+  if (typeof email !== 'string' || !email.includes('@')) {
+    throw new ValidationError({
+      message: `O campo "email" não é um email válido.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_WITHOUT_PASS_REQUEST:INVALID_EMAIL',
+      key: 'email',
+    });
+  }
+
+  if (typeof name !== 'string' || name.length < 3) {
+    throw new ValidationError({
+      message: `O campo "name" deve ter no mínimo 3 caracteres.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_WITHOUT_PASS_REQUEST:INVALID_NAME',
+      key: 'name',
+    });
+  }
+
+  if (!isValidPhoneNumber(phoneNumber)) {
+    throw new ValidationError({
+      message: `O campo "phoneNumber" não é um número de telefone válido.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_REQUEST:INVALID_PHONE_NUMBER',
+      key: 'phoneNumber',
+    });
+  }
+
+  return {
+    email: email.toLowerCase().trim(),
+    name: name.trim(),
+    phoneNumber: phoneNumber.trim(),
+  } as CreateWithoutPasswordUserData;
 }
 
 function validateUpdateUserProfileRequest(req: UpdateUserProfileRequest) {
@@ -418,8 +540,6 @@ async function updateProfile({
     });
   }
 
-  console.log(displayName);
-
   const updatedUser = await prisma.user.update({
     where: {
       id: userId,
@@ -516,7 +636,9 @@ export default Object.freeze({
   findOneByEmail,
   generateUniqueUsernameFromEmail,
   generateDisplayNameFromName,
+  createWithoutPassword,
   validateRegisterUserRequest,
+  validateRegisterUserWithoutPasswordRequest,
   validateUpdateUserProfileRequest,
   cleanUserToFrontend,
   updateUserSubscription,

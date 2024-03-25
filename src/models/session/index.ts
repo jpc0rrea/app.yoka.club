@@ -17,7 +17,7 @@ import { UnauthorizedError, ValidationError } from '@errors/index';
 import { CreateSessionRequest } from '@pages/api/sessions';
 import { subDays } from 'date-fns';
 
-const SESSION_EXPIRATION_IN_SECONDS = 60 * 60 * 24 * 30; // 30 days
+export const SESSION_EXPIRATION_IN_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 async function create({ userId }: CreateSessionParams) {
   const sessionToken = crypto.randomBytes(48).toString('hex');
@@ -45,6 +45,7 @@ function setSessionIdCookieInResponse({
       secure: process.env.NODE_ENV === 'production',
       path: '/',
       maxAge: SESSION_EXPIRATION_IN_SECONDS,
+      domain: process.env.COOKIE_DOMAIN,
     }),
   ]);
 }

@@ -34,6 +34,26 @@ async function comparePasswords({
   }
 }
 
+async function generateRandomPassword() {
+  const generatedPassword = await password.generate();
+
+  const hashedPassword = await password.hash(generatedPassword);
+
+  return {
+    generatedPassword,
+    hashedPassword,
+  };
+}
+
+async function injectAuthenticatedUserOnRequest(
+  request: NextApiRequest,
+  response: NextApiResponse,
+  next: () => void
+) {
+  await injectAuthenticatedUser({ request });
+  return next();
+}
+
 async function injectAnonymousOrUser(
   request: NextApiRequest,
   response: NextApiResponse,
@@ -54,6 +74,7 @@ async function injectAuthenticatedUser({
   const sessionObject = await session.findOneValidFromRequest({
     req: request,
   });
+
   const userObject = await user.findOneById({
     userId: sessionObject.userId,
     prismaInstance: prisma,
@@ -119,7 +140,9 @@ async function ensureAuthenticatedAndInjectUser(
 export default Object.freeze({
   hashPassword,
   comparePasswords,
+  generateRandomPassword,
   injectAnonymousOrUser,
+  injectAuthenticatedUserOnRequest,
   // parseSetCookies,
   createSessionAndSetCookies,
   ensureAuthenticatedAndInjectUser,
