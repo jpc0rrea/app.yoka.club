@@ -19,6 +19,8 @@ import { errorToast } from '@components/Toast/ErrorToast';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { Loader2 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
+import ChangePassword from '@components/ChangePassword';
 
 const updateProfileFormSchema = z.object({
   displayName: z.string({
@@ -136,50 +138,56 @@ const Profile: NextPage = () => {
           <main className="flex-1 bg-white">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                {/* Replace with your content */}
-                <form
-                  className="space-y-8 divide-y divide-gray-200"
-                  onSubmit={handleSubmit(handleUpdateProfile)}
-                >
-                  <div className="max-w-2xl space-y-8 divide-y divide-gray-200">
-                    <div>
-                      <div>
-                        <h3 className="text-lg font-medium leading-6 text-gray-900">
-                          perfil
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          essas informações vão estar disponíveis para outras
-                          yoginis :)
-                        </p>
-                      </div>
+                <Tabs defaultValue="account" className="">
+                  <TabsList className="grid w-[400px] grid-cols-2">
+                    <TabsTrigger value="account">conta</TabsTrigger>
+                    <TabsTrigger value="password">senha</TabsTrigger>
+                  </TabsList>
 
-                      <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
-                        <div className="sm:col-span-4">
-                          <Input
-                            label="nome"
-                            helperText="esse é o nome que ficará disponível para os outros usuários"
-                            {...register('displayName')}
-                          />
-                        </div>
+                  <TabsContent value="account">
+                    <form
+                      className="space-y-8 divide-y divide-gray-200"
+                      onSubmit={handleSubmit(handleUpdateProfile)}
+                    >
+                      <div className="max-w-2xl space-y-8 divide-y divide-gray-200">
+                        <div>
+                          <div>
+                            <h3 className="text-lg font-medium leading-6 text-gray-900">
+                              perfil
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              essas informações vão estar disponíveis para
+                              outras yoginis :)
+                            </p>
+                          </div>
 
-                        <div className="sm:col-span-4">
-                          <Input
-                            label="username"
-                            helperText={`esse é o nome que ficará na url para acessar seu perfil: yogacomkaka.com/@${usernameValue}`}
-                            errorMessage={errors.username?.message}
-                            {...register('username')}
-                          />
-                        </div>
+                          <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
+                            <div className="sm:col-span-4">
+                              <Input
+                                label="nome"
+                                helperText="esse é o nome que ficará disponível para os outros usuários"
+                                {...register('displayName')}
+                              />
+                            </div>
 
-                        <div className="sm:col-span-6">
-                          <TextArea
-                            label="bio"
-                            helperText="fale um pouquinho sobre você"
-                            {...register('bio')}
-                          />
-                        </div>
+                            <div className="sm:col-span-4">
+                              <Input
+                                label="username"
+                                helperText={`esse é o nome que ficará na url para acessar seu perfil: yogacomkaka.com/@${usernameValue}`}
+                                errorMessage={errors.username?.message}
+                                {...register('username')}
+                              />
+                            </div>
 
-                        {/* <div className="sm:col-span-4">
+                            <div className="sm:col-span-6">
+                              <TextArea
+                                label="bio"
+                                helperText="fale um pouquinho sobre você"
+                                {...register('bio')}
+                              />
+                            </div>
+
+                            {/* <div className="sm:col-span-4">
                           <label
                             htmlFor="username"
                             className="block text-sm font-medium text-gray-700"
@@ -221,99 +229,109 @@ const Profile: NextPage = () => {
                           </p>
                         </div> */}
 
-                        <div className="sm:col-span-6">
-                          <label
-                            htmlFor="photo"
-                            className="ml-2 block text-sm font-medium text-gray-700"
-                          >
-                            foto
-                          </label>
-                          <div className="mt-1 flex items-center">
-                            <img
-                              className="h-20 w-20 rounded-full"
-                              src={
-                                user?.imageUrl || '/images/default-avatar.png'
-                              }
-                              alt=""
-                            />
-                            {/* <button
+                            <div className="sm:col-span-6">
+                              <label
+                                htmlFor="photo"
+                                className="ml-2 block text-sm font-medium text-gray-700"
+                              >
+                                foto
+                              </label>
+                              <div className="mt-1 flex items-center">
+                                <img
+                                  className="h-20 w-20 rounded-full"
+                                  src={
+                                    user?.imageUrl ||
+                                    '/images/default-avatar.png'
+                                  }
+                                  alt=""
+                                />
+                                {/* <button
                               type="button"
                               className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                               atualizar
                             </button> */}
-                            <UploadButton
-                              className="ml-2 ut-button:h-8 ut-button:bg-purple-800 ut-button:text-sm ut-button:after:bg-purple-900 ut-button:ut-readying:bg-purple-800/50 ut-uploading:cursor-not-allowed"
-                              endpoint="imageUploader"
-                              onClientUploadComplete={async (res) => {
-                                // Do something with the response
-                                console.log('Files: ', res);
+                                <UploadButton
+                                  className="ml-2 ut-button:h-8 ut-button:bg-purple-800 ut-button:text-sm ut-button:after:bg-purple-900 ut-button:ut-readying:bg-purple-800/50 ut-uploading:cursor-not-allowed"
+                                  endpoint="imageUploader"
+                                  onClientUploadComplete={async (res) => {
+                                    // Do something with the response
+                                    console.log('Files: ', res);
 
-                                await fetchUser();
-                                successToast({
-                                  message: 'foto atualizada com sucesso',
-                                  description:
-                                    'sua foto de perfil foi atualizada :)',
-                                });
-                              }}
-                              onUploadError={(error: Error) => {
-                                // Do something with the error.
-                                console.log(error);
-                                errorToast({
-                                  message: 'erro ao atualizar foto',
-                                  description:
-                                    'ocorreu um erro ao atualizar sua foto de perfil :(',
-                                });
-                              }}
-                              content={{
-                                button({ ready, uploadProgress, isUploading }) {
-                                  if (isUploading)
-                                    return (
-                                      <div>
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                      </div>
-                                    );
-                                  if (ready) return <div>atualizar</div>;
+                                    await fetchUser();
+                                    successToast({
+                                      message: 'foto atualizada com sucesso',
+                                      description:
+                                        'sua foto de perfil foi atualizada :)',
+                                    });
+                                  }}
+                                  onUploadError={(error: Error) => {
+                                    // Do something with the error.
+                                    console.log(error);
+                                    errorToast({
+                                      message: 'erro ao atualizar foto',
+                                      description:
+                                        'ocorreu um erro ao atualizar sua foto de perfil :(',
+                                    });
+                                  }}
+                                  content={{
+                                    button({
+                                      ready,
+                                      uploadProgress,
+                                      isUploading,
+                                    }) {
+                                      if (isUploading)
+                                        return (
+                                          <div>
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                          </div>
+                                        );
+                                      if (ready) return <div>atualizar</div>;
 
-                                  return `${uploadProgress}%`;
-                                },
-                                allowedContent({
-                                  ready,
-                                  isUploading,
-                                  uploadProgress,
-                                }) {
-                                  if (!ready) return 'Checking what you allow';
-                                  if (isUploading) return `${uploadProgress}%`;
-                                  return `escolha a sua foto nova :)`;
-                                },
-                              }}
-                            />
+                                      return `${uploadProgress}%`;
+                                    },
+                                    allowedContent({
+                                      ready,
+                                      isUploading,
+                                      uploadProgress,
+                                    }) {
+                                      if (!ready)
+                                        return 'Checking what you allow';
+                                      if (isUploading)
+                                        return `${uploadProgress}%`;
+                                      return `escolha a sua foto nova :)`;
+                                    },
+                                  }}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
 
-                    <div className="pt-8">
-                      <div>
-                        <h3 className="text-lg font-medium leading-6 text-gray-900">
-                          informações pessoais
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          essas informações são privadas :)
-                        </p>
-                      </div>
-                      <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
-                        <div className="sm:col-span-4">
-                          <Input label="nome completo" {...register('name')} />
+                        <div className="pt-8">
+                          <div>
+                            <h3 className="text-lg font-medium leading-6 text-gray-900">
+                              informações pessoais
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              essas informações são privadas :)
+                            </p>
+                          </div>
+                          <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
+                            <div className="sm:col-span-4">
+                              <Input
+                                label="nome completo"
+                                {...register('name')}
+                              />
+                            </div>
+
+                            <div className="sm:col-span-4">
+                              <Input label="e-mail" {...register('email')} />
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="sm:col-span-4">
-                          <Input label="e-mail" {...register('email')} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <div className="pt-8">
+                        {/* <div className="pt-8">
                       <div>
                         <h3 className="text-lg font-medium leading-6 text-gray-900">
                           notificações
@@ -394,31 +412,35 @@ const Profile: NextPage = () => {
                         </div>
                       </div>
                     </div> */}
-                  </div>
+                      </div>
 
-                  <div className="pt-5">
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={handleCancelUpdateProfile}
-                        className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
-                      >
-                        cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className="ml-3 inline-flex w-16 justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
-                      >
-                        {isSubmitting ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          'salvar'
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </form>
-                {/* /End replace */}
+                      <div className="pt-5">
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={handleCancelUpdateProfile}
+                            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
+                          >
+                            cancelar
+                          </button>
+                          <button
+                            type="submit"
+                            className="ml-3 inline-flex w-16 justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
+                          >
+                            {isSubmitting ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              'salvar'
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </TabsContent>
+                  <TabsContent value="password">
+                    <ChangePassword />
+                  </TabsContent>
+                </Tabs>
               </div>
             </div>
           </main>
