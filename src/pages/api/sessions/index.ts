@@ -23,6 +23,8 @@ export interface PatchSessionRequest extends NextApiRequest {
   body: {
     sessionToken: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  context: any;
 }
 
 router
@@ -44,7 +46,6 @@ async function deleteSessionHandler(
   request: AuthenticatedRequest,
   response: NextApiResponse
 ) {
-  request.context.user;
   const sessionObject = request.context.session;
 
   await session.expireById({
@@ -122,6 +123,16 @@ async function updateSessionInRequest(
   req: PatchSessionRequest,
   res: NextApiResponse
 ) {
+  const sessionObjectInContext = req.context?.session;
+
+  if (sessionObjectInContext) {
+    await session.expireById({
+      sessionId: sessionObjectInContext.id,
+    });
+
+    session.clearSessionIdCookie(res);
+  }
+
   const sessionToken = req.body.sessionToken;
   const sessionObject = await session.findOneValidByToken({ sessionToken });
 
