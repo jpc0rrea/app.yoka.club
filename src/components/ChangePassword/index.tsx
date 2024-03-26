@@ -32,6 +32,7 @@ export default function ChangePassword() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdatePasswordFormData>({
     resolver: zodResolver(updatePasswordFormSchema),
@@ -48,6 +49,9 @@ export default function ChangePassword() {
       successToast({
         message: 'senha atualizada com sucesso',
       });
+
+      // reset form
+      reset();
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
