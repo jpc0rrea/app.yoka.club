@@ -21,6 +21,10 @@ declare global {
 
       // Mercado Pago
       MERCADO_PAGO_ACCESS_TOKEN: string;
+
+      // PostHog
+      NEXT_PUBLIC_POSTHOG_KEY: string;
+      NEXT_PUBLIC_POSTHOG_HOST: string;
     }
   }
 }

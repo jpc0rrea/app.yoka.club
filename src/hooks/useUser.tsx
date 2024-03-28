@@ -13,6 +13,7 @@ import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { successToast } from '@components/Toast/SuccessToast';
+import { usePostHog } from 'posthog-js/react';
 
 const userEndpoint = '/user';
 const sessionEndpoint = '/sessions';
@@ -51,7 +52,10 @@ export interface UserContextData {
   user: null | UserInContext;
   isLoading: boolean;
   error: ErrorInUserContext | undefined;
-  fetchUser: () => Promise<void>;
+  fetchUser: () => Promise<{
+    id: string;
+    email: string;
+  } | void>;
   logout: () => Promise<void>;
 }
 
@@ -71,6 +75,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<undefined | ErrorInUserContext>(undefined);
   const router = useRouter();
+  const posthog = usePostHog();
 
   const fetchUser = useCallback(async () => {
     try {
@@ -97,9 +102,23 @@ export function UserProvider({ children }: UserProviderProps) {
           cacheTime: Date.now(),
         };
 
+        posthog?.identify(fetchedUser.id, {
+          email: fetchedUser.email,
+        });
+
         setUser(fetchedUser);
         localStorage.setItem('user', JSON.stringify(cachedUserProperties));
         localStorage.removeItem('reloadTime');
+
+        posthog?.capture('user_activated', {
+          email: fetchedUser.email,
+          id: fetchedUser.id,
+        });
+
+        return {
+          id: fetchedUser.id,
+          email: fetchedUser.email,
+        };
       }
 
       if (fetchUserResponse.status >= 400) {
@@ -121,7 +140,7 @@ export function UserProvider({ children }: UserProviderProps) {
       setUser(null);
       localStorage.removeItem('user');
     }
-  }, []);
+  }, [posthog]);
 
   useEffect(() => {
     // const storedUser = localStorage.getItem('user');
