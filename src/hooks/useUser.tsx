@@ -110,11 +110,6 @@ export function UserProvider({ children }: UserProviderProps) {
         localStorage.setItem('user', JSON.stringify(cachedUserProperties));
         localStorage.removeItem('reloadTime');
 
-        posthog?.capture('user_activated', {
-          email: fetchedUser.email,
-          id: fetchedUser.id,
-        });
-
         return {
           id: fetchedUser.id,
           email: fetchedUser.email,
@@ -158,6 +153,7 @@ export function UserProvider({ children }: UserProviderProps) {
         // setUser(JSON.parse(storedUser));
         setIsFetching(true);
         await fetchUser();
+
         setIsFetching(false);
       }
       setIsLoading(false);
@@ -202,6 +198,8 @@ export function UserProvider({ children }: UserProviderProps) {
           description: 'até logo :)',
         });
 
+        posthog?.capture('user_logged_out');
+
         router.push('/login');
       }
     } catch (err) {
@@ -212,7 +210,7 @@ export function UserProvider({ children }: UserProviderProps) {
         description,
       });
     }
-  }, [router]);
+  }, [router, posthog]);
 
   const userContextValue = {
     user,
