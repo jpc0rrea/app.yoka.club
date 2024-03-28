@@ -74,6 +74,7 @@ async function registerWithoutPassword(
   return res.status(201).json({
     code: 'user-created',
     sessionToken: session.sessionToken,
+    userId: newUser.id,
   });
 }
 

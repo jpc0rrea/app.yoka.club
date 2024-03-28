@@ -16,6 +16,7 @@ import { Value, isValidPhoneNumber } from 'react-phone-number-input';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import useUser from '@hooks/useUser';
 import { PasswordInput } from '@components/Form/PasswordInput';
+import { usePostHog } from 'posthog-js/react';
 
 const registerFormSchema = z
   .object({
@@ -73,6 +74,7 @@ export default function Login() {
   const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState<
     FieldError | undefined
   >(undefined);
+  const posthog = usePostHog();
 
   const handlePhoneNumberChange = (value?: Value) => {
     setPhoneNumber(value);
@@ -100,7 +102,9 @@ export default function Login() {
     }
 
     try {
-      await api.post('/users/register', {
+      const response = await api.post<{
+        userId: string;
+      }>('/users/register', {
         email: data.email,
         password: data.password,
         name: data.fullName,
@@ -109,6 +113,17 @@ export default function Login() {
 
       localStorage.setItem('registrationEmail', data.email);
       router.push('/register/confirm');
+
+      posthog?.identify(response.data.userId, {
+        email: data.email,
+      });
+
+      posthog?.capture('user_registered_with_password', {
+        email: data.email,
+        name: data.fullName,
+        phoneNumber: String(phoneNumber),
+        id: response.data.userId,
+      });
 
       successToast({
         message: 'usuário criado com sucesso',

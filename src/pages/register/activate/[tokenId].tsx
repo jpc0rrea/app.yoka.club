@@ -8,6 +8,7 @@ import Confetti from '@components/Confetti';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import useUser from '@hooks/useUser';
+import { usePostHog } from 'posthog-js/react';
 
 export default function ActiveUser() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function ActiveUser() {
   const [buttonText, setButtonText] = useState('login');
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const posthog = usePostHog();
 
   const handleActivateUser = async (token: string) => {
     try {
@@ -35,7 +37,15 @@ export default function ActiveUser() {
           'você ganhou 1 check-in para testar a plataforma. aproveite!'
         );
         setButtonText('ir para a página inicial');
-        await fetchUser();
+        const response = await fetchUser();
+
+        const email = response ? response.email : 'unknown';
+        const id = response ? response.id : 'unknown';
+
+        posthog?.capture('user_activated', {
+          email,
+          id,
+        });
 
         return;
       }

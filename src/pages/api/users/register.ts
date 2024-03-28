@@ -52,6 +52,7 @@ async function register(req: RegisterRequest, res: NextApiResponse) {
 
   return res.status(201).json({
     code: 'user-created',
+    userId: newUser.id,
   });
 }
 
