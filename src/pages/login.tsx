@@ -13,6 +13,7 @@ import useUser from '@hooks/useUser';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { PasswordInput } from '@components/Form/PasswordInput';
+import { usePostHog } from 'posthog-js/react';
 
 const loginFormSchema = z.object({
   email: z
@@ -34,6 +35,7 @@ type LoginFormData = z.infer<typeof loginFormSchema>;
 export default function Login() {
   const router = useRouter();
   const { user, fetchUser } = useUser();
+  const posthog = usePostHog();
 
   const {
     register,
@@ -63,6 +65,8 @@ export default function Login() {
           message: 'login realizado com sucesso',
           description: 'aproveite a plataforma :)',
         });
+
+        posthog?.capture('user_logged_in');
 
         router.push('/');
         return;
