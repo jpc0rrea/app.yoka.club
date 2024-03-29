@@ -27,6 +27,8 @@ const listRecordedEvents = async (
   res: NextApiResponse
 ) => {
   try {
+    const { role, userId } = req;
+
     const {
       search: searchInString,
       page: pageInString,
@@ -71,6 +73,7 @@ const listRecordedEvents = async (
         intensity: {
           in: intensity,
         },
+        instructorId: role === 'INSTRUCTOR' ? userId : undefined,
       },
       orderBy: {
         startDate: 'desc',
@@ -105,4 +108,7 @@ const listRecordedEvents = async (
   }
 };
 
-export default ensureAuthenticatedWithRole(listRecordedEvents, ['ADMIN']);
+export default ensureAuthenticatedWithRole(listRecordedEvents, [
+  'ADMIN',
+  'INSTRUCTOR',
+]);

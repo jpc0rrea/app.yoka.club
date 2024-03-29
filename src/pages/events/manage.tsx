@@ -69,7 +69,7 @@ const Event: NextPage = () => {
     isLive: isLiveFilter,
     page,
     pageSize,
-    enabled: !!user && user.role === 'ADMIN',
+    enabled: !!user && (user.role === 'ADMIN' || user.role === 'INSTRUCTOR'),
   });
 
   const { events, totalPages } = data || {};
@@ -117,13 +117,15 @@ const Event: NextPage = () => {
                   setIsLiveFilter={setIsLiveFilter}
                 />
                 <EventsSection events={events} isLoading={isLoading} />
-                <Pagination
-                  currentPage={page}
-                  pageSize={pageSize}
-                  totalPages={totalPages || 1}
-                  onChangePage={setPage}
-                  onChangePageSize={setPageSize}
-                />
+                {!isLoading && events && events.length > 0 && (
+                  <Pagination
+                    currentPage={page}
+                    pageSize={pageSize}
+                    totalPages={totalPages || 1}
+                    onChangePage={setPage}
+                    onChangePageSize={setPageSize}
+                  />
+                )}
               </main>
             </div>
           </main>
