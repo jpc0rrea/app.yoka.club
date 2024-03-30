@@ -15,6 +15,7 @@ import {
   UserIcon,
   CreditCardIcon,
   PlayCircleIcon,
+  RocketIcon,
 } from 'lucide-react';
 import useUser from '@hooks/useUser';
 
@@ -59,6 +60,12 @@ export const navigationItems = [
     name: 'gerenciar usuários',
     href: '/admin/users',
     icon: UsersIcon,
+    role: ['ADMIN'],
+  },
+  {
+    name: 'business',
+    href: '/admin/business',
+    icon: RocketIcon,
     role: ['ADMIN'],
   },
 ];
