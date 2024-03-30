@@ -105,7 +105,7 @@ export default function ActiveUserWithoutPassword() {
                 className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
                 onClick={() => {
                   if (isSuccess) {
-                    router.push('/');
+                    router.push('/?firstTime=true');
                   } else {
                     router.push('/login');
                   }

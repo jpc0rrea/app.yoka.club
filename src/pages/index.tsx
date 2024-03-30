@@ -7,6 +7,7 @@ import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscri
 import Calendar from '@components/Calendar';
 import NextEventsSection from '@components/NextEventsSection';
 import HappeningNowEvents from '@components/HappeningNowEvents';
+import OnboardingUserModal from '@components/Modals/OnboardingUserModal';
 
 const Home: NextPage = () => {
   return (
@@ -21,6 +22,7 @@ const Home: NextPage = () => {
           <Header />
 
           <main className="flex-1 bg-white">
+            <OnboardingUserModal />
             <HappeningNowEvents />
             <NextEventsSection />
             <div className="py-6">
