@@ -74,6 +74,7 @@
     "react-hook-form": "^7.45.2",
     "react-hot-toast": "^2.4.0",
     "react-phone-number-input": "^3.3.6",
+    "react-player": "^2.15.1",
     "react-use-measure": "^2.1.1",
     "set-cookie-parser": "^2.6.0",
     "snakeize": "^0.1.0",

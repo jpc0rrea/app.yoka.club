@@ -54,6 +54,7 @@ model User {
     statements            Statement[]
     activateAccountTokens ActivateAccountToken[]
     eventLogs             EventLog[]
+    WatchSession          WatchSession[]
 
     @@map("users")
 }
@@ -93,8 +94,9 @@ model Event {
     intensity           String?
     isPremium           Boolean   @default(true) @map("is_premium")
 
-    instructor User      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-    checkIns   CheckIn[]
+    instructor   User           @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+    checkIns     CheckIn[]
+    WatchSession WatchSession[]
 
     @@map("events")
 }
@@ -200,4 +202,19 @@ model EventLog {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("event_logs")
+}
+
+model WatchSession {
+    id            String   @id @default(cuid())
+    userId        String   @map("user_id")
+    eventId       String   @map("event_id")
+    progress      Float    @default(0)
+    playedSeconds Int      @default(0) @map("played_seconds")
+    createdAt     DateTime @default(now()) @map("created_at")
+    updatedAt     DateTime @updatedAt @map("updated_at")
+
+    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@map("watch_sessions")
 }
