@@ -7,6 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export interface EnsureAuthenticatedRequest extends NextApiRequest {
   userId: string;
+  role: UserRole;
 }
 
 export default function ensureAuthenticated(handler: any) {
@@ -47,6 +48,8 @@ export function ensureAuthenticatedWithRole(handler: any, roles: UserRole[]) {
       if (!roles.includes(userObject.role)) {
         return res.status(403).json({ message: 'Forbidden' });
       }
+
+      req.role = userObject.role;
 
       return handler(req, res);
     } catch (err) {

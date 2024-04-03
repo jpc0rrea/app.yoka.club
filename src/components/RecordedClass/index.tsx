@@ -1,16 +1,15 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/23DispJmXdh
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import { EventFromAPI } from '@models/events/types';
 import IntensityBadge from '@components/reusables/IntensityBadge';
 import DurationBadge from '@components/reusables/DurationBadge';
 import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
-import getYouTubeEmbedUrl from '@lib/utilities/getYouTubeEmbedURL';
 import { useUserPlan } from '@hooks/useUserPlan';
 import { Loader2 } from 'lucide-react';
 import { LockIcon } from 'lucide-react';
+import ReactPlayer from 'react-player';
+import { OnProgressProps } from 'react-player/base';
+import { api } from '@lib/api';
+import { useCallback, useState } from 'react';
+import { WatchSession } from '@prisma/client';
 // import RecomendedVideos from './RecomendedVideos';
 
 interface RecordedClassProps {
@@ -22,7 +21,25 @@ interface RecordedClassProps {
 
 export default function RecordedClass({ event }: RecordedClassProps) {
   const { data: userPlan, isLoading: isUserLoading } = useUserPlan();
+  const [watchSessionId, setWatchSessionId] = useState<string | undefined>(
+    undefined
+  );
   const { isPremium } = event;
+
+  const onProgress = useCallback(
+    async (state: OnProgressProps) => {
+      try {
+        await api.post('watch-session/progress', {
+          watchSessionId,
+          progress: Number(state.played.toFixed(2)),
+          playedSeconds: state.playedSeconds,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [watchSessionId]
+  );
 
   if (!event || !event.recordedUrl) {
     return null;
@@ -30,6 +47,14 @@ export default function RecordedClass({ event }: RecordedClassProps) {
 
   if (!userPlan || isUserLoading) {
     return <Loader2 className="m-8 h-8 w-8" />;
+  }
+
+  async function onStart() {
+    const watchSessionResponse = await api.get<{
+      watchSession: WatchSession;
+    }>(`watch-session?eventId=${event.id}`);
+
+    setWatchSessionId(watchSessionResponse.data.watchSession.id);
   }
 
   const userHaveAccess = userPlan.canSeeExclusiveContents || !isPremium;
@@ -84,14 +109,29 @@ export default function RecordedClass({ event }: RecordedClassProps) {
                 <div className="absolute left-0 top-0 z-[5] h-full w-full bg-black bg-opacity-20 blur-md"></div>
               )}
               {event.recordedUrl && (
-                <iframe
-                  title={event.title}
-                  allowFullScreen
+                // <iframe
+                //   title={event.title}
+                //   allowFullScreen
+                //   className={`mt-4 aspect-video w-full rounded-lg object-cover ${
+                //     !userHaveAccess ? 'blur-md ' : ''
+                //   }`}
+                //   src={getYouTubeEmbedUrl(event.recordedUrl)}
+                // ></iframe>
+                <div
                   className={`mt-4 aspect-video w-full rounded-lg object-cover ${
                     !userHaveAccess ? 'blur-md ' : ''
                   }`}
-                  src={getYouTubeEmbedUrl(event.recordedUrl)}
-                ></iframe>
+                >
+                  <ReactPlayer
+                    url={event.recordedUrl}
+                    controls
+                    height="100%"
+                    width="100%"
+                    onProgress={onProgress}
+                    progressInterval={10000}
+                    onStart={onStart}
+                  />
+                </div>
               )}
               {!userHaveAccess && (
                 <div className="absolute left-0 top-0 z-[15] flex h-full w-full items-center justify-center">
