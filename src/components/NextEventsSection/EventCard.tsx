@@ -244,7 +244,7 @@ export default function EventCard({ event }: EventCardProps) {
                 {isCancellingCheckIn ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  'cancelar check-in'
+                  'cancelar agendamento'
                 )}
               </Button>
             ) : liveUrl ? (
