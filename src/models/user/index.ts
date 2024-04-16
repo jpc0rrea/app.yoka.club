@@ -417,10 +417,14 @@ async function updateUserSubscription({
     prismaInstance,
   });
 
+  const normalizedExpirationDate = userObject.expirationDate
+    ? isAfter(userObject.expirationDate, new Date())
+      ? userObject.expirationDate
+      : new Date()
+    : new Date();
+
   const newExpirationDate = addMonths(
-    userObject.expirationDate
-      ? new Date(userObject.expirationDate)
-      : new Date(),
+    normalizedExpirationDate,
     recurrencePeriod === 'MONTHLY'
       ? 1
       : recurrencePeriod === 'QUARTERLY'

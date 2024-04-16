@@ -98,7 +98,7 @@ export default function UsersTable() {
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       {formatPhoneNumberIntl(user.phoneNumber)}
                     </td>
-                    <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    <td className="whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <RemoveCheckInsFromUser userId={user.id} />
                       <AddMoreCheckInsToUser userId={user.id} />
                     </td>
