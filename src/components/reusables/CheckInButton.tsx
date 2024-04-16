@@ -1,3 +1,4 @@
+import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
 import UserCantViewRecordedClassAlert from '@components/Modals/UserCantViewRecordedEventAlert';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { successToast } from '@components/Toast/SuccessToast';
@@ -142,16 +143,22 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
             {isCheckingIn ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              'check-in'
+              'agendar'
             )}
           </button>
-        ) : (
+        ) : userCheckInsQuantity > 0 ? (
           <button
             disabled
             className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
           >
             evento já começou :(
           </button>
+        ) : (
+          <BuyMoreCheckIns
+            ctaText="agendar"
+            title="que pena, você não tem mais check-ins disponíveis :("
+            description="compre mais check-ins para agendar aula"
+          />
         )
       ) : (
         <button
