@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@components/ui/tooltip';
+import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
 
 interface EventCardProps {
   event: EventFromAPI;
@@ -194,7 +195,7 @@ export default function EventCard({ event }: EventCardProps) {
             <strong className="text-gray-600">{event.duration} minutos</strong>
           </p>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
-            check-ins restantes:{' '}
+            vagas restantes:{' '}
             <strong className="text-gray-600">
               {event.checkInsMaxQuantity - event.checkIns.length}
             </strong>
@@ -258,18 +259,27 @@ export default function EventCard({ event }: EventCardProps) {
               </Button>
             )
           ) : stillHasVacancy ? (
-            <Button
-              onClick={handleCheckIn}
-              className="mt-2 w-full"
-              variant="default"
-              disabled={isCheckingIn}
-            >
-              {isCheckingIn ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                'fazer check-in'
-              )}
-            </Button>
+            userCheckInsQuantity > 0 ? (
+              <Button
+                onClick={handleCheckIn}
+                className="mt-2 w-full"
+                variant="default"
+                disabled={isCheckingIn}
+              >
+                {isCheckingIn ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'agendar aula'
+                )}
+              </Button>
+            ) : (
+              <BuyMoreCheckIns
+                ctaText="agendar"
+                title="que pena, você não tem mais check-ins disponíveis :("
+                description="compre mais check-ins para agendar aula"
+                CTAButton={Button}
+              />
+            )
           ) : (
             <Button disabled className="mt-2 w-full" variant="default">
               evento esgotado :(
