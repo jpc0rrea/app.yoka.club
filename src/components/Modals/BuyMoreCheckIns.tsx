@@ -1,4 +1,9 @@
-import { Fragment, useCallback, useState } from 'react';
+import React, {
+  ButtonHTMLAttributes,
+  Fragment,
+  useCallback,
+  useState,
+} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   CheckCircleIcon,
@@ -17,12 +22,14 @@ interface BuyMoreCheckInsProps {
   title?: string;
   ctaText?: string;
   description?: string;
+  CTAButton?: React.FC<ButtonHTMLAttributes<HTMLButtonElement>>;
 }
 
 export default function BuyMoreCheckIns({
   title = 'comprar mais check-ins',
   ctaText = 'comprar mais',
   description = 'escolha a quantidade de check-ins que deseja comprar',
+  CTAButton,
 }: BuyMoreCheckInsProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,14 +64,25 @@ export default function BuyMoreCheckIns({
 
   return (
     <>
-      <button
-        onClick={() => {
-          setOpen(true);
-        }}
-        className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
-      >
-        {ctaText}
-      </button>
+      {CTAButton ? (
+        <CTAButton
+          onClick={() => {
+            setOpen(true);
+          }}
+          className="mt-2 w-full"
+        >
+          {ctaText}
+        </CTAButton>
+      ) : (
+        <button
+          onClick={() => {
+            setOpen(true);
+          }}
+          className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
+        >
+          {ctaText}
+        </button>
+      )}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"

@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@components/ui/tooltip';
+import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
 
 interface EventCardProps {
   event: EventFromAPI;
@@ -258,18 +259,27 @@ export default function EventCard({ event }: EventCardProps) {
               </Button>
             )
           ) : stillHasVacancy ? (
-            <Button
-              onClick={handleCheckIn}
-              className="mt-2 w-full"
-              variant="default"
-              disabled={isCheckingIn}
-            >
-              {isCheckingIn ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                'agendar aula'
-              )}
-            </Button>
+            userCheckInsQuantity > 0 ? (
+              <Button
+                onClick={handleCheckIn}
+                className="mt-2 w-full"
+                variant="default"
+                disabled={isCheckingIn}
+              >
+                {isCheckingIn ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'agendar aula'
+                )}
+              </Button>
+            ) : (
+              <BuyMoreCheckIns
+                ctaText="agendar"
+                title="que pena, você não tem mais check-ins disponíveis :("
+                description="compre mais check-ins para agendar aula"
+                CTAButton={Button}
+              />
+            )
           ) : (
             <Button disabled className="mt-2 w-full" variant="default">
               evento esgotado :(
