@@ -69,7 +69,7 @@ const getBusinessInfo = async (
 
   const newUsersPerDay = newUsersPerDayRaw.map((item) => {
     return {
-      day: item.day,
+      date: item.day,
       usuários: item['usuários'],
     };
   });

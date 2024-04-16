@@ -13,7 +13,17 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
 
-export default function BuyMoreCheckIns() {
+interface BuyMoreCheckInsProps {
+  title?: string;
+  ctaText?: string;
+  description?: string;
+}
+
+export default function BuyMoreCheckIns({
+  title = 'comprar mais check-ins',
+  ctaText = 'comprar mais',
+  description = 'escolha a quantidade de check-ins que deseja comprar',
+}: BuyMoreCheckInsProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(4);
@@ -53,7 +63,7 @@ export default function BuyMoreCheckIns() {
         }}
         className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
       >
-        comprar mais
+        {ctaText}
       </button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -109,10 +119,13 @@ export default function BuyMoreCheckIns() {
                     <div className="mt text-center sm:mt-5">
                       <Dialog.Title
                         as="h3"
-                        className="text-base font-semibold leading-6 text-purple-700"
+                        className="mb-2 text-base font-semibold leading-6 text-purple-700"
                       >
-                        comprar mais check-ins
+                        {title}
                       </Dialog.Title>
+                      <Dialog.Description>
+                        <p className="text-sm text-gray-600">{description}</p>
+                      </Dialog.Description>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           número de check-ins
