@@ -22,6 +22,7 @@ async function addCredits({
   title,
   description,
   paymentId,
+  checkInType = 'PAID',
 }: AddCreditsParams) {
   if (!amount || amount <= 0) {
     throw new ValidationError({
@@ -46,8 +47,16 @@ async function addCredits({
       type: 'CREDIT',
       checkInsQuantity: amount,
       paymentId,
+      checkInType,
     },
   });
+
+  const checkInTypeToIncrement =
+    checkInType === 'PAID'
+      ? 'paidCheckInsQuantity'
+      : checkInType === 'TRIAL'
+      ? 'trialCheckInsQuantity'
+      : 'freeCheckInsQuantity';
 
   const updateUserTransaction = prisma.user.update({
     where: {
@@ -55,6 +64,9 @@ async function addCredits({
     },
     data: {
       checkInsQuantity: {
+        increment: amount,
+      },
+      [checkInTypeToIncrement]: {
         increment: amount,
       },
     },

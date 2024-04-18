@@ -55,7 +55,7 @@ export default function EventCard({ event }: EventCardProps) {
               {userHaveAccess ? (
                 <Link href={`/events/${event.id}`}>
                   <CardTitle
-                    className={`line-clamp-2 h-12 cursor-pointer overflow-hidden text-ellipsis text-left transition-all hover:underline ${
+                    className={`line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all hover:underline ${
                       userHaveAccess ? '' : 'cursor-not-allowed'
                     }`}
                   >
@@ -64,7 +64,7 @@ export default function EventCard({ event }: EventCardProps) {
                 </Link>
               ) : (
                 <CardTitle
-                  className={`line-clamp-2 h-12 cursor-pointer overflow-hidden text-ellipsis text-left transition-all ${
+                  className={`line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all ${
                     userHaveAccess ? '' : 'cursor-not-allowed'
                   }`}
                 >

@@ -17,6 +17,16 @@ async function giveTrialCheckin({ userId }: GiveTrialCheckinParams) {
     });
   }
 
+  if (userObject.trialCheckInsQuantity > 0) {
+    throw new ValidationError({
+      message: `você já ganhou seu check-in de teste.`,
+      action: `se você gostou do nosso serviço, considere assinar um plano.`,
+      stack: new Error().stack,
+      errorLocationCode: 'MODEL:CHECKIN:GIVE_TRIAL_CHECKIN:ALREADY_USED',
+      key: 'checkInQuantity',
+    });
+  }
+
   const creditsObject = await statement.findAllCreditsByUserId({ userId });
 
   if (creditsObject.length > 0) {
@@ -44,6 +54,7 @@ async function giveTrialCheckin({ userId }: GiveTrialCheckinParams) {
     amount: 1,
     title: 'check-in de boas vindas',
     description: 'check-in inicial para experimentar a plataforma :)',
+    checkInType: 'TRIAL',
     prismaInstance: prisma,
   });
 }
