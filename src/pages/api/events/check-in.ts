@@ -7,6 +7,7 @@ import {
 import { prisma } from '@server/db';
 import { isAfter, subMinutes } from 'date-fns';
 import { MINUTES_TO_CHECK_IN } from '@lib/constants';
+import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 
 interface CheckInEventRequest extends EnsureAuthenticatedRequest {
   query: {
@@ -88,12 +89,22 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       },
     });
 
+    const checkInTypeToDecrement =
+      user.trialCheckInsQuantity > 0
+        ? 'trialCheckInsQuantity'
+        : user.freeCheckInsQuantity > 0
+        ? 'freeCheckInsQuantity'
+        : 'paidCheckInsQuantity';
+
     const updateUser = prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         checkInsQuantity: {
+          decrement: 1,
+        },
+        [checkInTypeToDecrement]: {
           decrement: 1,
         },
       },
@@ -109,8 +120,25 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
         type: 'DEBIT',
         description: 'check-in realizado com sucesso',
         checkInsQuantity: 1,
+        checkInType:
+          checkInTypeToDecrement === 'trialCheckInsQuantity'
+            ? 'TRIAL'
+            : checkInTypeToDecrement === 'freeCheckInsQuantity'
+            ? 'FREE'
+            : 'PAID',
       },
     });
+
+    if (checkInTypeToDecrement === 'trialCheckInsQuantity') {
+      await sendMessageToYogaComKakaTelegramGroup(
+        `
+🎉🎉🎉 O usuário ${user.name} realizou um check-in experimental no evento ${event.title}!
+        
+entre em contato com ela :)
+telefone: ${user.phoneNumber}
+`
+      );
+    }
 
     return res.status(201).json({
       checkIn,

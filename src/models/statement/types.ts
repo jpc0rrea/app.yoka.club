@@ -1,3 +1,4 @@
+import { CheckInTypes } from '@prisma/client';
 import { PrismaInstance } from '@server/db';
 
 export interface FindAllCreditsByUserIdParams {
@@ -11,4 +12,5 @@ export interface AddCreditsParams {
   description: string;
   paymentId?: string;
   prismaInstance: PrismaInstance;
+  checkInType: CheckInTypes;
 }

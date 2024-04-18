@@ -2,6 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@server/db';
 
 const addSeedUsers = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (process.env.NODE_ENV !== 'development') {
+    return res.status(400).json({
+      message:
+        'esse script só pode ser executado em ambiente de desenvolvimento',
+    });
+  }
   // create 100 random users
   for (let i = 0; i < 100; i++) {
     await prisma.user.create({

@@ -6,6 +6,13 @@ const fixUsersCheckInsQuantity = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
+  if (process.env.NODE_ENV !== 'development') {
+    return res.status(400).json({
+      message:
+        'esse script só pode ser executado em ambiente de desenvolvimento',
+    });
+  }
+
   const users = await prisma.user.findMany({ include: { statements: true } });
 
   users.forEach((user) => {

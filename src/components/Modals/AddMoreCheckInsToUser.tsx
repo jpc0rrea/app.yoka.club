@@ -12,11 +12,26 @@ interface AddMoreCheckInsToUserProps {
   userId: string;
 }
 
+export const checkInTypesOptions: {
+  label: string;
+  value: 'PAID' | 'FREE';
+}[] = [
+  {
+    label: 'Pago',
+    value: 'PAID',
+  },
+  {
+    label: 'Gratuito',
+    value: 'FREE',
+  },
+];
+
 export default function AddMoreCheckInsToUser({
   userId,
 }: AddMoreCheckInsToUserProps) {
   const [open, setOpen] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(1);
+  const [checkInType, setCheckInType] = useState<'PAID' | 'FREE'>('PAID');
   const [isAddingCheckIns, setIsAddingCheckIns] = useState(false);
 
   const handleAddCheckIn = async () => {
@@ -26,6 +41,7 @@ export default function AddMoreCheckInsToUser({
       await api.post('/admin/users/add-check-in', {
         userId,
         checkInsQuantity,
+        checkInType,
       });
 
       queryClient.invalidateQueries({
@@ -108,6 +124,29 @@ export default function AddMoreCheckInsToUser({
                       >
                         adicionar check-ins
                       </Dialog.Title>
+                      <div className="mt-1">
+                        <p className="text-sm text-gray-500">
+                          tipo de check-in
+                        </p>
+                        <div className="mt-1 flex items-center justify-center space-x-3">
+                          {checkInTypesOptions.map((option) => (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2 ${
+                                checkInType === option.value
+                                  ? 'bg-purple-700 text-white'
+                                  : 'border-gray-300 text-gray-700'
+                              }`}
+                              onClick={() => {
+                                setCheckInType(option.value);
+                              }}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           número de check-ins

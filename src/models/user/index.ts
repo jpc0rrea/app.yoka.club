@@ -477,6 +477,9 @@ async function updateUserSubscription({
       checkInsQuantity: {
         increment: checkInsQuantity,
       },
+      paidCheckInsQuantity: {
+        increment: checkInsQuantity,
+      },
       expirationDate: newExpirationDate,
     },
   });

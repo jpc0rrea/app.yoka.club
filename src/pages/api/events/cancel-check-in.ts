@@ -94,12 +94,22 @@ const cancelCheckInRoute = async (
       },
     });
 
+    const checkInTypeToIncrement =
+      checkIn.type === 'PAID'
+        ? 'paidCheckInsQuantity'
+        : checkIn.type === 'FREE'
+        ? 'freeCheckInsQuantity'
+        : 'trialCheckInsQuantity';
+
     const updateUser = prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         checkInsQuantity: {
+          increment: 1,
+        },
+        [checkInTypeToIncrement]: {
           increment: 1,
         },
       },
@@ -112,6 +122,7 @@ const cancelCheckInRoute = async (
         type: 'CREDIT',
         description: 'check-in cancelado com sucesso',
         checkInsQuantity: 1,
+        checkInType: checkIn.type,
       },
     });
 
