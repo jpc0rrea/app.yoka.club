@@ -274,7 +274,7 @@ export default function EventCard({ event }: EventCardProps) {
               </Button>
             ) : (
               <BuyMoreCheckIns
-                ctaText="agendar"
+                ctaText="agendar aula"
                 title="que pena, você não tem mais check-ins disponíveis :("
                 description="compre mais check-ins para agendar aula"
                 CTAButton={Button}
