@@ -38,6 +38,7 @@ async function renewSubscription({
       userId,
       paymentId,
       prismaInstance,
+      checkInType: 'PAID',
     });
   }
 

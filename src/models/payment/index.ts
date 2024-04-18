@@ -211,6 +211,7 @@ async function handleMercadoPagoPayment({
       paymentId: payment.id,
       userId: userObject.id,
       prismaInstance: tx,
+      checkInType: 'PAID',
     });
 
     await tx.user.update({
@@ -219,6 +220,9 @@ async function handleMercadoPagoPayment({
       },
       data: {
         checkInsQuantity: {
+          increment: checkInsQuantity,
+        },
+        paidCheckInsQuantity: {
           increment: checkInsQuantity,
         },
       },

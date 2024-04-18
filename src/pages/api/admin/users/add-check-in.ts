@@ -9,6 +9,7 @@ interface AddCheckInsToUserRequest extends EnsureAuthenticatedRequest {
   body: {
     userId: string;
     checkInsQuantity: number;
+    checkInType: 'PAID' | 'FREE';
   };
 }
 
@@ -16,7 +17,7 @@ const addCheckInsToUser = async (
   req: AddCheckInsToUserRequest,
   res: NextApiResponse
 ) => {
-  const { userId, checkInsQuantity } = req.body;
+  const { userId, checkInsQuantity, checkInType } = req.body;
   const adminId = req.userId;
 
   if (!userId || !checkInsQuantity) {
@@ -24,6 +25,22 @@ const addCheckInsToUser = async (
       message: 'erro ao adicionar check-ins',
       description: 'userId e checkInsQuantity são obrigatórios',
       errorCode: 'missing-parameters',
+    });
+  }
+
+  if (!checkInType) {
+    return res.status(400).json({
+      message: 'erro ao adicionar check-ins',
+      description: 'checkInType é obrigatório',
+      errorCode: 'missing-parameters',
+    });
+  }
+
+  if (checkInType !== 'PAID' && checkInType !== 'FREE') {
+    return res.status(400).json({
+      message: 'erro ao adicionar check-ins',
+      description: 'checkInType deve ser "PAID" ou "FREE"',
+      errorCode: 'invalid-check-in-type',
     });
   }
 
@@ -69,12 +86,18 @@ const addCheckInsToUser = async (
     });
   }
 
+  const checkInTypeToIncrement =
+    checkInType === 'PAID' ? 'paidCheckInsQuantity' : 'freeCheckInsQuantity';
+
   const updateUser = prisma.user.update({
     where: {
       id: user.id,
     },
     data: {
       checkInsQuantity: {
+        increment: checkInsQuantity,
+      },
+      [checkInTypeToIncrement]: {
         increment: checkInsQuantity,
       },
     },
@@ -87,6 +110,7 @@ const addCheckInsToUser = async (
       description: `${checkInsQuantity} check-ins adicionados por ${admin.name}`,
       type: 'CREDIT',
       checkInsQuantity,
+      checkInType,
     },
   });
 

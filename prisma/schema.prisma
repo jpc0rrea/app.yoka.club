@@ -28,24 +28,33 @@ enum UserRole {
     USER
 }
 
+enum CheckInTypes {
+    PAID
+    FREE
+    TRIAL
+}
+
 model User {
-    id               String    @id @default(cuid())
-    name             String
-    displayName      String
-    email            String    @unique
-    isUserActivated  Boolean   @default(false) @map("is_user_activated")
-    imageUrl         String?   @map("image_url")
-    password         String
-    username         String    @unique
-    bio              String?
-    phoneNumber      String    @map("phone_number")
-    role             UserRole  @default(USER)
-    checkInsQuantity Int       @default(0) @map("check_ins_quantity")
-    stripeId         String?   @map("stripe_id")
-    subscriptionId   String?   @map("subscription_id")
-    expirationDate   DateTime? @map("expiration_date")
-    updatedAt        DateTime  @updatedAt @map("updated_at")
-    createdAt        DateTime  @default(now()) @map("created_at")
+    id                    String    @id @default(cuid())
+    name                  String
+    displayName           String
+    email                 String    @unique
+    isUserActivated       Boolean   @default(false) @map("is_user_activated")
+    imageUrl              String?   @map("image_url")
+    password              String
+    username              String    @unique
+    bio                   String?
+    phoneNumber           String    @map("phone_number")
+    role                  UserRole  @default(USER)
+    checkInsQuantity      Int       @default(0) @map("check_ins_quantity")
+    paidCheckInsQuantity  Int       @default(0) @map("paid_check_ins_quantity")
+    freeCheckInsQuantity  Int       @default(0) @map("free_check_ins_quantity")
+    trialCheckInsQuantity Int       @default(0) @map("trial_check_ins_quantity")
+    stripeId              String?   @map("stripe_id")
+    subscriptionId        String?   @map("subscription_id")
+    expirationDate        DateTime? @map("expiration_date")
+    updatedAt             DateTime  @updatedAt @map("updated_at")
+    createdAt             DateTime  @default(now()) @map("created_at")
 
     sessions              Session[]
     events                Event[]
@@ -102,10 +111,11 @@ model Event {
 }
 
 model CheckIn {
-    id        String   @id @default(cuid())
-    userId    String   @map("user_id")
-    eventId   String   @map("event_id")
-    createdAt DateTime @default(now()) @map("created_at")
+    id        String       @id @default(cuid())
+    userId    String       @map("user_id")
+    eventId   String       @map("event_id")
+    type      CheckInTypes @default(PAID)
+    createdAt DateTime     @default(now()) @map("created_at")
 
     user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     event     Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
@@ -124,6 +134,7 @@ model Statement {
     description      String
     type             StatementType
     checkInsQuantity Int           @map("check_ins_quantity")
+    checkInType      CheckInTypes  @default(PAID) @map("check_in_type")
     createdAt        DateTime      @default(now())
     updatedAt        DateTime      @updatedAt
 

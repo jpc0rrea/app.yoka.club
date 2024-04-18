@@ -9,6 +9,7 @@ interface RemoveCheckInsFromuserRequest extends EnsureAuthenticatedRequest {
   body: {
     userId: string;
     checkInsQuantity: number;
+    checkInType: 'PAID' | 'FREE';
   };
 }
 
@@ -16,7 +17,7 @@ const addCheckInsToUser = async (
   req: RemoveCheckInsFromuserRequest,
   res: NextApiResponse
 ) => {
-  const { userId, checkInsQuantity } = req.body;
+  const { userId, checkInsQuantity, checkInType } = req.body;
   const adminId = req.userId;
 
   if (!userId || !checkInsQuantity) {
@@ -24,6 +25,22 @@ const addCheckInsToUser = async (
       message: 'erro ao remover check-ins',
       description: 'userId e checkInsQuantity são obrigatórios',
       errorCode: 'missing-parameters',
+    });
+  }
+
+  if (!checkInType) {
+    return res.status(400).json({
+      message: 'erro ao adicionar check-ins',
+      description: 'checkInType é obrigatório',
+      errorCode: 'missing-parameters',
+    });
+  }
+
+  if (checkInType !== 'PAID' && checkInType !== 'FREE') {
+    return res.status(400).json({
+      message: 'erro ao adicionar check-ins',
+      description: 'checkInType deve ser "PAID" ou "FREE"',
+      errorCode: 'invalid-check-in-type',
     });
   }
 
@@ -77,12 +94,29 @@ const addCheckInsToUser = async (
     });
   }
 
+  const checkInTypeToDecrement =
+    checkInType === 'PAID' ? 'paidCheckInsQuantity' : 'freeCheckInsQuantity';
+
+  const checkInsToDecrement = user[checkInTypeToDecrement];
+
+  if (checkInsToDecrement < checkInsQuantity) {
+    return res.status(400).json({
+      message: 'erro ao remover check-ins',
+      description:
+        'o usuário não possui check-ins suficientes do tipo informado',
+      errorCode: 'invalid-check-ins-quantity-from-this-type',
+    });
+  }
+
   const updateUser = prisma.user.update({
     where: {
       id: user.id,
     },
     data: {
       checkInsQuantity: {
+        decrement: checkInsQuantity,
+      },
+      [checkInTypeToDecrement]: {
         decrement: checkInsQuantity,
       },
     },
@@ -95,6 +129,7 @@ const addCheckInsToUser = async (
       description: `${checkInsQuantity} check-ins removidos por ${admin.name}`,
       type: 'DEBIT',
       checkInsQuantity,
+      checkInType,
     },
   });
 

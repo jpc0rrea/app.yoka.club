@@ -7,6 +7,7 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { queryClient } from '@lib/queryClient';
 import { Loader2 } from 'lucide-react';
+import { checkInTypesOptions } from './AddMoreCheckInsToUser';
 
 interface RemoveCheckInsFromUserProps {
   userId: string;
@@ -17,6 +18,7 @@ export default function RemoveCheckInsFromUser({
 }: RemoveCheckInsFromUserProps) {
   const [open, setOpen] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(1);
+  const [checkInType, setCheckInType] = useState<'PAID' | 'FREE'>('PAID');
   const [isRemovingCheckIns, setIsRemovingCheckIns] = useState(false);
 
   const handleRemoveCheckIn = async () => {
@@ -26,6 +28,7 @@ export default function RemoveCheckInsFromUser({
       await api.post('/admin/users/remove-check-in', {
         userId,
         checkInsQuantity,
+        checkInType,
       });
 
       queryClient.invalidateQueries({
@@ -108,6 +111,29 @@ export default function RemoveCheckInsFromUser({
                       >
                         remover check-ins
                       </Dialog.Title>
+                      <div className="mt-1">
+                        <p className="text-sm text-gray-500">
+                          tipo de check-in
+                        </p>
+                        <div className="mt-1 flex items-center justify-center space-x-3">
+                          {checkInTypesOptions.map((option) => (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2 ${
+                                checkInType === option.value
+                                  ? 'bg-purple-700 text-white'
+                                  : 'border-gray-300 text-gray-700'
+                              }`}
+                              onClick={() => {
+                                setCheckInType(option.value);
+                              }}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           número de check-ins
