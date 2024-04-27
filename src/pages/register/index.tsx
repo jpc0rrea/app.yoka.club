@@ -105,11 +105,6 @@ export default function Login() {
       return;
     }
 
-    if (isBrazilianPhoneNumber(String(phoneNumber))) {
-      console.log('número brasileiro');
-      console.log(phoneNumber);
-    }
-
     // if it's a brazilian phone number, validate more deeply
     if (
       isBrazilianPhoneNumber(String(phoneNumber)) &&
