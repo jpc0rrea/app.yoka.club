@@ -1,8 +1,9 @@
 import user from '@models/user';
 import { prisma } from '@server/db';
-import { GiveTrialCheckinParams } from './types';
+import { GiveTrialCheckinParams, UpdateCheckinAttendance } from './types';
 import { ValidationError } from '@errors/index';
 import statement from '@models/statement';
+import eventLogs from '@models/event-logs';
 
 async function giveTrialCheckin({ userId }: GiveTrialCheckinParams) {
   const userObject = await user.findOneById({ userId, prismaInstance: prisma });
@@ -59,6 +60,33 @@ async function giveTrialCheckin({ userId }: GiveTrialCheckinParams) {
   });
 }
 
+async function updateCheckInAttendance({
+  checkinId,
+  attended,
+}: UpdateCheckinAttendance) {
+  const checkIn = await prisma.checkIn.update({
+    where: {
+      id: checkinId,
+    },
+    data: {
+      attended,
+    },
+  });
+
+  await eventLogs.createEventLog({
+    userId: checkIn.userId,
+    eventType: 'CHECK_IN.ATTENDANCE_UPDATED',
+    metadata: {
+      checkInId: checkIn.id,
+      attended: checkIn.attended,
+    },
+    prismaInstance: prisma,
+  });
+
+  return checkIn;
+}
+
 export default Object.freeze({
   giveTrialCheckin,
+  updateCheckInAttendance,
 });

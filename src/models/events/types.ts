@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 export const eventSelect = {
   id: true,
@@ -24,6 +24,7 @@ export const eventSelect = {
       createdAt: true,
       userId: true,
       id: true,
+      attended: true,
       user: {
         select: {
           displayName: true,
@@ -69,6 +70,59 @@ export interface ListRecordedEventsQueryParams
 export interface ListManageEventsQueryParams
   extends ListRecordedEventsQueryParams {
   isLiveInString?: string;
+}
+
+export interface HasEventStartedParams {
+  event: EventFromAPI;
+}
+
+export interface HasUserAlreadyCheckedInParams {
+  event: EventFromAPI;
+  userId: string;
+}
+
+export interface StillHasVacancyParams {
+  event: EventFromAPI;
+}
+
+export interface CanEnterTheEventParams {
+  event: EventFromAPI;
+  userId: string;
+}
+
+export interface UserCanCheckInInEventParams {
+  event: EventFromAPI;
+  userId: string;
+  userCheckInsQuantity: number;
+}
+
+export interface UserCanCancelCheckInParams {
+  event: EventFromAPI;
+  userId: string;
+}
+
+export interface UserCanViewRecordedEventParams {
+  event: EventFromAPI;
+  userId: string;
+  isUserSubscribed: boolean;
+}
+
+export interface FindEventByIdParams {
+  eventId: string;
+}
+
+export interface CanUserManageEvent {
+  event: EventFromAPI;
+  user: User;
+}
+
+export interface UpdateEventAttendace {
+  eventId: string;
+  attendance: {
+    id: string;
+    attended: boolean;
+  }[];
+  userId: string;
 }
 
 export const intensityOptions = [

@@ -115,6 +115,7 @@ model CheckIn {
     userId    String       @map("user_id")
     eventId   String       @map("event_id")
     type      CheckInTypes @default(PAID)
+    attended  Boolean?
     createdAt DateTime     @default(now()) @map("created_at")
 
     user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
