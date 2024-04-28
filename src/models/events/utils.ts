@@ -134,7 +134,7 @@ function userCanCancelCheckIn({ event, userId }: UserCanCancelCheckInParams) {
     new Date()
   );
 
-  if (timeToEventInMinutes > MINUTES_TO_CANCEL_CHECK_IN) {
+  if (timeToEventInMinutes < MINUTES_TO_CANCEL_CHECK_IN) {
     return false;
   }
 
