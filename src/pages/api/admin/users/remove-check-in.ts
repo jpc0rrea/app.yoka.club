@@ -9,7 +9,7 @@ interface RemoveCheckInsFromuserRequest extends EnsureAuthenticatedRequest {
   body: {
     userId: string;
     checkInsQuantity: number;
-    checkInType: 'PAID' | 'FREE';
+    checkInType: 'PAID' | 'FREE' | 'TRIAL';
   };
 }
 
@@ -36,7 +36,11 @@ const addCheckInsToUser = async (
     });
   }
 
-  if (checkInType !== 'PAID' && checkInType !== 'FREE') {
+  if (
+    checkInType !== 'PAID' &&
+    checkInType !== 'FREE' &&
+    checkInType !== 'TRIAL'
+  ) {
     return res.status(400).json({
       message: 'erro ao adicionar check-ins',
       description: 'checkInType deve ser "PAID" ou "FREE"',
@@ -95,7 +99,11 @@ const addCheckInsToUser = async (
   }
 
   const checkInTypeToDecrement =
-    checkInType === 'PAID' ? 'paidCheckInsQuantity' : 'freeCheckInsQuantity';
+    checkInType === 'PAID'
+      ? 'paidCheckInsQuantity'
+      : checkInType === 'FREE'
+      ? 'freeCheckInsQuantity'
+      : 'trialCheckInsQuantity';
 
   const checkInsToDecrement = user[checkInTypeToDecrement];
 

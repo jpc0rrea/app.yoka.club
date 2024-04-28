@@ -1,12 +1,21 @@
+import { useState } from 'react';
 import DeleteEventModal from '@components/Modals/DeleteEventAlert';
 import EditEventModal from '@components/Modals/EditEventModal';
 import EditRecordedEventUrlModal from '@components/Modals/EditRecordedEventUrlModal';
+import UpdateAttendanceModal from '@components/Modals/UpdateAttendanceModal';
+import { Button } from '@components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
 import { classNames } from '@lib/utils';
-import { ActionIcon, Menu } from '@mantine/core';
 import { EventFromAPI } from '@models/events/types';
+import eventUtils from '@models/events/utils';
 import { isAfter, format } from 'date-fns';
-import { Settings, Pencil, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Pencil, Trash2, UserCheck, Ellipsis } from 'lucide-react';
 
 interface EventInManageSectionProps {
   event: EventFromAPI;
@@ -23,6 +32,11 @@ export default function EventInManageSection({
 }: EventInManageSectionProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUpdateAttendanceModalOpen, setIsUpdateAttendanceModalOpen] =
+    useState(false);
+
+  const eventHasStarted = eventUtils.hasStarted({ event });
+
   const eventStatus =
     event.isLive && event.startDate
       ? isAfter(new Date(), new Date(event.startDate))
@@ -45,6 +59,11 @@ export default function EventInManageSection({
       <DeleteEventModal
         open={isDeleteModalOpen}
         setOpen={setIsDeleteModalOpen}
+        event={event}
+      />
+      <UpdateAttendanceModal
+        open={isUpdateAttendanceModalOpen}
+        setOpen={setIsUpdateAttendanceModalOpen}
         event={event}
       />
       <div className="min-w-0">
@@ -89,36 +108,49 @@ export default function EventInManageSection({
             recordedUrl={event.recordedUrl || undefined}
           />
         )}
-        <Menu shadow="md" position="bottom-end">
-          <Menu.Target>
-            <ActionIcon className="bg-purple-700 hover:bg-purple-800">
-              <Settings className="h-4 w-4" />
-            </ActionIcon>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<Pencil className="h-4 w-4" />}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            >
+              <Ellipsis className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[160px]">
+            <DropdownMenuItem
               onClick={() => {
                 setIsEditModalOpen(true);
               }}
             >
+              <Pencil className="mr-2 h-4 w-4" />
               editar
-            </Menu.Item>
+            </DropdownMenuItem>
+            {eventHasStarted && (
+              <DropdownMenuItem
+                onClick={() => {
+                  setIsUpdateAttendanceModalOpen(true);
+                }}
+              >
+                <UserCheck className="mr-2 h-4 w-4" />
+                presença
+              </DropdownMenuItem>
+            )}
 
-            <Menu.Divider />
+            <DropdownMenuSeparator />
 
-            <Menu.Item
-              color="red"
+            <DropdownMenuItem
               onClick={() => {
                 setIsDeleteModalOpen(true);
               }}
-              leftSection={<Trash2 className="h-4 w-4" />}
+              className="text-red-400 focus:bg-red-100 focus:text-red-500"
             >
+              <Trash2 className="mr-2 h-4 w-4" />
               deletar evento
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </li>
   );

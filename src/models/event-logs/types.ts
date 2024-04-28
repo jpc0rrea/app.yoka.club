@@ -7,7 +7,8 @@ export type EventLogType =
   | 'USER.UPDATE_PROFILE'
   | 'USER.UPDATE_PROFILE_PICTURE'
   | 'USER.CREATE_MERCADOPAGO_CHECKOUT'
-  | 'USER.PURCHASED_CHECK_INS';
+  | 'USER.PURCHASED_CHECK_INS'
+  | 'CHECK_IN.ATTENDANCE_UPDATED';
 
 export interface CreateEventLogParams {
   prismaInstance: PrismaInstance;

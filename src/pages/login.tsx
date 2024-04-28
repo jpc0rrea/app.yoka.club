@@ -56,8 +56,6 @@ export default function Login() {
         password: data.password,
       });
 
-      console.log(createSessionResponse);
-
       if (createSessionResponse.status === 201) {
         await fetchUser();
 

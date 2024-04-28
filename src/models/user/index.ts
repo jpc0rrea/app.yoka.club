@@ -27,6 +27,10 @@ import mailLists from '@lib/mail/mailLists';
 import webserver from '@infra/webserver';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 import { RegisterWithoutPasswordRequest } from '@pages/api/users/register-without-password';
+import {
+  isBrazilianPhoneNumber,
+  isValidBrazilianPhoneNumber,
+} from '@lib/utils';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -249,6 +253,19 @@ function validateRegisterUserRequest(req: RegisterRequest) {
     });
   }
 
+  if (
+    isBrazilianPhoneNumber(phoneNumber) &&
+    !!isValidBrazilianPhoneNumber(String(phoneNumber))
+  ) {
+    throw new ValidationError({
+      message: `O campo "phoneNumber" não é um número de telefone válido.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_REQUEST:INVALID_PHONE_NUMBER',
+      key: 'phoneNumber',
+    });
+  }
+
   return {
     email: email.toLowerCase().trim(),
     password: password.trim(),
@@ -293,6 +310,19 @@ function validateRegisterUserWithoutPasswordRequest(
   }
 
   if (!isValidPhoneNumber(phoneNumber)) {
+    throw new ValidationError({
+      message: `O campo "phoneNumber" não é um número de telefone válido.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_REQUEST:INVALID_PHONE_NUMBER',
+      key: 'phoneNumber',
+    });
+  }
+
+  if (
+    isBrazilianPhoneNumber(phoneNumber) &&
+    !!isValidBrazilianPhoneNumber(String(phoneNumber))
+  ) {
     throw new ValidationError({
       message: `O campo "phoneNumber" não é um número de telefone válido.`,
       stack: new Error().stack,

@@ -1,13 +1,17 @@
-import { ValidationError } from '@errors/index';
+import { NotFoundError, ValidationError } from '@errors/index';
 import {
+  FindEventByIdParams,
   ListEventsParams,
   ListEventsQueryParams,
   ListManageEventsQueryParams,
   ListRecordedEventsQueryParams,
+  UpdateEventAttendace,
   eventSelect,
 } from './types';
 import { prisma } from '@server/db';
 import user from '@models/user';
+import eventUtils from '@models/events/utils';
+import checkInModel from '@models/checkin';
 
 async function listEvents({
   isLive,
@@ -265,9 +269,81 @@ function convertQueryParamsInListManageEventsParams({
   };
 }
 
+async function findOneById({ eventId }: FindEventByIdParams) {
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+    select: eventSelect,
+  });
+
+  if (!event) {
+    throw new NotFoundError({
+      message: `o evento com id ${eventId} não foi encontrado.`,
+      action: `verifique se o "eventId" informado está correto e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:FIND_ONE_BY_ID:EVENT_NOT_FOUND',
+      key: 'eventId',
+    });
+  }
+
+  return event;
+}
+
+async function updateEventAttendance({
+  eventId,
+  attendance,
+  userId, // user (admin or instructor) that is updating the attendance
+}: UpdateEventAttendace) {
+  const eventObject = await findOneById({ eventId });
+
+  if (!eventObject.isLive) {
+    throw new ValidationError({
+      message: `o evento não é um evento ao vivo.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode: 'MODEL:EVENTS:UPDATE_EVENT_ATTENDANCE:EVENT_NOT_LIVE',
+      key: 'eventId',
+    });
+  }
+
+  const userObject = await user.findOneById({
+    userId,
+    prismaInstance: prisma,
+  });
+
+  const canUserManageEvent = eventUtils.canUserManageEvent({
+    event: eventObject,
+    user: userObject,
+  });
+
+  if (!canUserManageEvent) {
+    throw new ValidationError({
+      message: `você não tem permissão para atualizar a lista de presença.`,
+      action: `verifique o valor informado e tente novamente.`,
+      errorLocationCode:
+        'MODEL:EVENTS:UPDATE_EVENT_ATTENDANCE:USER_NOT_ALLOWED',
+      key: 'eventId',
+    });
+  }
+
+  const updateCheckinsAttencePromises = [];
+
+  for (const checkin of attendance) {
+    updateCheckinsAttencePromises.push(
+      checkInModel.updateCheckInAttendance({
+        checkinId: checkin.id,
+        attended: checkin.attended,
+      })
+    );
+  }
+
+  await Promise.all(updateCheckinsAttencePromises);
+}
+
 export default Object.freeze({
+  findOneById,
   listEvents,
   convertQueryParamsInListEventsParams,
   convertQueryParamsInListRecordedEventsParams,
   convertQueryParamsInListManageEventsParams,
+  updateEventAttendance,
 });
