@@ -34,6 +34,7 @@ export default function OnboardingUserModal() {
       router.replace(router.pathname, undefined, { shallow: true });
     }
   }, [router]);
+
   return (
     <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
       <DialogContent className={`${seeOnboardingVideo ? 'min-w-[80%]' : ''}`}>

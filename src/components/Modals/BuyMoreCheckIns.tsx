@@ -78,7 +78,7 @@ export default function BuyMoreCheckIns({
           onClick={() => {
             setOpen(true);
           }}
-          className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
+          className="rounded bg-brand-purple-900 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-purple-800"
         >
           {ctaText}
         </button>
