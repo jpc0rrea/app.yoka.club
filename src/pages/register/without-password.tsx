@@ -55,9 +55,8 @@ export default function ActiveUserWithoutPassword() {
           isFetching: false,
           isSuccess: true,
           message: 'sua conta foi ativada com sucesso!',
-          description:
-            'você ganhou 1 check-in para testar a plataforma. aproveite!',
-          buttonLabel: 'ir para a página inicial',
+          description: 'você ganhou 1 aula ao vivo gratuita.',
+          buttonLabel: 'ver horários disponíveis',
         }));
       } catch (error) {
         setActivationState((prev) => ({
@@ -92,6 +91,7 @@ export default function ActiveUserWithoutPassword() {
           alt="Logo grupo r3"
           width={300}
           height={100}
+          className="mx-auto"
         />
       </div>
       {isSuccess && <Confetti />}
@@ -106,15 +106,20 @@ export default function ActiveUserWithoutPassword() {
             {description}
           </p>
           {isSuccess && (
-            <div className="mt-2 aspect-video h-full w-full">
-              <iframe
-                src="https://www.youtube.com/embed/E3csGvH4t6o"
-                title="agende sua aula com kaká"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="mx-auto h-full w-full"
-              ></iframe>
-            </div>
+            <>
+              <p className="mt-0.5 text-center text-sm text-gray-600">
+                assista o vídeo para entender os próximos passos:
+              </p>
+              <div className="mt-4 aspect-video h-full w-full">
+                <iframe
+                  src="https://www.youtube.com/embed/E3csGvH4t6o"
+                  title="agende sua aula com kaká"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="mx-auto h-full w-full"
+                ></iframe>
+              </div>
+            </>
           )}
           {!(isLoading || isFetching) && (
             <button
