@@ -37,6 +37,13 @@ export default function ActiveUserWithoutPassword() {
   const { sessionToken } = router.query;
   const { isLoading, fetchUser } = useUser();
 
+  // Use local storage to determine if the page should display the video or not.
+  const [hasBeenActivated, setHasBeenActivated] = useState(
+    (typeof window !== 'undefined' &&
+      localStorage.getItem('activationComplete') === 'true') ||
+      false
+  );
+
   const [activationState, setActivationState] = useState({
     message: 'ativando sua conta...',
     description: 'aguarde um pouquinho. não deve demorar muito :)',
@@ -46,6 +53,17 @@ export default function ActiveUserWithoutPassword() {
   });
 
   useEffect(() => {
+    if (hasBeenActivated) {
+      setActivationState((prev) => ({
+        ...prev,
+        isFetching: false,
+        isSuccess: true,
+        message: 'sua conta já foi ativada!',
+        description: 'você já ganhou 1 aula ao vivo gratuita :)',
+        buttonLabel: 'ver horários disponíveis',
+      }));
+      return;
+    }
     const handleActivation = async () => {
       try {
         await api.patch('/sessions', { sessionToken });
@@ -58,6 +76,8 @@ export default function ActiveUserWithoutPassword() {
           description: 'você ganhou 1 aula ao vivo gratuita.',
           buttonLabel: 'ver horários disponíveis',
         }));
+        localStorage.setItem('activationComplete', 'true');
+        setHasBeenActivated(true);
       } catch (error) {
         setActivationState((prev) => ({
           ...prev,
@@ -71,10 +91,10 @@ export default function ActiveUserWithoutPassword() {
       }
     };
 
-    if (sessionToken) {
+    if (sessionToken && !hasBeenActivated) {
       handleActivation();
     }
-  }, [sessionToken, fetchUser]);
+  }, [sessionToken, fetchUser, hasBeenActivated]);
 
   const { message, description, buttonLabel, isSuccess, isFetching } =
     activationState;
@@ -108,7 +128,7 @@ export default function ActiveUserWithoutPassword() {
           {isSuccess && (
             <>
               <p className="mt-0.5 text-center text-sm text-gray-600">
-                assista o vídeo para entender os próximos passos:
+                assista o vídeo para entender como agendar uma aula:
               </p>
               <div className="mt-4 aspect-video h-full w-full">
                 <iframe
