@@ -17,6 +17,10 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import useUser from '@hooks/useUser';
 import { PasswordInput } from '@components/Form/PasswordInput';
 import { usePostHog } from 'posthog-js/react';
+import {
+  isBrazilianPhoneNumber,
+  isValidBrazilianPhoneNumber,
+} from '@lib/utils';
 
 const registerFormSchema = z
   .object({
@@ -96,7 +100,19 @@ export default function Login() {
     if (!isValidPhoneNumber(String(phoneNumber))) {
       setPhoneNumberErrorMessage({
         type: 'min',
-        message: 'Número de telefone inválido',
+        message: 'número de telefone inválido',
+      });
+      return;
+    }
+
+    // if it's a brazilian phone number, validate more deeply
+    if (
+      isBrazilianPhoneNumber(String(phoneNumber)) &&
+      !isValidBrazilianPhoneNumber(String(phoneNumber))
+    ) {
+      setPhoneNumberErrorMessage({
+        type: 'min',
+        message: 'número de telefone inválido',
       });
       return;
     }

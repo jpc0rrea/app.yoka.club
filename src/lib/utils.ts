@@ -27,3 +27,18 @@ export function roundNumber({
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function isBrazilianPhoneNumber(phoneNumber: string): boolean {
+  // Regex to check if the phone number starts with "+55"
+  const regex = /^\+55/;
+
+  return regex.test(phoneNumber);
+}
+
+export function isValidBrazilianPhoneNumber(phoneNumber: string): boolean {
+  // Regex to match exactly "+55" followed by 2 digits for the area code,
+  // and then 8 or 9 digits for the phone number, respecting the specified format.
+  const regex = /^\+55\d{2}\d{8,9}$/;
+
+  return regex.test(phoneNumber);
+}

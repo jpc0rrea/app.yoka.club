@@ -7,18 +7,37 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { queryClient } from '@lib/queryClient';
 import { Loader2 } from 'lucide-react';
-import { checkInTypesOptions } from './AddMoreCheckInsToUser';
 
 interface RemoveCheckInsFromUserProps {
   userId: string;
 }
+
+export const checkInTypesOptions: {
+  label: string;
+  value: 'PAID' | 'FREE' | 'TRIAL';
+}[] = [
+  {
+    label: 'Pago',
+    value: 'PAID',
+  },
+  {
+    label: 'Gratuito',
+    value: 'FREE',
+  },
+  {
+    label: 'Experimental',
+    value: 'TRIAL',
+  },
+];
 
 export default function RemoveCheckInsFromUser({
   userId,
 }: RemoveCheckInsFromUserProps) {
   const [open, setOpen] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(1);
-  const [checkInType, setCheckInType] = useState<'PAID' | 'FREE'>('PAID');
+  const [checkInType, setCheckInType] = useState<'PAID' | 'FREE' | 'TRIAL'>(
+    'PAID'
+  );
   const [isRemovingCheckIns, setIsRemovingCheckIns] = useState(false);
 
   const handleRemoveCheckIn = async () => {

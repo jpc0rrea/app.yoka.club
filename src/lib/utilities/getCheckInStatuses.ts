@@ -1,10 +1,5 @@
-import {
-  MINUTES_TO_CANCEL_CHECK_IN,
-  MINUTES_TO_CHECK_IN,
-  TOLERANCE_MINUTES_TO_ENTER_EVENT,
-} from '@lib/constants';
 import { EventFromAPI } from '@models/events/types';
-import { differenceInMinutes } from 'date-fns';
+import eventUtils from '@models/events/utils';
 
 interface GetCheckInStatusesParams {
   event: EventFromAPI;
@@ -41,41 +36,40 @@ export default function getCheckInStatuses({
     };
   }
 
-  const alreadyCheckedIn = event.checkIns
-    .map((checkIn) => checkIn.userId)
-    .includes(userId);
+  const alreadyCheckedIn = eventUtils.hasUserAlreadyCheckedIn({
+    event,
+    userId,
+  });
 
-  const eventAlreadyStarted = event.startDate
-    ? new Date(event?.startDate) < new Date()
-    : false;
+  const eventAlreadyStarted = eventUtils.hasStarted({
+    event,
+  });
 
-  const stillHasVacancy = event.checkIns.length < event.checkInsMaxQuantity;
+  const stillHasVacancy = eventUtils.stillHasVacancy({ event });
 
-  // to checkIn/ cancel checkIn, there must be at least 30 minutes left to the event
-  const timeToEventInMinutes = differenceInMinutes(
-    new Date(event.startDate),
-    new Date()
-  );
+  const canEnterTheEvent = eventUtils.userCanEnterTheEvent({
+    event,
+    userId,
+  });
 
-  const canEnterTheEvent = event.startDate
-    ? timeToEventInMinutes > -TOLERANCE_MINUTES_TO_ENTER_EVENT
-    : false;
+  const canCheckIn = eventUtils.userCanCheckIn({
+    event,
+    userId,
+    userCheckInsQuantity,
+  });
 
-  const canCheckIn =
-    !alreadyCheckedIn &&
-    !eventAlreadyStarted &&
-    stillHasVacancy &&
-    userCheckInsQuantity > 0 &&
-    timeToEventInMinutes > MINUTES_TO_CHECK_IN;
-
-  const canCancelCheckIn =
-    alreadyCheckedIn &&
-    !eventAlreadyStarted &&
-    timeToEventInMinutes > MINUTES_TO_CANCEL_CHECK_IN;
+  const canCancelCheckIn = eventUtils.userCanCancelCheckIn({
+    event,
+    userId,
+  });
 
   // o usuário pode ver o evento gravado se a data de expiração dele for maior que hoje
   // ou se ela fez check-in no evento
-  const canViewRecordedEvent = isUserSubscribed || alreadyCheckedIn;
+  const canViewRecordedEvent = eventUtils.userCanViewRecordedEvent({
+    event,
+    userId,
+    isUserSubscribed,
+  });
 
   return {
     alreadyCheckedIn,
