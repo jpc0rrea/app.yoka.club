@@ -255,7 +255,7 @@ function validateRegisterUserRequest(req: RegisterRequest) {
 
   if (
     isBrazilianPhoneNumber(phoneNumber) &&
-    !!isValidBrazilianPhoneNumber(String(phoneNumber))
+    !isValidBrazilianPhoneNumber(String(phoneNumber))
   ) {
     throw new ValidationError({
       message: `O campo "phoneNumber" não é um número de telefone válido.`,
