@@ -7,18 +7,20 @@ import {
   HomeIcon,
 } from '@heroicons/react/24/outline';
 import useUser from '@hooks/useUser';
-import { UserIcon } from 'lucide-react';
+import { LucideIcon, UserIcon } from 'lucide-react';
 
 interface UserNavigation {
   name: string;
   href: string;
   type: 'link' | 'button';
-  icon: (
-    props: SVGProps<SVGSVGElement> & {
-      title?: string | undefined;
-      titleId?: string | undefined;
-    }
-  ) => JSX.Element;
+  icon:
+    | ((
+        props: SVGProps<SVGSVGElement> & {
+          title?: string | undefined;
+          titleId?: string | undefined;
+        }
+      ) => JSX.Element)
+    | LucideIcon;
   onClick?: () => void;
 }
 
