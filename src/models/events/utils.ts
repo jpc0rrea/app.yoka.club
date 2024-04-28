@@ -72,7 +72,7 @@ function userCanCheckIn({
     event,
   });
 
-  if (!eventAlreadyStarted) {
+  if (eventAlreadyStarted) {
     return false;
   }
 
@@ -100,7 +100,7 @@ function userCanCheckIn({
     new Date()
   );
 
-  if (timeToEventInMinutes > MINUTES_TO_CHECK_IN) {
+  if (timeToEventInMinutes < MINUTES_TO_CHECK_IN) {
     return false;
   }
 

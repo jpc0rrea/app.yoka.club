@@ -15,17 +15,12 @@ interface CheckInButtonProps {
   event: EventFromAPI;
 }
 
-export default function CheckInButton({ event }: CheckInButtonProps) {
+const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
   const [isCheckingIn, setIsCheckingIn] = useState(false);
   const { user, fetchUser } = useUser();
 
-  const userId = user?.id || '';
-
-  const userCheckInsQuantity = user?.checkInsQuantity || 0;
-
-  // if (!event.startDate || !event.checkInsMaxQuantity) {
-  //   return null;
-  // }
+  const recordedUrl = event.recordedUrl;
+  const liveUrl = event.liveUrl;
 
   const {
     alreadyCheckedIn,
@@ -36,138 +31,117 @@ export default function CheckInButton({ event }: CheckInButtonProps) {
     canCheckIn,
   } = getCheckInStatuses({
     event,
-    userId,
-    userCheckInsQuantity,
+    userId: user?.id || '',
+    userCheckInsQuantity: user?.checkInsQuantity || 0,
     isUserSubscribed: user?.isSubscribed || false,
   });
 
-  const recordedUrl = event?.recordedUrl;
-
-  const liveUrl = event?.liveUrl;
+  console.log({
+    canCheckIn,
+  });
 
   const handleCheckIn = async () => {
     setIsCheckingIn(true);
-
     try {
-      await api.post<{
-        checkInsRemaining: number;
-      }>(`/events/check-in?eventId=${event.id}`);
-
-      await fetchUser();
-
-      queryClient.invalidateQueries({
-        queryKey: [
-          'events',
-          {
-            isLive: true,
-          },
-        ],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['events', 'byId', event.id],
-      });
-
-      await queryClient.refetchQueries({
-        queryKey: ['events'],
-      });
-
-      await queryClient.refetchQueries({
-        queryKey: ['events', 'next'],
-      });
-
-      successToast({
-        message: 'check-in realizado com sucesso',
-      });
-    } catch (err) {
-      const { message, description } = convertErrorMessage({
-        err,
-      });
-
-      errorToast({
-        message,
-        description,
-      });
+      await checkInAndUpdateUser();
+      successToast({ message: 'check-in realizado com sucesso' });
+    } catch (error) {
+      const { message, description } = convertErrorMessage({ err: error });
+      errorToast({ message, description });
+    } finally {
+      setIsCheckingIn(false);
     }
-
-    setIsCheckingIn(false);
   };
 
-  return (
-    <>
-      {eventAlreadyStarted && !canEnterTheEvent ? (
-        recordedUrl ? (
-          canViewRecordedEvent ? (
-            <a
-              href={recordedUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-            >
-              ver aula gravada
-            </a>
-          ) : (
-            <UserCantViewRecordedClassAlert />
-          )
+  const checkInAndUpdateUser = async () => {
+    await api.post(`/events/check-in?eventId=${event.id}`);
+    await fetchUser();
+    await refetchQueryData();
+  };
+
+  const refetchQueryData = async () => {
+    const queriesToRefetch = [
+      ['events', { isLive: true }],
+      ['events', 'byId', event.id],
+      ['events'],
+      ['events', 'next'],
+    ];
+    for (const queryKey of queriesToRefetch) {
+      await queryClient.invalidateQueries({ queryKey });
+    }
+  };
+
+  return renderButton();
+
+  function renderButton() {
+    if (eventAlreadyStarted && !canEnterTheEvent) {
+      return recordedUrl ? (
+        canViewRecordedEvent ? (
+          linkButton(recordedUrl, 'ver aula gravada')
         ) : (
-          <button
-            disabled
-            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-          >
-            link ainda não disponível
-          </button>
-        )
-      ) : alreadyCheckedIn ? (
-        liveUrl ? (
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-          >
-            ir para aula
-          </a>
-        ) : (
-          <button
-            disabled
-            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-          >
-            link ainda não disponível
-          </button>
-        )
-      ) : stillHasVacancy ? (
-        canCheckIn ? (
-          <button
-            onClick={handleCheckIn}
-            className="flex h-7 min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-          >
-            {isCheckingIn ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              'agendar'
-            )}
-          </button>
-        ) : userCheckInsQuantity > 0 ? (
-          <button
-            disabled
-            className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-          >
-            evento já começou :(
-          </button>
-        ) : (
-          <BuyMoreCheckIns
-            ctaText="agendar"
-            title="que pena, você não tem mais check-ins disponíveis :("
-            description="compre mais check-ins para agendar aula"
-          />
+          <UserCantViewRecordedClassAlert />
         )
       ) : (
-        <button
-          disabled
-          className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
-        >
-          evento esgotado :(
-        </button>
-      )}
-    </>
-  );
-}
+        disabledButton('link ainda não disponível')
+      );
+    }
+    if (alreadyCheckedIn) {
+      return liveUrl
+        ? linkButton(liveUrl, 'ir para aula')
+        : disabledButton('link ainda não disponível');
+    }
+    if (stillHasVacancy) {
+      return canCheckIn ? (
+        checkInButton()
+      ) : (
+        <BuyMoreCheckIns {...buyMoreProps} />
+      );
+    }
+    return disabledButton('evento esgotado :(');
+  }
+
+  function linkButton(url: string, text: string) {
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonStyle}
+      >
+        {text}
+      </a>
+    );
+  }
+
+  function disabledButton(text: string) {
+    return (
+      <button disabled className={buttonStyle}>
+        {text}
+      </button>
+    );
+  }
+
+  function checkInButton() {
+    return (
+      <button onClick={handleCheckIn} className={buttonStyle}>
+        {isCheckingIn ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          'agendar'
+        )}
+      </button>
+    );
+  }
+};
+
+export default CheckInButton;
+
+// Tailwind utility class for button styling
+const buttonStyle =
+  'flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none';
+
+const buyMoreProps = {
+  ctaText: 'agendar',
+  title: 'Que pena, você não tem mais check-ins disponíveis :(',
+  description: 'Compre mais check-ins para agendar aula',
+};
