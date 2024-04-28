@@ -15,7 +15,7 @@ interface ActivationStatusProps {
   message: string;
 }
 
-// Subcomponent for displaying success/error icons and messages
+// Subcomponent updated for more accurate status indication
 const ActivationStatus: React.FC<ActivationStatusProps> = ({
   isLoading,
   isSuccess,
@@ -39,6 +39,7 @@ export default function ActiveUser() {
   const router = useRouter();
   const { fetchUser } = useUser();
   const { tokenId } = router.query;
+  const posthog = usePostHog();
   const [activationDetails, setActivationDetails] = useState({
     message: 'ativando sua conta...',
     description: 'aguarde um pouquinho. não deve demorar muito :)',
@@ -46,31 +47,25 @@ export default function ActiveUser() {
     isSuccess: false,
     isLoading: true,
   });
-  const posthog = usePostHog();
 
-  const handleActivateUser = async (token: string) => {
+  async function handleActivateUser(token: string) {
     try {
       const response = await api.patch('/user/activate', { token });
+      if (response.status !== 200) throw new Error('activation failed');
 
-      if (response.status === 200) {
-        const userInfo = await fetchUser();
+      const userInfo = await fetchUser();
+      posthog?.capture('user_activated', {
+        email: userInfo?.email || 'unknown',
+        id: userInfo?.id || 'unknown',
+      });
 
-        posthog?.capture('user_activated', {
-          email: userInfo?.email || 'unknown',
-          id: userInfo?.id || 'unknown',
-        });
-        setActivationDetails({
-          message: 'sua conta foi ativada com sucesso!',
-          description:
-            'você ganhou 1 check-in para testar a plataforma. aproveite!',
-          buttonLabel: 'ir para a página inicial',
-          isSuccess: true,
-          isLoading: false,
-        });
-        return;
-      }
-
-      throw new Error('Activation failed');
+      setActivationDetails({
+        message: 'sua conta foi ativada com sucesso!',
+        description: 'você ganhou 1 aula ao vivo gratuita.',
+        buttonLabel: 'ver horários disponíveis',
+        isSuccess: true,
+        isLoading: false,
+      });
     } catch (err) {
       const { message, description } = convertErrorMessage({ err });
       setActivationDetails({
@@ -81,12 +76,11 @@ export default function ActiveUser() {
         isLoading: false,
       });
     }
-  };
+  }
 
   useEffect(() => {
-    if (tokenId) {
-      handleActivateUser(tokenId as string);
-    }
+    if (!tokenId) return;
+    handleActivateUser(tokenId as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenId]);
 
@@ -94,7 +88,7 @@ export default function ActiveUser() {
     activationDetails;
 
   return (
-    <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-full flex-col justify-center bg-white py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
           src="/logo-yoga-com-kaka-roxo.png"
@@ -103,25 +97,8 @@ export default function ActiveUser() {
           height={100}
           className="mx-auto"
         />
+        {isSuccess && <Confetti />}
       </div>
-      {isSuccess && <Confetti />}
-      {isSuccess && (
-        <div className="aspect-video h-full w-full">
-          <iframe
-            // width="560"
-            // width="1120"
-            // height="315"
-            // height="630"
-            src="https://www.youtube.com/embed/E3csGvH4t6o"
-            title="agende sua aula com a kaká"
-            // frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            className="mx-auto h-[70%] w-[70%] sm:h-[70%] sm:w-[70%]"
-            // allowfullscreen
-          ></iframe>
-        </div>
-      )}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
         <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
           <ActivationStatus
@@ -132,13 +109,27 @@ export default function ActiveUser() {
           <p className="mt-2 text-center text-sm text-gray-600">
             {description}
           </p>
+          {isSuccess && (
+            <>
+              <p className="mt-0.5 text-center text-sm text-gray-600">
+                assista o vídeo para entender os próximos passos:
+              </p>
+              <div className="mt-4 max-w-none text-sm text-gray-600">
+                <iframe
+                  src="https://www.youtube.com/embed/E3csGvH4t6o"
+                  title="agende sua aula com a kaká"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="mx-auto my-2 aspect-video w-full"
+                ></iframe>
+              </div>
+            </>
+          )}
           {!isLoading && (
             <button
               type="button"
-              className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
-              onClick={() =>
-                router.push(isSuccess ? '/?firstTime=true' : '/login')
-              }
+              className="mt-4 flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
+              onClick={() => router.push(isSuccess ? '/' : '/login')}
             >
               {buttonLabel}
             </button>
