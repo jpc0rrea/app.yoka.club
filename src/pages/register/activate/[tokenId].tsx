@@ -40,6 +40,14 @@ export default function ActiveUser() {
   const { fetchUser } = useUser();
   const { tokenId } = router.query;
   const posthog = usePostHog();
+
+  // Use local storage to determine if the page should display the video or not.
+  const [hasBeenActivated, setHasBeenActivated] = useState(
+    (typeof window !== 'undefined' &&
+      localStorage.getItem('activationComplete') === 'true') ||
+      false
+  );
+
   const [activationDetails, setActivationDetails] = useState({
     message: 'ativando sua conta...',
     description: 'aguarde um pouquinho. não deve demorar muito :)',
@@ -66,6 +74,9 @@ export default function ActiveUser() {
         isSuccess: true,
         isLoading: false,
       });
+
+      localStorage.setItem('activationComplete', 'true');
+      setHasBeenActivated(true);
     } catch (err) {
       const { message, description } = convertErrorMessage({ err });
       setActivationDetails({
@@ -80,9 +91,19 @@ export default function ActiveUser() {
 
   useEffect(() => {
     if (!tokenId) return;
+    if (hasBeenActivated) {
+      setActivationDetails({
+        message: 'sua conta já foi ativada!',
+        description: 'você já ganhou 1 aula ao vivo gratuita :)',
+        buttonLabel: 'ver horários disponíveis',
+        isSuccess: true,
+        isLoading: false,
+      });
+      return;
+    }
     handleActivateUser(tokenId as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenId]);
+  }, [tokenId, hasBeenActivated]);
 
   const { message, description, buttonLabel, isSuccess, isLoading } =
     activationDetails;
@@ -112,7 +133,7 @@ export default function ActiveUser() {
           {isSuccess && (
             <>
               <p className="mt-0.5 text-center text-sm text-gray-600">
-                assista o vídeo para entender os próximos passos:
+                assista o vídeo para entender como agendar uma aula:
               </p>
               <div className="mt-4 max-w-none text-sm text-gray-600">
                 <iframe
