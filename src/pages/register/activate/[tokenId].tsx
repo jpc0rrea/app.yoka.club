@@ -101,19 +101,26 @@ export default function ActiveUser() {
           alt="Logo grupo r3"
           width={300}
           height={100}
+          className="mx-auto"
         />
       </div>
       {isSuccess && <Confetti />}
       {isSuccess && (
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/E3csGvH4t6o"
-          title="agende sua aula com kaká"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+        <div className="aspect-video h-full w-full">
+          <iframe
+            // width="560"
+            // width="1120"
+            // height="315"
+            // height="630"
+            src="https://www.youtube.com/embed/E3csGvH4t6o"
+            title="agende sua aula com a kaká"
+            // frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            className="mx-auto h-[70%] w-[70%] sm:h-[70%] sm:w-[70%]"
+            // allowfullscreen
+          ></iframe>
+        </div>
       )}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
         <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
