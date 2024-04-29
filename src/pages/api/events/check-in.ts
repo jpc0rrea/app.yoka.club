@@ -82,12 +82,12 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       });
     }
 
-    const createCheckIn = prisma.checkIn.create({
-      data: {
-        eventId: event.id,
-        userId: user.id,
-      },
-    });
+    const checkInType =
+      user.trialCheckInsQuantity > 0
+        ? 'TRIAL'
+        : user.freeCheckInsQuantity > 0
+        ? 'FREE'
+        : 'PAID';
 
     const checkInTypeToDecrement =
       user.trialCheckInsQuantity > 0
@@ -95,6 +95,14 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
         : user.freeCheckInsQuantity > 0
         ? 'freeCheckInsQuantity'
         : 'paidCheckInsQuantity';
+
+    const createCheckIn = prisma.checkIn.create({
+      data: {
+        eventId: event.id,
+        userId: user.id,
+        type: checkInType,
+      },
+    });
 
     const updateUser = prisma.user.update({
       where: {
