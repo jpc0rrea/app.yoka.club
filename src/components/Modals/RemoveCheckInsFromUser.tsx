@@ -10,6 +10,8 @@ import { Loader2 } from 'lucide-react';
 
 interface RemoveCheckInsFromUserProps {
   userId: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 export const checkInTypesOptions: {
@@ -32,8 +34,9 @@ export const checkInTypesOptions: {
 
 export default function RemoveCheckInsFromUser({
   userId,
+  open,
+  setOpen,
 }: RemoveCheckInsFromUserProps) {
-  const [open, setOpen] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(1);
   const [checkInType, setCheckInType] = useState<'PAID' | 'FREE' | 'TRIAL'>(
     'PAID'
@@ -77,14 +80,14 @@ export default function RemoveCheckInsFromUser({
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           setOpen(true);
         }}
         className="mr-2 rounded bg-red-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-800"
       >
         remover check-ins
-      </button>
+      </button> */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"

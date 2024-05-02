@@ -10,6 +10,8 @@ import { Loader2 } from 'lucide-react';
 
 interface AddMoreCheckInsToUserProps {
   userId: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 export const checkInTypesOptions: {
@@ -28,8 +30,9 @@ export const checkInTypesOptions: {
 
 export default function AddMoreCheckInsToUser({
   userId,
+  open,
+  setOpen,
 }: AddMoreCheckInsToUserProps) {
-  const [open, setOpen] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(1);
   const [checkInType, setCheckInType] = useState<'PAID' | 'FREE'>('PAID');
   const [isAddingCheckIns, setIsAddingCheckIns] = useState(false);
@@ -71,14 +74,14 @@ export default function AddMoreCheckInsToUser({
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           setOpen(true);
         }}
         className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
       >
         adicionar check-ins
-      </button>
+      </button> */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
