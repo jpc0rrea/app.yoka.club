@@ -97,7 +97,7 @@ export default function UserRow({ user }: UserRowProps) {
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[180px]">
+          <DropdownMenuContent className="w-[180px]" align="end">
             <DropdownMenuItem
               onClick={() => {
                 setIsResetUserPasswordModalOpen(true);
