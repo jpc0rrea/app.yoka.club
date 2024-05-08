@@ -15,6 +15,7 @@ import user from '@models/user';
 import checkin from '@models/checkin';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 import mailLists from '@lib/mail/mailLists';
+import { ClintCRMService } from '@lib/crm/ClintCRMService';
 
 async function createAndSendActivationEmail({
   user,
@@ -137,6 +138,15 @@ async function activateUserUsingTokenId({
       userName: userToActivate.displayName,
       buttonLink: webserver.host,
     },
+  });
+
+  const CRMService = new ClintCRMService();
+
+  await CRMService.addContact({
+    name: userToActivate.name,
+    email: userToActivate.email,
+    phone: userToActivate.phoneNumber,
+    origin: 'app',
   });
 
   await sendMessageToYogaComKakaTelegramGroup(

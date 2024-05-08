@@ -134,7 +134,7 @@ export default function Login() {
         email: data.email,
       });
 
-      posthog?.capture('user_registered_with_password', {
+      posthog?.capture('onboarding:register_with_password', {
         email: data.email,
         name: data.fullName,
         phoneNumber: String(phoneNumber),
