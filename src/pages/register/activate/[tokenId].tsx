@@ -62,7 +62,7 @@ export default function ActiveUser() {
       if (response.status !== 200) throw new Error('activation failed');
 
       const userInfo = await fetchUser();
-      posthog?.capture('user_activated', {
+      posthog?.capture('onboarding:activate_account', {
         email: userInfo?.email || 'unknown',
         id: userInfo?.id || 'unknown',
       });
