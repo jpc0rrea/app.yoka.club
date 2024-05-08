@@ -24,7 +24,7 @@ export default function Custom500() {
                 </span>
               </Link>
               <Link
-                href="https://api.whatsapp.com/send/?phone=5522999542672&text&type=phone_number&app_absent=0"
+                href="https://api.whatsapp.com/send/?phone=5522992336710&text&type=phone_number&app_absent=0"
                 target="_blank"
               >
                 <span className="inline-flex items-center rounded-md border border-transparent bg-brand-purple-100 px-4 py-2 text-sm font-medium text-brand-purple-700 hover:bg-brand-purple-200 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2">

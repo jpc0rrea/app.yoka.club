@@ -31,6 +31,7 @@ import {
   isBrazilianPhoneNumber,
   isValidBrazilianPhoneNumber,
 } from '@lib/utils';
+import { ClintCRMService } from '@lib/crm/ClintCRMService';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -102,6 +103,15 @@ async function createWithoutPassword(userData: CreateWithoutPasswordUserData) {
       buttonLink: `${webserver.host}/profile`,
       password: generatedPassword,
     },
+  });
+
+  const CRMService = new ClintCRMService();
+
+  await CRMService.addContact({
+    name,
+    email,
+    phone: phoneNumber,
+    origin: 'ad',
   });
 
   await sendMessageToYogaComKakaTelegramGroup(
