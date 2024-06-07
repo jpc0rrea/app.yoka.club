@@ -15,6 +15,7 @@ import { sleep } from '@lib/utils';
 export default function SubscriptionActivation() {
   const router = useRouter();
   const { fetchUser } = useUser();
+  const { sessionToken } = router.query;
 
   const [globalMessage, setGlobalMessage] = useState(
     'ativando sua assinatura...'
@@ -26,8 +27,17 @@ export default function SubscriptionActivation() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleActivateSubscription = async () => {
+  const handleActivateSubscription = async ({
+    sessionToken,
+  }: {
+    sessionToken?: string | string[] | undefined;
+  }) => {
     try {
+      if (sessionToken) {
+        localStorage.setItem('activationComplete', 'true');
+        await api.patch('/sessions', { sessionToken });
+        await fetchUser();
+      }
       setIsLoading(true);
 
       await sleep(3000);
@@ -78,9 +88,9 @@ export default function SubscriptionActivation() {
   };
 
   useEffect(() => {
-    handleActivateSubscription();
+    handleActivateSubscription({ sessionToken });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sessionToken]);
 
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">

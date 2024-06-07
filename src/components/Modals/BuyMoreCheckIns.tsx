@@ -12,7 +12,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { convertNumberToReal } from '@lib/utils';
-import { CHECK_IN_PRICE } from '@lib/constants';
+import { calculatePricePerCheckin } from '@lib/constants';
 import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
@@ -25,17 +25,19 @@ interface BuyMoreCheckInsProps {
   CTAButton?: React.FC<ButtonHTMLAttributes<HTMLButtonElement>>;
 }
 
+const discountOptionStyle =
+  'rounded bg-green-100 px-2 py-1 font-bold text-green-500';
+const normalOptionStyle = 'text-sm text-green-500';
+
 export default function BuyMoreCheckIns({
   title = 'comprar mais check-ins',
   ctaText = 'comprar mais',
-  description = 'escolha a quantidade de check-ins que deseja comprar',
+  description = 'escolha a quantidade que deseja comprar',
   CTAButton,
 }: BuyMoreCheckInsProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [checkInsQuantity, setCheckInsQuantity] = useState(4);
-
-  // const cancelButtonRef = useRef(null);
 
   const handleCreatePaymentWithPix = useCallback(async () => {
     setIsLoading(true);
@@ -61,6 +63,10 @@ export default function BuyMoreCheckIns({
     }
     setIsLoading(false);
   }, [checkInsQuantity]);
+
+  const pricePerCheckIn = calculatePricePerCheckin(checkInsQuantity);
+  const totalCost = convertNumberToReal(checkInsQuantity * pricePerCheckIn);
+  const checkInUnityPrice = convertNumberToReal(pricePerCheckIn);
 
   return (
     <>
@@ -141,17 +147,15 @@ export default function BuyMoreCheckIns({
                       >
                         {title}
                       </Dialog.Title>
-                      <Dialog.Description>
+                      {/* <Dialog.Description>
                         <p className="text-sm text-gray-600">{description}</p>
-                      </Dialog.Description>
+                      </Dialog.Description> */}
                       <div className="mt-2">
-                        <p className="text-sm text-gray-500">
-                          número de check-ins
-                        </p>
+                        <p className="text-sm text-gray-500">{description}</p>
                         <div className="mt-1 flex items-center justify-center">
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2"
+                            className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
                             onClick={() => {
                               if (checkInsQuantity > 1) {
                                 setCheckInsQuantity(checkInsQuantity - 1);
@@ -168,7 +172,7 @@ export default function BuyMoreCheckIns({
                           </p>
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2"
+                            className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
                             onClick={() => {
                               setCheckInsQuantity(checkInsQuantity + 1);
                             }}
@@ -184,9 +188,7 @@ export default function BuyMoreCheckIns({
                         <p className="text-sm text-gray-500">total</p>
                         <div className="mx-auto flex items-end">
                           <p className="text-xl font-bold text-purple-800">
-                            {convertNumberToReal(
-                              checkInsQuantity * CHECK_IN_PRICE
-                            )}
+                            {totalCost}
                           </p>
                         </div>
                       </div>
@@ -195,7 +197,7 @@ export default function BuyMoreCheckIns({
 
                         <p className="ml-1 text-sm text-gray-700">
                           <strong className="text-purple-800">
-                            {convertNumberToReal(CHECK_IN_PRICE)}
+                            {checkInUnityPrice}
                           </strong>{' '}
                           por check-in
                         </p>
@@ -222,6 +224,39 @@ export default function BuyMoreCheckIns({
                     >
                       pagar com cartão de crédito
                     </button> */}
+                  </div>
+                  <div className="mt-4 text-center text-sm">
+                    <span className="text-gray-600">desconto progressivo</span>
+                    <br />
+                    <span
+                      className={
+                        pricePerCheckIn === 28
+                          ? discountOptionStyle
+                          : normalOptionStyle
+                      }
+                    >
+                      7% de desconto comprando a partir de 4 check-ins
+                    </span>
+                    <br />
+                    <span
+                      className={
+                        pricePerCheckIn === 26
+                          ? discountOptionStyle
+                          : normalOptionStyle
+                      }
+                    >
+                      14% de desconto comprando a partir de 8 check-ins
+                    </span>
+                    <br />
+                    <span
+                      className={
+                        pricePerCheckIn === 22
+                          ? discountOptionStyle
+                          : normalOptionStyle
+                      }
+                    >
+                      27% de desconto comprando 12 check-ins ou mais
+                    </span>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
