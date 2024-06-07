@@ -2,10 +2,16 @@ import statement from '@models/statement';
 import plan from '@models/plan';
 import user from '@models/user';
 import { prisma } from '@server/db';
-import { CancelSubscriptionParams, RenewSubscriptionParams } from './types';
+import {
+  CancelSubscriptionParams,
+  CreateSubscriptionCheckoutSession,
+  RenewSubscriptionParams,
+} from './types';
 import { UnauthorizedError } from '@errors/index';
 import { stripe } from '@lib/stripe';
 import eventLogs from '@models/event-logs';
+import { PLANS } from '@lib/stripe/plans';
+import webserver from '@infra/webserver';
 
 async function renewSubscription({
   userId,
@@ -80,7 +86,77 @@ async function cancelSubscription({ userId }: CancelSubscriptionParams) {
   });
 }
 
+async function createSubscriptionCheckoutSession({
+  userId,
+  planCode,
+  billingPeriod,
+  sessionToken,
+  prismaInstance,
+}: CreateSubscriptionCheckoutSession) {
+  const userObject = await user.findOneById({
+    userId,
+    prismaInstance: prismaInstance,
+  });
+
+  const { stripeId } = userObject;
+
+  let customerId = stripeId || '';
+
+  if (!stripeId) {
+    const stripeCustomer = await stripe.customers.create({
+      email: userObject.email,
+      name: userObject.name,
+      metadata: {
+        userId,
+      },
+    });
+
+    customerId = stripeCustomer.id;
+
+    await prismaInstance.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        stripeId: customerId,
+      },
+    });
+  }
+
+  const priceId =
+    PLANS.find(
+      (plan) => plan.billingPeriod === billingPeriod && plan.code === planCode
+    )?.stripePriceId || '';
+
+  if (!priceId) {
+    throw new UnauthorizedError({
+      message: `o plano com o código ${planCode} e período de cobrança ${billingPeriod} não foi encontrado.`,
+      action: `verifique se o plano com o código ${planCode} e período de cobrança ${billingPeriod} existe e tente novamente.`,
+      errorLocationCode:
+        'MODEL:SUBSCRIPTION:CREATE_SUBSCRIPTION_CHECKOUT_SESSION:MISSING_PLAN',
+    });
+  }
+
+  const stripeCheckoutSession = await stripe.checkout.sessions.create({
+    customer: customerId,
+    payment_method_types: ['card'],
+    billing_address_collection: 'auto',
+    line_items: [{ price: priceId, quantity: 1 }],
+    mode: 'subscription',
+    allow_promotion_codes: true,
+    success_url: sessionToken
+      ? `${process.env.STRIPE_SUCCESS_URL}?sessionToken=${sessionToken}`
+      : process.env.STRIPE_SUCCESS_URL,
+    cancel_url: sessionToken
+      ? `${webserver.host}/register/without-password?sessionToken=${sessionToken}`
+      : process.env.STRIPE_CANCEL_URL,
+  });
+
+  return stripeCheckoutSession.id;
+}
+
 export default Object.freeze({
   renewSubscription,
   cancelSubscription,
+  createSubscriptionCheckoutSession,
 });

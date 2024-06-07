@@ -3,8 +3,9 @@ import { CreatePlanParams, GetUserPlanParams } from './types';
 import { prisma } from '@server/db';
 import { NotFoundError } from '@errors/index';
 import user from '@models/user';
-import { PlanIds, UserPlan } from '@hooks/useUserPlan';
+import { UserPlan } from '@hooks/useUserPlan';
 import { isAfter } from 'date-fns';
+import { PlanId } from '@lib/stripe/plans';
 
 async function create({
   checkInsQuantity,
@@ -77,7 +78,7 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
     type: 'free',
     name: 'plano gratuito',
     price: 0,
-    checkinsQuantity: userObject.checkInsQuantity,
+    checkinsQuantity: 0,
     extra: 'acesso aos conteúdos gratuitos',
     cancelAtPeriodEnd: false,
     expirationDate: userObject.expirationDate || undefined,
@@ -104,13 +105,13 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
   plan.type = 'premium';
   plan.nextBillingValue = subscriptionDetails.nextBillingValue;
   plan.nextBillingDate = new Date(subscriptionDetails.nextBillingTime);
-  plan.id = subscriptionDetails.plan.id as PlanIds;
+  plan.id = subscriptionDetails.plan.id as PlanId;
   plan.name =
     subscriptionDetails.plan.checkInsQuantity === 0
       ? 'plano zen'
       : subscriptionDetails.plan.checkInsQuantity === 8
-      ? 'plano lótus'
-      : 'plano flow';
+      ? 'plano flow'
+      : 'plano gratuito';
   plan.checkinsQuantity = subscriptionDetails.plan.checkInsQuantity;
   plan.price = subscriptionDetails.plan.fullPricePerBillingPeriod;
   plan.extra = 'acesso a todas as aulas gravadas e a conteúdos exclusivos';

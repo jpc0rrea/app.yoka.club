@@ -1,3 +1,4 @@
+import { BillingPeriod, PlanCode } from '@lib/stripe/plans';
 import { UpdateProfileFormData } from '@pages/profile';
 import { Prisma, RecurrencePeriod, User } from '@prisma/client';
 import { PrismaInstance } from '@server/db';
@@ -13,6 +14,8 @@ export interface CreateWithoutPasswordUserData {
   email: string;
   phoneNumber: string;
   name: string;
+  planCode: PlanCode;
+  billingPeriod: BillingPeriod;
 }
 
 export interface FindOneByIdParams {
