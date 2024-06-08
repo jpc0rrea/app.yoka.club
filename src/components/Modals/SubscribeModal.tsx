@@ -1,33 +1,268 @@
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { ArrowPathIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import { SegmentedControl } from '@mantine/core';
-import { convertNumberToReal } from '@lib/utils';
-import {
-  getFullPricePerBillingPeriod,
-  getPlanPricePerMonth,
-} from '@hooks/useUserPlan';
+import { RadioGroup } from '@headlessui/react';
+// import { ArrowPathIcon, SparklesIcon } from '@heroicons/react/24/outline';
+// import { SegmentedControl } from '@mantine/core';
+// import { convertNumberToReal } from '@lib/utils';
+// import {
+//   getFullPricePerBillingPeriod,
+//   getPlanPricePerMonth,
+// } from '@hooks/useUserPlan';
 import { api } from '@lib/api';
 import { getStripeJs } from '@lib/stripe';
 import { errorToast } from '@components/Toast/ErrorToast';
-import { Loader2 } from 'lucide-react';
+import { CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@utils';
+import clsx from 'clsx';
+import { Button } from '@components/ui/button';
+import { BillingPeriod, PlanCode } from '@lib/stripe/plans';
 
 interface SubscribeModalProps {
   label: string;
   className?: string;
 }
 
+const plans = [
+  {
+    name: 'plano zen',
+    code: 'zen' as PlanCode,
+    checkInsQuantityPerMonth: 0,
+    featured: false,
+    price: {
+      monthly: 'R$ 59,90',
+      quarterly: 'R$ 49,90',
+      fullQuarterlyPrice: 'R$ 149,70',
+    },
+    description:
+      'você está começando a praticar yoga e quer ter acesso a todas as aulas gravadas',
+    button: {
+      label: 'escolher plano zen',
+      href: 'https://app.yogacomkaka.com/register',
+    },
+    includedFeatures: [
+      'acesso as aulas gratuitas da plataforma',
+      'acesso as aulas exclusivas da plataforma',
+      'acesso as gravações das aulas ao vivo',
+    ],
+    excludedFeatures: [],
+  },
+  {
+    name: 'plano flow',
+    code: 'flow' as PlanCode,
+    checkInsQuantityPerMonth: 8,
+    featured: true,
+    price: {
+      monthly: 'R$ 199,90',
+      quarterly: 'R$ 166,57',
+      fullQuarterlyPrice: 'R$ 499,70',
+    },
+    description:
+      'você quer ter acesso a todas as aulas gravadas e participar das aulas ao vivo',
+    button: {
+      label: 'escolher plano flow',
+      href: 'https://app.yogacomkaka.com/register',
+    },
+    includedFeatures: [
+      'acesso as aulas gratuitas da plataforma',
+      'acesso as aulas exclusivas da plataforma',
+      'acesso as gravações das aulas ao vivo',
+    ],
+    excludedFeatures: [],
+  },
+];
+
+function Plan({
+  name,
+  code,
+  checkInsQuantityPerMonth,
+  price,
+  description,
+  button,
+  includedFeatures,
+  excludedFeatures,
+  activePeriod,
+  featured = false,
+  redirectToCheckout,
+  isRedirectingToCheckout,
+}: {
+  name: string;
+  code: PlanCode;
+  checkInsQuantityPerMonth: number;
+  price: {
+    monthly: string;
+    quarterly: string;
+    fullQuarterlyPrice: string;
+  };
+  description: string;
+  button: {
+    label: string;
+    href: string;
+  };
+  includedFeatures: Array<string>;
+  excludedFeatures: Array<string>;
+  activePeriod: BillingPeriod;
+  logomarkClassName?: string;
+  featured?: boolean;
+  redirectToCheckout: ({
+    planCode,
+    billingPeriod,
+  }: {
+    planCode: PlanCode;
+    billingPeriod: BillingPeriod;
+  }) => void;
+  isRedirectingToCheckout: boolean;
+}) {
+  return (
+    <section
+      className={clsx(
+        'flex flex-col overflow-hidden rounded-3xl p-6 shadow-lg shadow-brand-purple-800/10',
+        featured
+          ? 'border-[1px] border-brand-purple-800 lg:order-none'
+          : 'bg-white'
+      )}
+    >
+      <div className="flex items-center justify-between gap-x-4">
+        <h3
+          className={clsx(
+            'flex items-center text-lg font-semibold',
+            featured ? 'text-brand-purple-800' : 'text-gray-900'
+          )}
+        >
+          <span>{name}</span>
+        </h3>
+        {featured ? (
+          <p className="rounded-full bg-brand-purple-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-brand-purple-600">
+            mais popular
+          </p>
+        ) : null}
+      </div>
+      <p
+        className={clsx(
+          'relative mt-5 flex items-baseline text-3xl tracking-tight text-gray-700'
+          // featured ? 'text-white' : 'text-gray-900'
+        )}
+      >
+        <span
+          aria-hidden={activePeriod === 'quarterly'}
+          className={clsx(
+            'transition duration-300',
+            activePeriod === 'quarterly' &&
+              'pointer-events-none translate-x-6 select-none opacity-0'
+          )}
+        >
+          {price.monthly}
+        </span>
+        <span
+          aria-hidden={activePeriod === 'monthly'}
+          className={clsx(
+            'absolute left-0 top-0 transition duration-300',
+            activePeriod === 'monthly' &&
+              'pointer-events-none -translate-x-6 select-none opacity-0'
+          )}
+        >
+          {price.quarterly}
+        </span>
+        <span className="ml-1 text-sm font-semibold leading-6 tracking-normal text-gray-700">
+          /mês
+        </span>
+      </p>
+      <p
+        className={clsx(
+          'h-2 text-xs text-gray-700'
+          // featured ? 'text-gray-100' : 'text-gray-700'
+        )}
+      >
+        {activePeriod === 'quarterly' && (
+          <span>
+            (pagamento de {price.fullQuarterlyPrice} a cada trimestre)
+          </span>
+        )}
+      </p>
+      <p
+        className={clsx(
+          'mt-3 text-sm text-gray-700'
+          // featured ? 'text-gray-100' : 'text-gray-700'
+        )}
+      >
+        {description}
+      </p>
+      <div className="mt-6">
+        <ul
+          className={clsx(
+            '-my-2 divide-y divide-gray-200 text-sm text-gray-700'
+            // featured
+            //   ? 'divide-gray-700 text-gray-100'
+            //   : 'divide-gray-200 text-gray-700'
+          )}
+        >
+          {includedFeatures.map((feature) => (
+            <li key={feature} className="flex py-2">
+              <CheckCircle2
+                className={clsx(
+                  'h-6 w-6 flex-none text-brand-purple-600'
+                  // featured ? 'text-white' : 'text-brand-purple-600'
+                )}
+              />
+              <span className="ml-4">{feature}</span>
+            </li>
+          ))}
+          {excludedFeatures.map((feature) => (
+            <li key={feature} className="flex py-2">
+              <XCircle className={clsx('h-6 w-6 flex-none text-red-300')} />
+              <span className="ml-4">{feature}</span>
+            </li>
+          ))}
+          <li className="flex py-2">
+            {checkInsQuantityPerMonth === 0 ? (
+              <XCircle className={clsx('h-6 w-6 flex-none text-red-300')} />
+            ) : (
+              <CheckCircle2
+                className={clsx(
+                  'h-6 w-6 flex-none text-brand-purple-600'
+                  // featured ? 'text-white' : 'text-brand-purple-600'
+                )}
+              />
+            )}
+            <span className="ml-4">
+              <strong>{checkInsQuantityPerMonth}</strong> check-ins para aulas
+              ao vivo
+            </span>
+          </li>
+        </ul>
+      </div>
+      <Button
+        onClick={() =>
+          redirectToCheckout({
+            planCode: code,
+            billingPeriod: activePeriod,
+          })
+        }
+        variant={featured ? 'default' : 'outline'}
+        className="mt-6"
+        aria-label={`Get started with the ${name} plan for ${price}`}
+        disabled={isRedirectingToCheckout}
+      >
+        {button.label}
+      </Button>
+    </section>
+  );
+}
+
 export default function SubscribeModal({
   label,
   className,
 }: SubscribeModalProps) {
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
   const [open, setOpen] = useState(false);
-  const [billingPeriod, setBillingPeriod] = useState<string>('quarterly');
-  const [checkInsQuantity, setCheckInsQuantity] = useState<number>(8);
   const [isRedirectingToCheckout, setIsRedirectingToCheckout] = useState(false);
 
-  const handleRedirectToCheckout = useCallback(async () => {
+  const handleRedirectToCheckout = async ({
+    planCode,
+    billingPeriod,
+  }: {
+    planCode: PlanCode;
+    billingPeriod: BillingPeriod;
+  }) => {
     setIsRedirectingToCheckout(true);
 
     try {
@@ -35,7 +270,7 @@ export default function SubscribeModal({
         '/users/checkout-session',
         {
           billingPeriod,
-          checkInsQuantity,
+          planCode,
         }
       );
 
@@ -61,7 +296,7 @@ export default function SubscribeModal({
     } finally {
       setIsRedirectingToCheckout(false);
     }
-  }, [billingPeriod, checkInsQuantity]);
+  };
 
   return (
     <>
@@ -106,7 +341,7 @@ export default function SubscribeModal({
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
                   <div>
                     {/* <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                       <CheckIcon
@@ -121,133 +356,69 @@ export default function SubscribeModal({
                       >
                         planos - yoga com kaká
                       </Dialog.Title>
-                      <div className="items-center justify-between md:flex">
-                        <div className="mt-2">
-                          <p className="text-xs text-gray-800">
-                            escolha a frequência
-                          </p>
-                          <SegmentedControl
+
+                      <div className="mt-8 flex justify-center">
+                        <div className="relative">
+                          <RadioGroup
                             value={billingPeriod}
                             onChange={setBillingPeriod}
-                            size="xs"
-                            className="mt-1"
-                            classNames={{
-                              label: '!text-[10px] md:!text-xs',
-                            }}
-                            data={[
-                              { label: 'Mensal', value: 'monthly' },
-                              { label: 'Trimestral', value: 'quarterly' },
-                            ]}
-                          />
-                        </div>
-                        <div className="mt-2">
-                          <p className="text-xs text-gray-800">
-                            escolha a quantidade de check-ins
-                          </p>
-                          <SegmentedControl
-                            value={String(checkInsQuantity)}
-                            onChange={(value) => {
-                              setCheckInsQuantity(Number(value));
-                            }}
-                            className="ml-2 mt-1"
-                            classNames={{
-                              label: '!text-[10px] md:!text-xs',
-                            }}
-                            size="xs"
-                            data={[
-                              { label: '0 check-ins/mês', value: '0' },
-                              { label: '8 check-ins/mês', value: '8' },
-                              { label: '12 check-ins/mês', value: '12' },
-                            ]}
-                          />
-                        </div>
-                      </div>
-                      <div className="mt-3 flex items-center ">
-                        <div className="mx-auto flex items-end">
-                          <p className="text-xl font-bold text-purple-800">
-                            {convertNumberToReal(
-                              getPlanPricePerMonth({
-                                billingPeriod: billingPeriod as
-                                  | 'monthly'
-                                  | 'quarterly',
-                                checkInsQuantity,
-                              })
+                            className="grid grid-cols-2"
+                          >
+                            {['monthly', 'quarterly'].map((period) => (
+                              <RadioGroup.Option
+                                key={period}
+                                value={period}
+                                className={clsx(
+                                  'cursor-pointer border border-gray-300 px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)] text-center text-sm text-gray-700 outline-2 outline-offset-2 transition-colors hover:border-gray-400',
+                                  period === 'monthly'
+                                    ? 'rounded-l-lg'
+                                    : '-ml-px rounded-r-lg'
+                                )}
+                              >
+                                <span>
+                                  {period === 'monthly'
+                                    ? 'Mensal'
+                                    : 'Trimestral'}
+                                </span>
+                              </RadioGroup.Option>
+                            ))}
+                          </RadioGroup>
+                          <div
+                            aria-hidden="true"
+                            className={clsx(
+                              'pointer-events-none absolute inset-0 z-10 grid grid-cols-2 overflow-hidden rounded-lg bg-brand-purple-600 transition-all duration-300',
+                              billingPeriod === 'monthly'
+                                ? '[clip-path:inset(0_50%_0_0)]'
+                                : '[clip-path:inset(0_0_0_calc(50%-1px))]'
                             )}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {billingPeriod === 'monthly' ? '/mês' : '/mês*'}
-                          </p>
+                          >
+                            {['monthly', 'quarterly'].map((period) => (
+                              <div
+                                key={period}
+                                className={clsx(
+                                  'py-2 text-center text-sm font-semibold text-white',
+                                  period === 'quarterly' && '-ml-px'
+                                )}
+                              >
+                                {period === 'monthly' ? 'Mensal' : 'Trimestral'}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                      <div className="mt-4 flex items-center">
-                        <ArrowPathIcon className="inline-block h-5 w-5 text-purple-800" />
-
-                        <p className="ml-1 text-sm text-gray-700">
-                          <strong className="text-purple-800">
-                            {checkInsQuantity}
-                          </strong>{' '}
-                          check-ins por mês
-                        </p>
-                      </div>
-                      <div className="mt-2 flex items-center">
-                        <SparklesIcon className="inline-block h-5 w-5 text-purple-800" />
-
-                        <p className="ml-1 text-sm font-bold text-purple-800">
-                          acesso a conteúdos exclusivos
-                        </p>
-                      </div>
-                      <div className="mt-3">
-                        <p className="text-left text-xs text-gray-500">
-                          assinatura com renovação automática.
-                        </p>
-                        <p className="text-left text-xs text-gray-500">
-                          você pode cancelar a qualquer momento :)
-                        </p>
-                      </div>
-                      {billingPeriod === 'quarterly' && (
-                        <div className="mt-1 flex items-center">
-                          <p className="text-left text-sm text-gray-500">
-                            * pagamento de{' '}
-                            {convertNumberToReal(
-                              getFullPricePerBillingPeriod({
-                                billingPeriod: billingPeriod as
-                                  | 'monthly'
-                                  | 'quarterly',
-                                checkInsQuantity,
-                              })
-                            )}{' '}
-                            a cada trimestre
-                          </p>
-                        </div>
-                      )}
                     </div>
-                  </div>
-                  <div className="mt-5 sm:mt-6">
-                    <button
-                      className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
-                      onClick={handleRedirectToCheckout}
-                    >
-                      {isRedirectingToCheckout ? (
-                        <Loader2 className="h-5 w-5 text-white" />
-                      ) : (
-                        'assinar a plataforma'
-                      )}
-                    </button>
-                    {/* <button
-                      type="button"
-                      className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-2"
-                      onClick={() => setOpen(false)}
-                    >
-                      pagamento avulso (pix)
-                    </button>
-                    <button
-                      type="button"
-                      className="mt-3 inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-1 sm:mt-0"
-                      onClick={() => setOpen(false)}
-                      ref={cancelButtonRef}
-                    >
-                      pagamento recorrente (cartão de crédito)
-                    </button> */}
+
+                    <div className="mx-auto mt-4 grid max-w-2xl grid-cols-1 flex-col-reverse items-start gap-x-8 gap-y-10 sm:mt-6 lg:max-w-none lg:grid-cols-2">
+                      {plans.map((plan) => (
+                        <Plan
+                          key={plan.name}
+                          {...plan}
+                          redirectToCheckout={handleRedirectToCheckout}
+                          isRedirectingToCheckout={isRedirectingToCheckout}
+                          activePeriod={billingPeriod}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

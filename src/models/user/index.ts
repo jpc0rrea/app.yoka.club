@@ -32,6 +32,7 @@ import {
   isValidBrazilianPhoneNumber,
 } from '@lib/utils';
 import { ClintCRMService } from '@lib/crm/ClintCRMService';
+import { BILLING_PERIODS, PLAN_CODES } from '@lib/stripe/plans';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -287,7 +288,7 @@ function validateRegisterUserRequest(req: RegisterRequest) {
 function validateRegisterUserWithoutPasswordRequest(
   req: RegisterWithoutPasswordRequest
 ) {
-  const { email, name, phoneNumber } = req.body;
+  const { email, name, phoneNumber, planCode, billingPeriod } = req.body;
 
   if (!email || !name || !phoneNumber) {
     throw new ValidationError({
@@ -342,10 +343,32 @@ function validateRegisterUserWithoutPasswordRequest(
     });
   }
 
+  if (!planCode || !PLAN_CODES.includes(planCode)) {
+    throw new ValidationError({
+      message: `O campo "chosenPlan" deve ser "free", "flow" ou "zen".`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_WITHOUT_PASS_REQUEST:INVALID_CHOSEN_PLAN',
+      key: 'chosenPlan',
+    });
+  }
+
+  if (!billingPeriod || !BILLING_PERIODS.includes(billingPeriod)) {
+    throw new ValidationError({
+      message: `O campo "billingPeriod" deve ser "monthly" ou "quarterly".`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_WITHOUT_PASS_REQUEST:INVALID_PERIOD',
+      key: 'period',
+    });
+  }
+
   return {
     email: email.toLowerCase().trim(),
     name: name.trim(),
     phoneNumber: phoneNumber.trim(),
+    planCode: planCode.trim(),
+    billingPeriod: billingPeriod.trim(),
   } as CreateWithoutPasswordUserData;
 }
 

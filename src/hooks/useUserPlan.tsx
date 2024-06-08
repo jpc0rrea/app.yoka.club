@@ -1,19 +1,17 @@
 import { api } from '@lib/api';
+import {
+  BillingPeriod,
+  PLANS,
+  PlanId,
+  PlanName,
+  PlanType,
+} from '@lib/stripe/plans';
 import { useQuery } from '@tanstack/react-query';
 
-export type PlanIds =
-  | 'FREE'
-  | 'MONTHLY_8'
-  | 'MONTHLY_12'
-  | 'QUARTERLY_8'
-  | 'QUARTERLY_12'
-  | 'MONTHLY_0'
-  | 'QUARTERLY_0';
-
 export interface UserPlan {
-  id: PlanIds;
-  type: 'free' | 'premium';
-  name: 'plano gratuito' | 'plano zen' | 'plano lótus' | 'plano flow';
+  id: PlanId;
+  type: PlanType;
+  name: PlanName;
   checkinsQuantity: number;
   price: number;
   extra: string;
@@ -24,47 +22,8 @@ export interface UserPlan {
   nextBillingValue?: string;
 }
 
-export interface Plan {
-  id: PlanIds;
-  fullPricePerBillingPeriod: number;
-  pricePerMonth: number;
-}
-
-export const planPrices: Plan[] = [
-  {
-    id: 'MONTHLY_8',
-    fullPricePerBillingPeriod: 199.9,
-    pricePerMonth: 199.9,
-  },
-  {
-    id: 'MONTHLY_12',
-    fullPricePerBillingPeriod: 259.9,
-    pricePerMonth: 259.9,
-  },
-  {
-    id: 'QUARTERLY_8',
-    fullPricePerBillingPeriod: 499.7,
-    pricePerMonth: 166.57,
-  },
-  {
-    id: 'QUARTERLY_12',
-    fullPricePerBillingPeriod: 649.7,
-    pricePerMonth: 216.57,
-  },
-  {
-    id: 'MONTHLY_0',
-    fullPricePerBillingPeriod: 59.9,
-    pricePerMonth: 59.9,
-  },
-  {
-    id: 'QUARTERLY_0',
-    fullPricePerBillingPeriod: 149.7,
-    pricePerMonth: 49.9,
-  },
-];
-
 interface GetPlanPricePerMonthParams {
-  billingPeriod: 'monthly' | 'quarterly';
+  billingPeriod: BillingPeriod;
   checkInsQuantity: number;
 }
 
@@ -72,7 +31,7 @@ export function getPlanPricePerMonth({
   billingPeriod,
   checkInsQuantity,
 }: GetPlanPricePerMonthParams) {
-  const plan = planPrices.find(
+  const plan = PLANS.find(
     (plan) => plan.id === `${billingPeriod.toUpperCase()}_${checkInsQuantity}`
   );
 
@@ -83,7 +42,7 @@ export function getFullPricePerBillingPeriod({
   billingPeriod,
   checkInsQuantity,
 }: GetPlanPricePerMonthParams) {
-  const plan = planPrices.find(
+  const plan = PLANS.find(
     (plan) => plan.id === `${billingPeriod.toUpperCase()}_${checkInsQuantity}`
   );
 

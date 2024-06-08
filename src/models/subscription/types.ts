@@ -1,3 +1,4 @@
+import { BillingPeriod, PlanCode } from '@lib/stripe/plans';
 import { PrismaInstance } from '@server/db';
 
 export interface RenewSubscriptionParams {
@@ -10,4 +11,12 @@ export interface RenewSubscriptionParams {
 
 export interface CancelSubscriptionParams {
   userId: string;
+}
+
+export interface CreateSubscriptionCheckoutSession {
+  userId: string;
+  planCode: PlanCode;
+  billingPeriod: BillingPeriod;
+  sessionToken?: string;
+  prismaInstance: PrismaInstance;
 }

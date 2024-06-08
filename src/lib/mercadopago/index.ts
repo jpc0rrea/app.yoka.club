@@ -1,6 +1,6 @@
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
-import { CHECK_IN_PRICE } from '@lib/constants';
+import { calculatePricePerCheckin } from '@lib/constants';
 import user from '@models/user';
 import { prisma } from '@server/db';
 import { ValidationError } from '@errors/index';
@@ -33,12 +33,14 @@ async function createCheckout({
     pending: process.env.MERCADOPAGO_BACK_URL,
   };
 
+  const pricePerCheckIn = calculatePricePerCheckin(checkInsQuantity);
+
   const preferenceBody = {
     items: [
       {
         id: 'SEPARATE-CHECK-IN-',
         title: 'Pacote de check-ins',
-        unit_price: CHECK_IN_PRICE,
+        unit_price: pricePerCheckIn,
         quantity: checkInsQuantity,
       },
     ],

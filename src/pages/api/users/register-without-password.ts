@@ -1,18 +1,24 @@
 import { createRouter } from 'next-connect';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { prisma } from '@server/db';
 import controller from '@models/controller';
 import authentication from '@models/authentication';
 import cacheControl from '@models/cache-control';
 import user from '@models/user';
 import { setCookie } from 'nookies';
 import { SESSION_EXPIRATION_IN_SECONDS } from '@models/session';
+import { BillingPeriod, PlanCode } from '@lib/stripe/plans';
+import webserver from '@infra/webserver';
+import subscription from '@models/subscription';
 
 export interface RegisterWithoutPasswordRequest extends NextApiRequest {
   body: {
     email: string;
     name: string;
     phoneNumber: string;
+    planCode: PlanCode;
+    billingPeriod: BillingPeriod;
   };
 }
 
@@ -71,10 +77,29 @@ async function registerWithoutPassword(
     domain: process.env.COOKIE_DOMAIN,
   });
 
+  if (req.body.planCode === 'free') {
+    return res.status(201).json({
+      code: 'user-created',
+      sessionToken: session.sessionToken,
+      userId: newUser.id,
+      returnUrl: `${webserver.host}/register/without-password`,
+    });
+  }
+
+  const sessionId = await subscription.createSubscriptionCheckoutSession({
+    userId: newUser.id,
+    planCode: req.body.planCode,
+    billingPeriod: req.body.billingPeriod,
+    sessionToken: session.sessionToken,
+    prismaInstance: prisma,
+  });
+
   return res.status(201).json({
     code: 'user-created',
     sessionToken: session.sessionToken,
     userId: newUser.id,
+    sessionId,
+    returnUrl: `${webserver.host}/register/without-password`,
   });
 }
 
