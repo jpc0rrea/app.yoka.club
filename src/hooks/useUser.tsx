@@ -59,6 +59,8 @@ export interface UserContextData {
     email: string;
   } | void>;
   logout: () => Promise<void>;
+  favoriteEvents: string[];
+  setFavoriteEvents: (favoriteEvents: string[]) => void;
 }
 
 interface UserProviderProps {
@@ -76,13 +78,14 @@ export function UserProvider({ children }: UserProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<undefined | ErrorInUserContext>(undefined);
+  const [favoriteEvents, setFavoriteEvents] = useState<string[]>([]);
   const router = useRouter();
   const posthog = usePostHog();
 
   const fetchUser = useCallback(async () => {
     try {
       const fetchUserResponse = await api.get<{
-        user: UserInContext | undefined;
+        user: (UserInContext & { favoriteEvents: string[] }) | undefined;
         message: string | undefined;
         description: string | undefined;
         action: string | undefined;
@@ -109,6 +112,7 @@ export function UserProvider({ children }: UserProviderProps) {
         });
 
         setUser(fetchedUser);
+        setFavoriteEvents(fetchedUser.favoriteEvents);
         localStorage.setItem('user', JSON.stringify(cachedUserProperties));
         localStorage.removeItem('reloadTime');
 
@@ -220,6 +224,8 @@ export function UserProvider({ children }: UserProviderProps) {
     error,
     fetchUser,
     logout,
+    favoriteEvents,
+    setFavoriteEvents,
   };
 
   return (

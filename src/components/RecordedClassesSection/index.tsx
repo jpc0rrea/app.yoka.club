@@ -37,6 +37,11 @@ export default function RecordedClassesSection() {
       ? [query.premium]
       : [];
   });
+  const [favoritesFilter, setFavoritesFilter] = useState<boolean>(() => {
+    const query = router.query;
+    return query.favorites === 'true';
+  });
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
@@ -51,6 +56,7 @@ export default function RecordedClassesSection() {
     duration: durationFilter,
     intensity: intensityFilter,
     premium: premiumFilter,
+    favorites: favoritesFilter,
     page,
     pageSize,
   });
@@ -81,6 +87,8 @@ export default function RecordedClassesSection() {
         setIntensityFilter={setIntensityFilter}
         premiumFilter={premiumFilter}
         setPremiumFilter={setPremiumFilter}
+        favoritesFilter={favoritesFilter}
+        setFavoritesFilter={setFavoritesFilter}
       />
       <ClassesSection events={events} isLoading={isLoading} />
       <Pagination
