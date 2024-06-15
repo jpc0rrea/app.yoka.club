@@ -87,7 +87,7 @@ export default function Toolbar({
         />
         <Toggle
           aria-label="Toggle favorites"
-          className="h-8"
+          className="h-8 border border-dashed"
           pressed={favoritesFilter}
           size="sm"
           onPressedChange={(pressed: boolean) => {
