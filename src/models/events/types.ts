@@ -65,6 +65,7 @@ export interface ListRecordedEventsQueryParams
   durationInString?: string;
   intensityInString?: string;
   premiumInString?: string;
+  favoritesInString?: string;
 }
 
 export interface ListManageEventsQueryParams
@@ -134,3 +135,13 @@ export const intensityOptions = [
 export const intensityPossibleValues = intensityOptions.map(
   (option) => option.value
 );
+
+export interface AddEventToUserFavoritesParams {
+  eventId: string;
+  userId: string;
+}
+
+export interface RemoveEventFromUserFavoritesParams {
+  eventId: string;
+  userId: string;
+}

@@ -17,6 +17,7 @@ interface ListRecordedEventsRequest extends EnsureAuthenticatedRequest {
     duration: string;
     intensity: string;
     premium: string;
+    favorites: string;
   };
 }
 
@@ -30,19 +31,29 @@ const listRecordedEvents = async (
       page: pageInString,
       pageSize: pageSizeInString,
       duration: durationInString,
+      favorites: favoritesInString,
       intensity: intensityInString,
       premium: premiumInString,
     } = req.query;
+    const { userId } = req;
 
-    const { search, page, pageSize, durationArray, intensity, isPremium } =
-      events.convertQueryParamsInListRecordedEventsParams({
-        searchInString,
-        pageInString,
-        pageSizeInString,
-        durationInString,
-        intensityInString,
-        premiumInString,
-      });
+    const {
+      search,
+      page,
+      pageSize,
+      durationArray,
+      intensity,
+      isPremium,
+      onlyFavorites,
+    } = events.convertQueryParamsInListRecordedEventsParams({
+      searchInString,
+      pageInString,
+      pageSizeInString,
+      durationInString,
+      intensityInString,
+      premiumInString,
+      favoritesInString,
+    });
 
     const query: Prisma.EventFindManyArgs<DefaultArgs> = {
       take: pageSize,
@@ -63,8 +74,18 @@ const listRecordedEvents = async (
         intensity: {
           in: intensity,
         },
+        favorites: onlyFavorites
+          ? {
+              some: {
+                userId,
+              },
+            }
+          : {},
       },
       select: eventSelect,
+      orderBy: {
+        createdAt: 'desc',
+      },
     };
 
     // next events are the next 10 events

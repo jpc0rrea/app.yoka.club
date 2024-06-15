@@ -64,6 +64,7 @@ model User {
     activateAccountTokens ActivateAccountToken[]
     eventLogs             EventLog[]
     WatchSession          WatchSession[]
+    favorites             Favorite[]
 
     @@map("users")
 }
@@ -106,6 +107,7 @@ model Event {
     instructor   User           @relation(fields: [instructorId], references: [id], onDelete: Cascade)
     checkIns     CheckIn[]
     WatchSession WatchSession[]
+    favorites    Favorite[]
 
     @@map("events")
 }
@@ -229,4 +231,16 @@ model WatchSession {
     event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
     @@map("watch_sessions")
+}
+
+model Favorite {
+    id      String @id @default(cuid())
+    userId  String
+    eventId String
+
+    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, eventId])
+    @@map("favorites")
 }

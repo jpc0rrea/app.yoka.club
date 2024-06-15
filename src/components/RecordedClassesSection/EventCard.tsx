@@ -1,4 +1,5 @@
 import DurationBadge from '@components/reusables/DurationBadge';
+import FavoriteButton from '@components/reusables/FavoriteButton';
 import IntensityBadge from '@components/reusables/IntensityBadge';
 import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
 import { Button } from '@components/ui/button';
@@ -44,10 +45,13 @@ export default function EventCard({ event }: EventCardProps) {
   return (
     <Card className="px-4 py-2">
       <CardHeader className="px-0 py-4">
-        <CardDescription className="py-1">
-          <DurationBadge duration={event.duration} />
-          {event.intensity && <IntensityBadge intensity={event.intensity} />}
-          <IsPremiumBadge isPremium={event.isPremium} />
+        <CardDescription className="flex items-center justify-between py-1">
+          <div>
+            <DurationBadge duration={event.duration} />
+            {event.intensity && <IntensityBadge intensity={event.intensity} />}
+            <IsPremiumBadge isPremium={event.isPremium} />
+          </div>
+          <FavoriteButton eventId={event.id} />
         </CardDescription>
         <TooltipProvider>
           <Tooltip>
