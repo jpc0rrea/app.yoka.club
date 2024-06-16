@@ -1,11 +1,12 @@
 import { Input } from '@components/ui/input';
 import { Dispatch, SetStateAction, useState } from 'react';
 import Filter from './Filter';
-import { XIcon } from 'lucide-react';
+import { Heart, XIcon } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import convertQueryToSearchParams from '@lib/utilities/convertQueryInSearchParams';
 import { useRouter } from 'next/router';
 import { intensityOptions } from '@models/events/types';
+import { Toggle } from '@components/ui/toggle';
 
 export const durationOptions = [
   { label: '15 min', value: '15' },
@@ -33,6 +34,8 @@ interface ToolbarProps {
   setIntensityFilter: Dispatch<SetStateAction<string[]>>;
   premiumFilter: string[];
   setPremiumFilter: Dispatch<SetStateAction<string[]>>;
+  favoritesFilter: boolean;
+  setFavoritesFilter: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Toolbar({
@@ -44,6 +47,8 @@ export default function Toolbar({
   setIntensityFilter,
   premiumFilter,
   setPremiumFilter,
+  favoritesFilter,
+  setFavoritesFilter,
 }: ToolbarProps) {
   const router = useRouter();
   const [searchToShowOnInput, setSearchToShowOnInput] = useState(search);
@@ -77,9 +82,45 @@ export default function Toolbar({
               { shallow: true }
             );
           }}
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="mb-2 h-8 w-[150px] lg:mb-0 lg:w-[250px]"
           error={undefined}
         />
+        <Toggle
+          aria-label="Toggle favorites"
+          className="h-8 border border-dashed"
+          pressed={favoritesFilter}
+          size="sm"
+          onPressedChange={(pressed: boolean) => {
+            setFavoritesFilter(pressed);
+
+            // get the url query params
+            const searchParams = convertQueryToSearchParams(router.query);
+
+            // Clear previous filter parameters
+            searchParams.delete('favorites');
+
+            if (pressed) {
+              // Add new filter parameters
+              searchParams.append('favorites', 'true');
+            }
+
+            router.push(
+              {
+                pathname: router.pathname,
+                query: searchParams.toString(),
+              },
+              undefined,
+              { shallow: true }
+            );
+          }}
+        >
+          <Heart
+            className={`mr-2 h-4 w-4 ${
+              favoritesFilter ? 'fill-brand-purple-800' : 'fill-transparent'
+            }`}
+          />
+          favoritos
+        </Toggle>
         <div className="space-y-2 lg:space-y-0">
           <Filter
             filteredValues={durationFilter}
@@ -116,6 +157,7 @@ export default function Toolbar({
                 setDurationFilter([]);
                 setIntensityFilter([]);
                 setPremiumFilter([]);
+                setFavoritesFilter(false);
 
                 // get the url query params
                 const searchParams = convertQueryToSearchParams(router.query);
@@ -124,6 +166,7 @@ export default function Toolbar({
                 searchParams.delete('duration');
                 searchParams.delete('intensity');
                 searchParams.delete('premium');
+                searchParams.delete('favorites');
 
                 router.push(
                   {

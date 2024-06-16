@@ -175,6 +175,9 @@ async function findOneById({ userId }: FindOneByIdParams) {
     where: {
       id: userId,
     },
+    include: {
+      favorites: true,
+    },
   });
 
   if (!user) {
@@ -187,7 +190,13 @@ async function findOneById({ userId }: FindOneByIdParams) {
     });
   }
 
-  return user;
+  const favoriteEvents = user.favorites.map((favorite) => favorite.eventId);
+
+  return {
+    ...user,
+    favoriteEvents,
+    favorites: undefined,
+  };
 }
 
 async function findOneByEmail({ email }: FindOneByEmailParams) {

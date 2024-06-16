@@ -1,10 +1,12 @@
 import { NotFoundError, ValidationError } from '@errors/index';
 import {
+  AddEventToUserFavoritesParams,
   FindEventByIdParams,
   ListEventsParams,
   ListEventsQueryParams,
   ListManageEventsQueryParams,
   ListRecordedEventsQueryParams,
+  RemoveEventFromUserFavoritesParams,
   UpdateEventAttendace,
   eventSelect,
 } from './types';
@@ -97,6 +99,7 @@ function convertQueryParamsInListRecordedEventsParams({
   durationInString,
   intensityInString,
   premiumInString,
+  favoritesInString,
 }: ListRecordedEventsQueryParams) {
   const page = pageInString ? parseInt(pageInString) : 1;
 
@@ -163,6 +166,8 @@ function convertQueryParamsInListRecordedEventsParams({
     ? intensityInString.split(',').map((intensity) => intensity.trim())
     : undefined;
 
+  const onlyFavorites = favoritesInString === 'true' ? true : false;
+
   return {
     search: searchInString || undefined,
     page,
@@ -171,6 +176,7 @@ function convertQueryParamsInListRecordedEventsParams({
     durationArray,
     intensity,
     isPremium,
+    onlyFavorites,
   };
 }
 
@@ -339,6 +345,53 @@ async function updateEventAttendance({
   await Promise.all(updateCheckinsAttencePromises);
 }
 
+async function addEventToUserFavorites({
+  eventId,
+  userId,
+}: AddEventToUserFavoritesParams) {
+  await user.findOneById({
+    userId,
+    prismaInstance: prisma,
+  });
+
+  const eventObject = await findOneById({ eventId });
+
+  await prisma.favorite.upsert({
+    where: {
+      userId_eventId: {
+        eventId,
+        userId,
+      },
+    },
+    create: {
+      userId,
+      eventId,
+    },
+    update: {},
+  });
+
+  return eventObject;
+}
+
+async function removeEventFromUserFavorites({
+  eventId,
+  userId,
+}: RemoveEventFromUserFavoritesParams) {
+  await user.findOneById({
+    userId,
+    prismaInstance: prisma,
+  });
+
+  await prisma.favorite.delete({
+    where: {
+      userId_eventId: {
+        eventId,
+        userId,
+      },
+    },
+  });
+}
+
 export default Object.freeze({
   findOneById,
   listEvents,
@@ -346,4 +399,6 @@ export default Object.freeze({
   convertQueryParamsInListRecordedEventsParams,
   convertQueryParamsInListManageEventsParams,
   updateEventAttendance,
+  addEventToUserFavorites,
+  removeEventFromUserFavorites,
 });

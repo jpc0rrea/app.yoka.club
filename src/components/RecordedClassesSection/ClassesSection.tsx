@@ -12,7 +12,7 @@ export default function ClassesSection({
   isLoading,
 }: ClassesSectionProps) {
   return (
-    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2 2xl:grid-cols-4">
       {isLoading || !events ? (
         Array.from({ length: 10 }, (_, index) => (
           <Skeleton key={index} className="h-64 flex-1" />
