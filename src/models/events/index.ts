@@ -100,6 +100,8 @@ function convertQueryParamsInListRecordedEventsParams({
   intensityInString,
   premiumInString,
   favoritesInString,
+  liveInString,
+  hasCheckedInString,
 }: ListRecordedEventsQueryParams) {
   const page = pageInString ? parseInt(pageInString) : 1;
 
@@ -168,6 +170,10 @@ function convertQueryParamsInListRecordedEventsParams({
 
   const onlyFavorites = favoritesInString === 'true' ? true : false;
 
+  const onlyLive = liveInString === 'true' ? true : false;
+
+  const onlyEventsWithCheckIn = hasCheckedInString === 'true' ? true : false;
+
   return {
     search: searchInString || undefined,
     page,
@@ -177,6 +183,8 @@ function convertQueryParamsInListRecordedEventsParams({
     intensity,
     isPremium,
     onlyFavorites,
+    onlyLive,
+    onlyEventsWithCheckIn,
   };
 }
 

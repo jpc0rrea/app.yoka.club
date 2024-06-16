@@ -24,7 +24,7 @@ function hasStarted({ event }: HasEventStartedParams) {
   return new Date(event.startDate) < new Date();
 }
 
-function hasUserAlreadyCheckedIn({
+export function hasUserAlreadyCheckedIn({
   event,
   userId,
 }: HasUserAlreadyCheckedInParams) {

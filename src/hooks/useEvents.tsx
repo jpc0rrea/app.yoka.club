@@ -73,6 +73,8 @@ interface GetRecordedEventsParams {
   intensity?: string[];
   premium?: string[];
   favorites?: boolean;
+  live?: boolean;
+  hasCheckedIn?: boolean;
   page?: number;
   pageSize?: number;
 }
@@ -83,6 +85,8 @@ export async function getRecordedEvents({
   intensity,
   premium,
   favorites,
+  live,
+  hasCheckedIn,
   page,
   pageSize,
 }: GetRecordedEventsParams): Promise<{
@@ -96,6 +100,8 @@ export async function getRecordedEvents({
     intensity,
     premium,
     favorites,
+    live,
+    hasCheckedIn,
     page,
     pageSize,
   });
@@ -115,6 +121,8 @@ export function useRecordedEvents({
   intensity,
   premium,
   favorites,
+  live,
+  hasCheckedIn,
   page,
   pageSize,
 }: GetRecordedEventsParams) {
@@ -127,6 +135,8 @@ export function useRecordedEvents({
         intensity,
         premium,
         favorites,
+        live,
+        hasCheckedIn,
         page,
         pageSize,
       },
@@ -138,6 +148,8 @@ export function useRecordedEvents({
         intensity,
         premium,
         favorites,
+        live,
+        hasCheckedIn,
         page,
         pageSize,
       }),

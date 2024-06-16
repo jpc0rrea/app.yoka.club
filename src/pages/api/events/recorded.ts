@@ -18,6 +18,8 @@ interface ListRecordedEventsRequest extends EnsureAuthenticatedRequest {
     intensity: string;
     premium: string;
     favorites: string;
+    live: string;
+    hasCheckedIn: string;
   };
 }
 
@@ -31,9 +33,11 @@ const listRecordedEvents = async (
       page: pageInString,
       pageSize: pageSizeInString,
       duration: durationInString,
-      favorites: favoritesInString,
       intensity: intensityInString,
       premium: premiumInString,
+      favorites: favoritesInString,
+      live: liveInString,
+      hasCheckedIn: hasCheckedInString,
     } = req.query;
     const { userId } = req;
 
@@ -45,6 +49,8 @@ const listRecordedEvents = async (
       intensity,
       isPremium,
       onlyFavorites,
+      onlyLive,
+      onlyEventsWithCheckIn,
     } = events.convertQueryParamsInListRecordedEventsParams({
       searchInString,
       pageInString,
@@ -53,13 +59,15 @@ const listRecordedEvents = async (
       intensityInString,
       premiumInString,
       favoritesInString,
+      liveInString,
+      hasCheckedInString,
     });
 
     const query: Prisma.EventFindManyArgs<DefaultArgs> = {
       take: pageSize,
       skip: page ? (page - 1) * pageSize : undefined,
       where: {
-        isLive: false,
+        isLive: onlyFavorites ? undefined : onlyLive ? true : false,
         recordedUrl: {
           not: null,
         },
@@ -75,6 +83,13 @@ const listRecordedEvents = async (
           in: intensity,
         },
         favorites: onlyFavorites
+          ? {
+              some: {
+                userId,
+              },
+            }
+          : {},
+        checkIns: onlyEventsWithCheckIn
           ? {
               some: {
                 userId,

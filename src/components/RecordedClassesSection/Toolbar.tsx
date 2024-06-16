@@ -1,7 +1,7 @@
 import { Input } from '@components/ui/input';
 import { Dispatch, SetStateAction, useState } from 'react';
 import Filter from './Filter';
-import { Heart, XIcon } from 'lucide-react';
+import { Check, Heart, Video, XIcon } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import convertQueryToSearchParams from '@lib/utilities/convertQueryInSearchParams';
 import { useRouter } from 'next/router';
@@ -36,6 +36,10 @@ interface ToolbarProps {
   setPremiumFilter: Dispatch<SetStateAction<string[]>>;
   favoritesFilter: boolean;
   setFavoritesFilter: Dispatch<SetStateAction<boolean>>;
+  liveFilter: boolean;
+  setLiveFilter: Dispatch<SetStateAction<boolean>>;
+  hasCheckedInFilter: boolean;
+  setHasCheckedInFilter: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Toolbar({
@@ -49,13 +53,17 @@ export default function Toolbar({
   setPremiumFilter,
   favoritesFilter,
   setFavoritesFilter,
+  liveFilter,
+  setLiveFilter,
+  hasCheckedInFilter,
+  setHasCheckedInFilter,
 }: ToolbarProps) {
   const router = useRouter();
   const [searchToShowOnInput, setSearchToShowOnInput] = useState(search);
 
   return (
     <div className="flex items-center justify-between">
-      <div className="items-center space-y-2 lg:flex lg:flex-1 lg:space-x-2 lg:space-y-0">
+      <div className="items-center space-y-2 xl:flex xl:flex-1 xl:space-x-2 xl:space-y-0">
         <Input
           placeholder="procurar aula..."
           value={searchToShowOnInput}
@@ -82,46 +90,123 @@ export default function Toolbar({
               { shallow: true }
             );
           }}
-          className="mb-2 h-8 w-[150px] lg:mb-0 lg:w-[250px]"
+          className="mb-2 h-8 w-[250px] xl:mb-0 "
           error={undefined}
         />
-        <Toggle
-          aria-label="Toggle favorites"
-          className="h-8 border border-dashed"
-          pressed={favoritesFilter}
-          size="sm"
-          onPressedChange={(pressed: boolean) => {
-            setFavoritesFilter(pressed);
-
-            // get the url query params
-            const searchParams = convertQueryToSearchParams(router.query);
-
-            // Clear previous filter parameters
-            searchParams.delete('favorites');
-
-            if (pressed) {
-              // Add new filter parameters
-              searchParams.append('favorites', 'true');
-            }
-
-            router.push(
-              {
-                pathname: router.pathname,
-                query: searchParams.toString(),
-              },
-              undefined,
-              { shallow: true }
-            );
-          }}
-        >
-          <Heart
-            className={`mr-2 h-4 w-4 ${
-              favoritesFilter ? 'fill-brand-purple-800' : 'fill-transparent'
-            }`}
-          />
-          favoritos
-        </Toggle>
         <div className="space-y-2 lg:space-y-0">
+          <Toggle
+            aria-label="Toggle favorites"
+            className="mr-2 h-8 border border-dashed"
+            pressed={favoritesFilter}
+            size="sm"
+            onPressedChange={(pressed: boolean) => {
+              setFavoritesFilter(pressed);
+
+              // get the url query params
+              const searchParams = convertQueryToSearchParams(router.query);
+
+              // Clear previous filter parameters
+              searchParams.delete('favorites');
+
+              if (pressed) {
+                // Add new filter parameters
+                searchParams.append('favorites', 'true');
+              }
+
+              router.push(
+                {
+                  pathname: router.pathname,
+                  query: searchParams.toString(),
+                },
+                undefined,
+                { shallow: true }
+              );
+            }}
+          >
+            <Heart
+              className={`mr-2 h-4 w-4 ${
+                favoritesFilter ? 'fill-brand-purple-800' : 'fill-transparent'
+              }`}
+            />
+            favoritas
+          </Toggle>
+          <Toggle
+            aria-label="Toggle live"
+            className="mr-2 h-8 min-w-max border border-dashed"
+            pressed={liveFilter}
+            size="sm"
+            onPressedChange={(pressed: boolean) => {
+              setLiveFilter(pressed);
+
+              // get the url query params
+              const searchParams = convertQueryToSearchParams(router.query);
+
+              // Clear previous filter parameters
+              searchParams.delete('live');
+
+              if (pressed) {
+                // Add new filter parameters
+                searchParams.append('live', 'true');
+              } else {
+                searchParams.delete('checkin');
+                setHasCheckedInFilter(false);
+              }
+
+              router.push(
+                {
+                  pathname: router.pathname,
+                  query: searchParams.toString(),
+                },
+                undefined,
+                { shallow: true }
+              );
+            }}
+          >
+            <Video
+              className={`mr-2 h-4 w-4 ${
+                liveFilter ? 'fill-brand-purple-800' : 'fill-transparent'
+              }`}
+            />
+            ao vivo
+          </Toggle>
+          {liveFilter && (
+            <Toggle
+              aria-label="Toggle checkd in"
+              className="ml-2 h-8 min-w-max border border-dashed"
+              pressed={hasCheckedInFilter}
+              size="sm"
+              onPressedChange={(pressed: boolean) => {
+                setHasCheckedInFilter(pressed);
+
+                // get the url query params
+                const searchParams = convertQueryToSearchParams(router.query);
+
+                // Clear previous filter parameters
+                searchParams.delete('checkin');
+
+                if (pressed) {
+                  // Add new filter parameters
+                  searchParams.append('checkin', 'true');
+                }
+
+                router.push(
+                  {
+                    pathname: router.pathname,
+                    query: searchParams.toString(),
+                  },
+                  undefined,
+                  { shallow: true }
+                );
+              }}
+            >
+              <Check
+                className={`mr-2 h-4 w-4 ${
+                  hasCheckedInFilter ? '' : 'fill-transparent'
+                }`}
+              />
+              fez check-in
+            </Toggle>
+          )}
           <Filter
             filteredValues={durationFilter}
             setFilteredValues={setDurationFilter}
@@ -138,14 +223,16 @@ export default function Toolbar({
             queryParamName="intensity"
             className="mr-2"
           />
-          <Filter
-            filteredValues={premiumFilter}
-            setFilteredValues={setPremiumFilter}
-            label="tipo"
-            options={premiumOptions}
-            queryParamName="premium"
-            className="ml-0"
-          />
+          {!liveFilter && (
+            <Filter
+              filteredValues={premiumFilter}
+              setFilteredValues={setPremiumFilter}
+              label="exclusividade"
+              options={premiumOptions}
+              queryParamName="premium"
+              className="ml-0"
+            />
+          )}
         </div>
         {(durationFilter.length > 0 ||
           intensityFilter.length > 0 ||
@@ -167,6 +254,8 @@ export default function Toolbar({
                 searchParams.delete('intensity');
                 searchParams.delete('premium');
                 searchParams.delete('favorites');
+                searchParams.delete('live');
+                searchParams.delete('checkin');
 
                 router.push(
                   {

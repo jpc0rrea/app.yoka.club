@@ -1,3 +1,4 @@
+import CheckedInBadge from '@components/reusables/CheckedInBadge';
 import DurationBadge from '@components/reusables/DurationBadge';
 import FavoriteButton from '@components/reusables/FavoriteButton';
 import IntensityBadge from '@components/reusables/IntensityBadge';
@@ -18,9 +19,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@components/ui/tooltip';
+import useUser from '@hooks/useUser';
 import { useUserPlan } from '@hooks/useUserPlan';
 import getYouTubeThumbnailURL from '@lib/utilities/getYouTubeThumbnailURL';
 import { EventFromAPI } from '@models/events/types';
+import { hasUserAlreadyCheckedIn } from '@models/events/utils';
+import { format } from 'date-fns';
 import { LockIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -30,26 +34,44 @@ interface EventCardProps {
 
 export default function EventCard({ event }: EventCardProps) {
   const { data: userPlan, isLoading: isUserLoading } = useUserPlan();
-  const { isPremium } = event;
+  const { user } = useUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const { isPremium, isLive } = event;
 
   if (!event || !event.recordedUrl) {
     return null;
   }
 
+  const hasCheckedIn = isLive
+    ? hasUserAlreadyCheckedIn({
+        event,
+        userId: user.id,
+      })
+    : false;
+
   if (!userPlan || isUserLoading) {
     return <Skeleton className="h-64 flex-1" />;
   }
 
-  const userHaveAccess = userPlan.canSeeExclusiveContents || !isPremium;
+  const userHaveAccess =
+    userPlan.canSeeExclusiveContents || !isPremium || hasCheckedIn;
 
   return (
     <Card className="px-4 py-2">
       <CardHeader className="px-0 py-4">
         <CardDescription className="flex items-center justify-between py-1">
-          <div>
+          <div className="flex flex-wrap gap-2">
             <DurationBadge duration={event.duration} />
             {event.intensity && <IntensityBadge intensity={event.intensity} />}
-            <IsPremiumBadge isPremium={event.isPremium} />
+            {isLive ? (
+              <CheckedInBadge hasCheckedIn={hasCheckedIn} />
+            ) : (
+              <IsPremiumBadge isPremium={event.isPremium} />
+            )}
           </div>
           <FavoriteButton eventId={event.id} />
         </CardDescription>
@@ -120,6 +142,16 @@ export default function EventCard({ event }: EventCardProps) {
           <p className="mt-1 text-xs text-gray-500">
             instrutora: {event.instructor.displayName}
           </p>
+          {isLive && event.startDate ? (
+            <p className="mt-1 text-xs text-gray-500">
+              aula em:{' '}
+              {format(new Date(event.startDate), "dd/MM/yyyy' às 'HH:mm")}
+            </p>
+          ) : (
+            <p className="mt-1 text-xs text-gray-500">
+              aula gravada em: {format(new Date(event.createdAt), 'dd/MM/yyyy')}
+            </p>
+          )}
         </div>
       </CardContent>
       <CardFooter className="px-0">
