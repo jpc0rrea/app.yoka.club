@@ -9,7 +9,7 @@ export default function IntensityBadge({ intensity }: IntensityBadgeProps) {
   return (
     <Badge
       variant="secondary"
-      className={`ml-2 min-w-max rounded-sm px-1 font-normal ${
+      className={`min-w-max rounded-sm px-1 font-normal ${
         intensity === 'leve'
           ? 'bg-green-100 text-green-800 hover:bg-green-100'
           : intensity === 'moderado'

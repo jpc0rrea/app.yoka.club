@@ -66,6 +66,8 @@ export interface ListRecordedEventsQueryParams
   intensityInString?: string;
   premiumInString?: string;
   favoritesInString?: string;
+  liveInString?: string;
+  hasCheckedInString?: string;
 }
 
 export interface ListManageEventsQueryParams
