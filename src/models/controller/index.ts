@@ -17,6 +17,10 @@ import logger from '@infra/logger';
 import ip from '@models/ip';
 import session from '@models/session';
 import { NextApiRequest, NextApiResponse } from 'next';
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+} from '@prisma/client/runtime/library';
 
 async function injectRequestMetadata(
   request: NextApiRequest & { [key: string]: any },
@@ -121,6 +125,56 @@ function onErrorHandler(
       .status(publicErrorObject.statusCode)
       .json(snakeize(publicErrorObject));
   }
+
+  // check if the error is from the prisma client
+  if (error instanceof PrismaClientKnownRequestError) {
+    const publicErrorObject = new InternalServerError({
+      requestId: request.context?.requestId,
+      message: error.message,
+      errorLocationCode:
+        'CONTROLLER:ON_ERROR_HANDLER:PRISMA_CLIENT_KNOWN_REQUEST_ERROR',
+    });
+
+    const privateErrorObject = {
+      ...new InternalServerError({
+        ...error,
+        requestId: request.context?.requestId,
+      }),
+      context: { ...request.context },
+      prismaError: error,
+    };
+
+    logger.error(snakeize(privateErrorObject));
+
+    return response
+      .status(publicErrorObject.statusCode)
+      .json(snakeize(publicErrorObject));
+  }
+
+  if (error instanceof PrismaClientUnknownRequestError) {
+    const publicErrorObject = new InternalServerError({
+      requestId: request.context?.requestId,
+      message: error.message,
+      errorLocationCode:
+        'CONTROLLER:ON_ERROR_HANDLER:PRISMA_CLIENT_UNKNOWN_REQUEST_ERROR',
+    });
+
+    const privateErrorObject = {
+      ...new InternalServerError({
+        ...error,
+        requestId: request.context?.requestId,
+      }),
+      context: { ...request.context },
+      prismaError: error,
+    };
+
+    logger.error(snakeize(privateErrorObject));
+
+    return response
+      .status(publicErrorObject.statusCode)
+      .json(snakeize(publicErrorObject));
+  }
+
   const publicErrorObject = new InternalServerError({
     requestId: request.context?.requestId,
     message: 'Erro não tratado',

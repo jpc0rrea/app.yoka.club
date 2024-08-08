@@ -1,3 +1,4 @@
+import UserCantAccessPremiumSystemResourceAlert from '@components/Modals/UserCantAccessPremiumSystemResourceAlert';
 import CheckedInBadge from '@components/reusables/CheckedInBadge';
 import DurationBadge from '@components/reusables/DurationBadge';
 import FavoriteButton from '@components/reusables/FavoriteButton';
@@ -25,7 +26,6 @@ import getYouTubeThumbnailURL from '@lib/utilities/getYouTubeThumbnailURL';
 import { EventFromAPI } from '@models/events/types';
 import { hasUserAlreadyCheckedIn } from '@models/events/utils';
 import { format } from 'date-fns';
-import { LockIcon } from 'lucide-react';
 import Link from 'next/link';
 
 interface EventCardProps {
@@ -80,22 +80,22 @@ export default function EventCard({ event }: EventCardProps) {
             <TooltipTrigger>
               {userHaveAccess ? (
                 <Link href={`/events/${event.id}`}>
-                  <CardTitle
-                    className={`line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all hover:underline ${
-                      userHaveAccess ? '' : 'cursor-not-allowed'
-                    }`}
-                  >
+                  <CardTitle className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all hover:underline">
                     {event.title}
                   </CardTitle>
                 </Link>
               ) : (
-                <CardTitle
-                  className={`line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all ${
-                    userHaveAccess ? '' : 'cursor-not-allowed'
-                  }`}
-                >
-                  {event.title}
-                </CardTitle>
+                <UserCantAccessPremiumSystemResourceAlert
+                  triggerButton={
+                    <CardTitle
+                      className={`line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all`}
+                    >
+                      {event.title}
+                    </CardTitle>
+                  }
+                  title="você não tem permissão para ver essa aula :("
+                  description="somente assinantes tem acesso as aulas exclusivas"
+                />
               )}
             </TooltipTrigger>
             <TooltipContent>
@@ -106,32 +106,38 @@ export default function EventCard({ event }: EventCardProps) {
       </CardHeader>
       <CardContent className="px-0">
         <div className={`relative`}>
-          {!userHaveAccess && (
-            <div className="absolute left-0 top-0 z-[5] h-full w-full bg-black bg-opacity-20 blur-md"></div>
-          )}
-
-          <img
-            alt="Thumbnail"
-            className={`w-full object-cover ${
-              !userHaveAccess ? 'blur-md ' : ''
-            }`}
-            height="90"
-            src={getYouTubeThumbnailURL(event.recordedUrl)}
-            style={{
-              aspectRatio: '16/9',
-              objectFit: 'cover',
-            }}
-            width="160"
-          />
-          {!userHaveAccess && (
-            <div className="absolute left-0 top-0 z-[15] flex h-full w-full items-center justify-center">
-              <div className="text-center">
-                <LockIcon className="mx-auto text-white" size={32} />
-                <p className="text-sm text-white">
-                  assine um plano para ter acesso a essa aula
-                </p>
-              </div>
-            </div>
+          {userHaveAccess ? (
+            <Link href={`/events/${event.id}`}>
+              <img
+                alt="Thumbnail"
+                className="w-full object-cover"
+                height="90"
+                src={getYouTubeThumbnailURL(event.recordedUrl)}
+                style={{
+                  aspectRatio: '16/9',
+                  objectFit: 'cover',
+                }}
+                width="160"
+              />
+            </Link>
+          ) : (
+            <UserCantAccessPremiumSystemResourceAlert
+              triggerButton={
+                <img
+                  alt="Thumbnail"
+                  className="w-full object-cover hover:cursor-pointer"
+                  height="90"
+                  src={getYouTubeThumbnailURL(event.recordedUrl)}
+                  style={{
+                    aspectRatio: '16/9',
+                    objectFit: 'cover',
+                  }}
+                  width="160"
+                />
+              }
+              title="você não tem permissão para ver essa aula :("
+              description="somente assinantes tem acesso as aulas exclusivas"
+            />
           )}
         </div>
         <div className="mt-2">
@@ -160,9 +166,11 @@ export default function EventCard({ event }: EventCardProps) {
             <Link href={`/events/${event.id}`}>ir para aula</Link>
           </Button>
         ) : (
-          <Button variant="default" className="cursor-not-allowed" disabled>
-            ir para aula
-          </Button>
+          <UserCantAccessPremiumSystemResourceAlert
+            triggerButton={<Button variant="default">ir para aula</Button>}
+            title="você não tem permissão para ver essa aula :("
+            description="somente assinantes tem acesso as aulas exclusivas"
+          />
         )}
       </CardFooter>
     </Card>
