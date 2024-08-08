@@ -12,7 +12,6 @@ import { queryClient } from '@lib/queryClient';
 import { successToast } from '@components/Toast/SuccessToast';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
-import UserCantViewRecordedClassAlert from '@components/Modals/UserCantViewRecordedEventAlert';
 import { Loader2 } from 'lucide-react';
 import {
   Tooltip,
@@ -21,6 +20,7 @@ import {
   TooltipTrigger,
 } from '@components/ui/tooltip';
 import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
+import UserCantAccessPremiumSystemResourceAlert from '@components/Modals/UserCantAccessPremiumSystemResourceAlert';
 
 interface EventCardProps {
   event: EventFromAPI;
@@ -226,7 +226,15 @@ export default function EventCard({ event }: EventCardProps) {
                   </Link>
                 </Button>
               ) : (
-                <UserCantViewRecordedClassAlert />
+                <UserCantAccessPremiumSystemResourceAlert
+                  triggerButton={
+                    <button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none">
+                      ir para aula
+                    </button>
+                  }
+                  title="você não tem permissão para ver essa aula :("
+                  description="somente assinantes ou alunas que fizeram check-in podem ver a gravação dessa aula"
+                />
               )
             ) : (
               <Button disabled className="mt-2 w-full" variant="default">
@@ -275,7 +283,7 @@ export default function EventCard({ event }: EventCardProps) {
             ) : (
               <BuyMoreCheckIns
                 ctaText="agendar aula"
-                title="que pena, você não tem mais check-ins disponíveis :("
+                title="você não tem mais check-ins disponíveis :("
                 description="compre mais check-ins para agendar aula"
                 CTAButton={Button}
               />

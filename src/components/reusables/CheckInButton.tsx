@@ -1,5 +1,5 @@
 import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
-import UserCantViewRecordedClassAlert from '@components/Modals/UserCantViewRecordedEventAlert';
+import UserCantAccessPremiumSystemResourceAlert from '@components/Modals/UserCantAccessPremiumSystemResourceAlert';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { successToast } from '@components/Toast/SuccessToast';
 import useUser from '@hooks/useUser';
@@ -79,7 +79,15 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
         canViewRecordedEvent ? (
           linkButton(recordedUrl, 'ver aula gravada')
         ) : (
-          <UserCantViewRecordedClassAlert />
+          <UserCantAccessPremiumSystemResourceAlert
+            triggerButton={
+              <button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none">
+                ir para aula
+              </button>
+            }
+            title="você não tem permissão para ver essa aula :("
+            description="somente assinantes ou alunas que fizeram check-in podem ver a gravação dessa aula"
+          />
         )
       ) : (
         disabledButton('link ainda não disponível')
@@ -142,6 +150,6 @@ const buttonStyle =
 
 const buyMoreProps = {
   ctaText: 'agendar',
-  title: 'Que pena, você não tem mais check-ins disponíveis :(',
+  title: 'você não tem mais check-ins disponíveis :(',
   description: 'Compre mais check-ins para agendar aula',
 };

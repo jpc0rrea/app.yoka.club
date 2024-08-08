@@ -3,7 +3,14 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
  */
-!process.env.SKIP_ENV_VALIDATION && (await import('./src/env/server.mjs'));
+const validateEnv = async () => {
+  if (!process.env.SKIP_ENV_VALIDATION) {
+    await import('./src/env/server.mjs');
+  }
+};
+
+// Invoke the async function immediately
+validateEnv();
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -12,6 +19,9 @@ const config = {
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
+  },
+  images: {
+    domains: ['i.ytimg.com', 'img.youtube.com'],
   },
   async headers() {
     return [

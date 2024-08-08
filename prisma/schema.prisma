@@ -104,10 +104,11 @@ model Event {
     intensity           String?
     isPremium           Boolean   @default(true) @map("is_premium")
 
-    instructor   User           @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-    checkIns     CheckIn[]
-    WatchSession WatchSession[]
-    favorites    Favorite[]
+    instructor           User                  @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+    checkIns             CheckIn[]
+    WatchSession         WatchSession[]
+    favorites            Favorite[]
+    dailyRecommendations DailyRecommendation[]
 
     @@map("events")
 }
@@ -243,4 +244,18 @@ model Favorite {
 
     @@unique([userId, eventId])
     @@map("favorites")
+}
+
+model DailyRecommendation {
+    id        String   @id @default(cuid())
+    date      DateTime
+    eventId   String
+    metadata  Json?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    event Event @relation(fields: [eventId], references: [id])
+
+    @@index([date])
+    @@map("daily_recommendations")
 }

@@ -16,6 +16,7 @@ import {
   CreditCardIcon,
   PlayCircleIcon,
   RocketIcon,
+  MousePointerClick,
 } from 'lucide-react';
 import useUser from '@hooks/useUser';
 
@@ -27,8 +28,8 @@ export const navigationItems = [
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
-    name: 'aulas gravadas',
-    href: '/recorded-classes',
+    name: 'aulas ao vivo',
+    href: '/live-classes',
     icon: PlayCircleIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
@@ -51,15 +52,21 @@ export const navigationItems = [
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
-    name: 'gerenciar eventos',
+    name: 'eventos',
     href: '/events/manage',
     icon: LockClosedIcon,
     role: ['ADMIN', 'INSTRUCTOR'],
   },
   {
-    name: 'gerenciar usuários',
+    name: 'usuários',
     href: '/admin/users',
     icon: UsersIcon,
+    role: ['ADMIN'],
+  },
+  {
+    name: 'recomendações',
+    href: '/admin/recommendations',
+    icon: MousePointerClick,
     role: ['ADMIN'],
   },
   {

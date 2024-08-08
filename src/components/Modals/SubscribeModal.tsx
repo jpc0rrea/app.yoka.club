@@ -27,7 +27,7 @@ const plans = [
     name: 'plano zen',
     code: 'zen' as PlanCode,
     checkInsQuantityPerMonth: 0,
-    featured: false,
+    featured: true,
     price: {
       monthly: 'R$ 59,90',
       quarterly: 'R$ 49,90',
@@ -50,7 +50,7 @@ const plans = [
     name: 'plano flow',
     code: 'flow' as PlanCode,
     checkInsQuantityPerMonth: 8,
-    featured: true,
+    featured: false,
     price: {
       monthly: 'R$ 199,90',
       quarterly: 'R$ 166,57',
@@ -248,12 +248,8 @@ function Plan({
   );
 }
 
-export default function SubscribeModal({
-  label,
-  className,
-}: SubscribeModalProps) {
+export function ChoosePlan() {
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
-  const [open, setOpen] = useState(false);
   const [isRedirectingToCheckout, setIsRedirectingToCheckout] = useState(false);
 
   const handleRedirectToCheckout = async ({
@@ -297,6 +293,76 @@ export default function SubscribeModal({
       setIsRedirectingToCheckout(false);
     }
   };
+  return (
+    <div>
+      <div className="mt text-center">
+        <div className="mt-8 flex justify-center">
+          <div className="relative">
+            <RadioGroup
+              value={billingPeriod}
+              onChange={setBillingPeriod}
+              className="grid grid-cols-2"
+            >
+              {['monthly', 'quarterly'].map((period) => (
+                <RadioGroup.Option
+                  key={period}
+                  value={period}
+                  className={clsx(
+                    'cursor-pointer border border-gray-300 px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)] text-center text-sm text-gray-700 outline-2 outline-offset-2 transition-colors hover:border-gray-400',
+                    period === 'monthly'
+                      ? 'rounded-l-lg'
+                      : '-ml-px rounded-r-lg'
+                  )}
+                >
+                  <span>{period === 'monthly' ? 'Mensal' : 'Trimestral'}</span>
+                </RadioGroup.Option>
+              ))}
+            </RadioGroup>
+            <div
+              aria-hidden="true"
+              className={clsx(
+                'pointer-events-none absolute inset-0 z-10 grid grid-cols-2 overflow-hidden rounded-lg bg-brand-purple-600 transition-all duration-300',
+                billingPeriod === 'monthly'
+                  ? '[clip-path:inset(0_50%_0_0)]'
+                  : '[clip-path:inset(0_0_0_calc(50%-1px))]'
+              )}
+            >
+              {['monthly', 'quarterly'].map((period) => (
+                <div
+                  key={period}
+                  className={clsx(
+                    'py-2 text-center text-sm font-semibold text-white',
+                    period === 'quarterly' && '-ml-px'
+                  )}
+                >
+                  {period === 'monthly' ? 'Mensal' : 'Trimestral'}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-4 grid max-w-2xl grid-cols-1 flex-col-reverse items-start gap-x-8 gap-y-10 sm:mt-6 lg:max-w-none lg:grid-cols-2">
+        {plans.map((plan) => (
+          <Plan
+            key={plan.name}
+            {...plan}
+            redirectToCheckout={handleRedirectToCheckout}
+            isRedirectingToCheckout={isRedirectingToCheckout}
+            activePeriod={billingPeriod}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function SubscribeModal({
+  label,
+  className,
+}: SubscribeModalProps) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -342,84 +408,16 @@ export default function SubscribeModal({
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
-                  <div>
-                    {/* <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                      <CheckIcon
-                        className="h-6 w-6 text-green-600"
-                        aria-hidden="true"
-                      />
-                    </div> */}
-                    <div className="mt text-center">
-                      <Dialog.Title
-                        as="h3"
-                        className="mb-2 text-base font-semibold leading-6 text-purple-700"
-                      >
-                        planos - yoga com kaká
-                      </Dialog.Title>
-
-                      <div className="mt-8 flex justify-center">
-                        <div className="relative">
-                          <RadioGroup
-                            value={billingPeriod}
-                            onChange={setBillingPeriod}
-                            className="grid grid-cols-2"
-                          >
-                            {['monthly', 'quarterly'].map((period) => (
-                              <RadioGroup.Option
-                                key={period}
-                                value={period}
-                                className={clsx(
-                                  'cursor-pointer border border-gray-300 px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)] text-center text-sm text-gray-700 outline-2 outline-offset-2 transition-colors hover:border-gray-400',
-                                  period === 'monthly'
-                                    ? 'rounded-l-lg'
-                                    : '-ml-px rounded-r-lg'
-                                )}
-                              >
-                                <span>
-                                  {period === 'monthly'
-                                    ? 'Mensal'
-                                    : 'Trimestral'}
-                                </span>
-                              </RadioGroup.Option>
-                            ))}
-                          </RadioGroup>
-                          <div
-                            aria-hidden="true"
-                            className={clsx(
-                              'pointer-events-none absolute inset-0 z-10 grid grid-cols-2 overflow-hidden rounded-lg bg-brand-purple-600 transition-all duration-300',
-                              billingPeriod === 'monthly'
-                                ? '[clip-path:inset(0_50%_0_0)]'
-                                : '[clip-path:inset(0_0_0_calc(50%-1px))]'
-                            )}
-                          >
-                            {['monthly', 'quarterly'].map((period) => (
-                              <div
-                                key={period}
-                                className={clsx(
-                                  'py-2 text-center text-sm font-semibold text-white',
-                                  period === 'quarterly' && '-ml-px'
-                                )}
-                              >
-                                {period === 'monthly' ? 'Mensal' : 'Trimestral'}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mx-auto mt-4 grid max-w-2xl grid-cols-1 flex-col-reverse items-start gap-x-8 gap-y-10 sm:mt-6 lg:max-w-none lg:grid-cols-2">
-                      {plans.map((plan) => (
-                        <Plan
-                          key={plan.name}
-                          {...plan}
-                          redirectToCheckout={handleRedirectToCheckout}
-                          isRedirectingToCheckout={isRedirectingToCheckout}
-                          activePeriod={billingPeriod}
-                        />
-                      ))}
-                    </div>
+                  <div className="mt text-center">
+                    <Dialog.Title
+                      as="h3"
+                      className="mb-2 text-base font-semibold leading-6 text-purple-700"
+                    >
+                      planos - yoga com kaká
+                    </Dialog.Title>
                   </div>
+
+                  <ChoosePlan />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -6,6 +6,7 @@ import useDebounce from '@hooks/useDebounce';
 import { useRecordedEvents } from '@hooks/useEvents';
 import { Loader2 } from 'lucide-react';
 import Pagination from '@components/reusables/Pagination';
+import { Separator } from '@components/ui/separator';
 
 export default function RecordedClassesSection() {
   const router = useRouter();
@@ -74,19 +75,21 @@ export default function RecordedClassesSection() {
   const { events, totalPages } = data || {};
 
   return (
-    <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
-      <div className="flex items-center justify-between space-y-2">
-        <div>
-          <div className="flex items-center">
-            <h2 className="text-2xl font-bold tracking-tight">
+    <div className="h-full flex-1 flex-col space-y-4 p-8 md:flex">
+      <Separator />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          {/* <h2 className="text-2xl font-bold tracking-tight">
               aulas gravadas
-            </h2>
-            {isFetching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
-          </div>
+            </h2> */}
           <p className="text-muted-foreground">
             procure a prática que deseja e seja feliz :)
           </p>
+          {isFetching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
+        {/* <p className="text-muted-foreground">
+            procure a prática que deseja e seja feliz :)
+          </p> */}
       </div>
       <Toolbar
         search={debounceSearch}
