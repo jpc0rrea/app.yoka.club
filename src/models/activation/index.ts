@@ -12,7 +12,7 @@ import {
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
 import { NotFoundError, ValidationError } from '@errors/index';
 import user from '@models/user';
-import checkin from '@models/checkin';
+// import checkin from '@models/checkin';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 import mailLists from '@lib/mail/mailLists';
 import { ClintCRMService } from '@lib/crm/ClintCRMService';
@@ -120,7 +120,7 @@ async function activateUserUsingTokenId({
 
   tokenObject = updatedTokenObject;
 
-  await checkin.giveTrialCheckin({ userId: userToActivate.id });
+  // await checkin.giveTrialCheckin({ userId: userToActivate.id });
 
   // enviar email de boas vindas
   const mailService = new SendGridMailService();

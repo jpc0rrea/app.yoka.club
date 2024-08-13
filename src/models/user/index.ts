@@ -22,7 +22,7 @@ import eventLogs from '@models/event-logs';
 import { UpdateUserProfileRequest } from '@pages/api/user/profile';
 import { UpdateProfileFormData } from '@pages/profile';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
-import checkin from '@models/checkin';
+// import checkin from '@models/checkin';
 import mailLists from '@lib/mail/mailLists';
 import webserver from '@infra/webserver';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
@@ -85,7 +85,7 @@ async function createWithoutPassword(userData: CreateWithoutPasswordUserData) {
     },
   });
 
-  await checkin.giveTrialCheckin({ userId: user.id });
+  // await checkin.giveTrialCheckin({ userId: user.id });
 
   // enviar email de boas vindas
   const mailService = new SendGridMailService();
