@@ -158,7 +158,11 @@ async function getNewUsersTableData(newUsers: User[]) {
       (item) => item.progress > 0.9
     ).length;
 
-    const daysUsingApp = newUsersDailyLogs.map((log) => {
+    const thisUserDailyLogs = newUsersDailyLogs.filter(
+      (item) => item.userId === user.id
+    );
+
+    const daysUsingApp = thisUserDailyLogs.map((log) => {
       const date = new Date(log.createdAt);
       return date.toISOString();
     });
