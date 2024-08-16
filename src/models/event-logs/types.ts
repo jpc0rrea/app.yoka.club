@@ -1,6 +1,7 @@
 import { PrismaInstance } from '@server/db';
 
 export type EventLogType =
+  | 'USER.DAILY_USAGE'
   | 'USER.SUBSCRIBED_TO_PLAN'
   | 'USER.RENEW_SUBSCRIPTION'
   | 'USER.CANCEL_SUBSCRIPTION'
@@ -17,4 +18,8 @@ export interface CreateEventLogParams {
   userId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata: any;
+}
+
+export interface LogDailyAppUsageParams {
+  userId: string;
 }

@@ -8,6 +8,7 @@ import session from 'models/session';
 import { AuthenticatedRequest } from '@models/controller/types';
 import user from '@models/user';
 import { UnauthorizedError } from '@errors/index';
+import eventLogs from '@models/event-logs';
 
 const router = createRouter<AuthenticatedRequest, NextApiResponse>();
 
@@ -47,6 +48,10 @@ async function renewSessionIfNecessary(
       action: `verifique se este usuário está logado.`,
     });
   }
+
+  await eventLogs.logDailyAppUsage({
+    userId: sessionObject.userId,
+  });
 
   // Renew session if it expires in less than 3 weeks.
   if (

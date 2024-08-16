@@ -15,6 +15,7 @@ import useBusinessInformations from '@hooks/useBusinessInformations';
 import Header from '@components/Header';
 import { withSSREnsureWithRole } from '@server/middlewares/withSSREnsureWithRole';
 import { Loader2 } from 'lucide-react';
+import WatchedVideosTable from '@components/Business/WatchedVideosTable';
 
 const BusinessInformations: NextPage = () => {
   const [dates, setDates] = useState<DateRangePickerValue>({
@@ -47,7 +48,7 @@ const BusinessInformations: NextPage = () => {
         <div className="flex flex-1 flex-col md:pl-64">
           <Header />
 
-          <main className="flex-1">
+          <main className="flex-1 bg-white">
             <div className="p-8 xl:p-10">
               <main className="">
                 <header className="w-full items-center justify-between py-4 sm:py-6">
@@ -71,7 +72,7 @@ const BusinessInformations: NextPage = () => {
 
                 {isLoading || !businessInfomations ? (
                   <div>
-                    <Loader2 className="mx-auto" />
+                    <Loader2 className="mx-auto animate-spin" />
                   </div>
                 ) : (
                   <Card className="mx-auto">
@@ -90,6 +91,15 @@ const BusinessInformations: NextPage = () => {
                       valueFormatter={dataFormatter}
                     />
                   </Card>
+                )}
+                {isLoading || !businessInfomations ? (
+                  <div>
+                    <Loader2 className="mx-auto animate-spin" />
+                  </div>
+                ) : (
+                  <WatchedVideosTable
+                    watchedVideos={businessInfomations.watchedEvents}
+                  />
                 )}
               </main>
             </div>
