@@ -7,12 +7,34 @@ interface GetBusinessInformationsParams {
   dates: DateRangePickerValue;
 }
 
+export type WatchedEvents = {
+  eventId: string;
+  playedSeconds: number;
+  watchedCount: number;
+  title: string;
+  usersThatWatched: {
+    userId: string;
+    displayName: string;
+  }[];
+};
+
+export type NewUsers = {
+  userId: string;
+  displayName: string;
+  // Dias que o usuário entrou no App
+  daysUsingApp: Date[];
+  // Total de aulas assistidas
+  watchedEventsCount: number;
+};
+
 interface BusinessInformations {
   newUsersPerDay: {
     date: string;
     usuários: number;
   }[];
-  totalUsers: number;
+  newUsersCount: number;
+  watchedEventsTableData: WatchedEvents[];
+  newUsersTableData: NewUsers[];
 }
 
 export async function getBusinessInformations({
