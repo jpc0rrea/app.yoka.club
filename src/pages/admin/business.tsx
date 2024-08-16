@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { startOfMonth } from 'date-fns';
 import {
   BarChart,
-  Card,
+  Card as TremorCard,
   DateRangePicker,
   DateRangePickerValue,
 } from '@tremor/react';
@@ -15,7 +15,15 @@ import useBusinessInformations from '@hooks/useBusinessInformations';
 import Header from '@components/Header';
 import { withSSREnsureWithRole } from '@server/middlewares/withSSREnsureWithRole';
 import { Loader2 } from 'lucide-react';
-import WatchedVideosTable from '@components/Business/WatchedVideosTable';
+import WatchedEventsTable from '@components/Business/WatchedEventsTable';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@components/ui/card';
+import NewUsersTable from '@components/Business/NewUsersTable';
 
 const BusinessInformations: NextPage = () => {
   const [dates, setDates] = useState<DateRangePickerValue>({
@@ -70,37 +78,56 @@ const BusinessInformations: NextPage = () => {
                   />
                 </header>
 
-                {isLoading || !businessInfomations ? (
-                  <div>
-                    <Loader2 className="mx-auto animate-spin" />
-                  </div>
-                ) : (
-                  <Card className="mx-auto">
-                    <h4 className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                      novos usuários
-                    </h4>
-                    <p className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                      {businessInfomations.totalUsers}
-                    </p>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                  <TremorCard className="col-span-4 mx-auto">
+                    <CardTitle className="text-gray-900">
+                      novos usuários por dia
+                    </CardTitle>
+                    {isLoading || !businessInfomations ? (
+                      <div>
+                        <Loader2 className="mt-2 animate-spin" />
+                      </div>
+                    ) : (
+                      <BarChart
+                        data={businessInfomations.newUsersPerDay}
+                        index="date"
+                        categories={['usuários']}
+                        colors={['purple']}
+                        valueFormatter={dataFormatter}
+                      />
+                    )}
+                  </TremorCard>
 
-                    <BarChart
-                      data={businessInfomations.newUsersPerDay}
-                      index="date"
-                      categories={['usuários']}
-                      colors={['purple']}
-                      valueFormatter={dataFormatter}
-                    />
+                  <Card className="col-span-3">
+                    <CardHeader>
+                      <CardTitle className="text-gray-900">
+                        novos usuários
+                      </CardTitle>
+                      {businessInfomations && (
+                        <CardDescription>
+                          <strong className="text-brand-purple-800">
+                            {businessInfomations.newUsersCount}
+                          </strong>{' '}
+                          novos usuários nesse período
+                        </CardDescription>
+                      )}
+                    </CardHeader>
+
+                    <CardContent>
+                      <NewUsersTable
+                        newUsersTableData={
+                          businessInfomations?.newUsersTableData
+                        }
+                      />
+                    </CardContent>
                   </Card>
-                )}
-                {isLoading || !businessInfomations ? (
-                  <div>
-                    <Loader2 className="mx-auto animate-spin" />
-                  </div>
-                ) : (
-                  <WatchedVideosTable
-                    watchedVideos={businessInfomations.watchedEvents}
-                  />
-                )}
+                </div>
+
+                <WatchedEventsTable
+                  watchedEventsTableData={
+                    businessInfomations?.watchedEventsTableData
+                  }
+                />
               </main>
             </div>
           </main>

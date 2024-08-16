@@ -10,7 +10,7 @@ interface GetBusinessInformationsParams {
 export type WatchedEvents = {
   eventId: string;
   playedSeconds: number;
-  watchedTimes: number;
+  watchedCount: number;
   title: string;
   usersThatWatched: {
     userId: string;
@@ -18,13 +18,23 @@ export type WatchedEvents = {
   }[];
 };
 
+export type NewUsers = {
+  userId: string;
+  displayName: string;
+  // Dias que o usuário entrou no App
+  daysUsingApp: Date[];
+  // Total de aulas assistidas
+  watchedEventsCount: number;
+};
+
 interface BusinessInformations {
   newUsersPerDay: {
     date: string;
     usuários: number;
   }[];
-  totalUsers: number;
-  watchedEvents: WatchedEvents[];
+  newUsersCount: number;
+  watchedEventsTableData: WatchedEvents[];
+  newUsersTableData: NewUsers[];
 }
 
 export async function getBusinessInformations({
