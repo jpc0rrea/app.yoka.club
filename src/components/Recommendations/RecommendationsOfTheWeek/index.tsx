@@ -24,7 +24,7 @@ export default function RecommendationsOfTheWeek() {
     <div className="px-8 pt-8">
       <div className="space-y-1">
         <h2 className="text-2xl font-semibold tracking-tight">
-          oie, {user.name}
+          oie, {user.displayName}
         </h2>
         <p className="text-sm text-muted-foreground">
           recomendações da semana para você :)
