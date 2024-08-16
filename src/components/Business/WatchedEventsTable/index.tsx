@@ -12,7 +12,7 @@ export default function WatchedEventsTable({
 }: WatchedEventsTableProps) {
   return (
     <div className="py-10">
-      <p className="mb-4 text-xl font-bold">Videos mais assistidos</p>
+      <p className="mb-4 text-xl font-bold">videos mais assistidos</p>
       {watchedEventsTableData ? (
         <WatchedEventsDataTable
           columns={columns}
