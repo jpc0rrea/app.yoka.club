@@ -41,10 +41,11 @@ const plans = [
     },
     includedFeatures: [
       'acesso as aulas gratuitas da plataforma',
-      'acesso as aulas exclusivas da plataforma',
-      'acesso as gravações das aulas ao vivo',
+      'acesso a mais de 50 aulas exclusivas',
+      'acesso a comunidade exclusiva',
+      'acesso ao suporte exclusivo da kaká',
     ],
-    excludedFeatures: [],
+    excludedFeatures: ['acesso as aulas ao vivo'],
   },
   {
     name: 'plano flow',
@@ -64,8 +65,10 @@ const plans = [
     },
     includedFeatures: [
       'acesso as aulas gratuitas da plataforma',
-      'acesso as aulas exclusivas da plataforma',
-      'acesso as gravações das aulas ao vivo',
+      'acesso a mais de 50 aulas exclusivas',
+      'acesso a comunidade exclusiva',
+      'acesso ao suporte exclusivo da kaká',
+      'acesso as aulas ao vivo',
     ],
     excludedFeatures: [],
   },
@@ -74,7 +77,7 @@ const plans = [
 function Plan({
   name,
   code,
-  checkInsQuantityPerMonth,
+  // checkInsQuantityPerMonth,
   price,
   description,
   button,
@@ -212,7 +215,7 @@ function Plan({
               <span className="ml-4">{feature}</span>
             </li>
           ))}
-          <li className="flex py-2">
+          {/* <li className="flex py-2">
             {checkInsQuantityPerMonth === 0 ? (
               <XCircle className={clsx('h-6 w-6 flex-none text-red-300')} />
             ) : (
@@ -227,7 +230,7 @@ function Plan({
               <strong>{checkInsQuantityPerMonth}</strong> check-ins para aulas
               ao vivo
             </span>
-          </li>
+          </li> */}
         </ul>
       </div>
       <Button
