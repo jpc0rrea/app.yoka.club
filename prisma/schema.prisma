@@ -65,6 +65,7 @@ model User {
     eventLogs             EventLog[]
     WatchSession          WatchSession[]
     favorites             Favorite[]
+    SystemLog             SystemLog[]
 
     @@map("users")
 }
@@ -217,6 +218,23 @@ model EventLog {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("event_logs")
+}
+
+/// Logs do sistema
+model SystemLog {
+    /// ID único do log
+    id        Int      @id @default(autoincrement())
+    /// O log em si, contendo a ação que foi realizada, como 'user-created', 'activation-email-sent', etc
+    log       String
+    /// Metadados do log, como token gerado, e qualquer informação adicional que seja necessária
+    metadata  Json?
+    /// ID do usuário associado a essa ação, caso exista
+    userId    String?  @map("user_id")
+    /// Data de criação do log
+    createdAt DateTime @default(now()) @map("created_at")
+    users     User?    @relation(fields: [userId], references: [id])
+
+    @@map("system_logs")
 }
 
 model WatchSession {
