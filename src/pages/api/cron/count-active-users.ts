@@ -25,10 +25,15 @@ export default async function handler(
   }
 }
 
-async function countActiveUsers(): Promise<number> {
+async function countActiveUsers(): Promise<
+  {
+    displayName: string;
+    id: string;
+  }[]
+> {
   const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
 
-  const activeUsers = await prisma.user.count({
+  const activeUsers = await prisma.user.findMany({
     where: {
       WatchSession: {
         some: {
@@ -43,14 +48,22 @@ async function countActiveUsers(): Promise<number> {
     },
   });
 
-  return activeUsers;
+  return activeUsers.map((user) => ({
+    displayName: user.displayName,
+    id: user.id,
+  }));
 }
 
-async function logActiveUsersCount(count: number): Promise<void> {
+async function logActiveUsersCount(
+  activeUsers: {
+    displayName: string;
+    id: string;
+  }[]
+): Promise<void> {
   await prisma.systemLog.create({
     data: {
       log: 'DAILY_ACTIVE_USERS_COUNT',
-      metadata: { count },
+      metadata: { count: activeUsers.length, activeUsers },
     },
   });
 }
