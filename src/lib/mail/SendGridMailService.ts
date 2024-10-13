@@ -27,7 +27,7 @@ export class SendGridMailService implements MailService {
     const { to, template, templateData } = message;
     const messageFormatted: sendGridMail.MailDataRequired = {
       to,
-      from: 'kaka@yogacomkaka.com',
+      from: 'suporte@yoka.club',
       templateId: sendGridTemplatesMapper[template],
       dynamicTemplateData: templateData,
     };

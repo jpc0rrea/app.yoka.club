@@ -88,12 +88,14 @@ export default function DailyRecommendation({
       <div className="space-y-1 text-sm">
         {userHaveAccess ? (
           <Link href={`/events/${event.id}`}>
-            <h3 className="font-medium leading-none">{event.title}</h3>
+            <h3 className="font-poppins font-medium leading-none hover:underline">
+              {event.title}
+            </h3>
           </Link>
         ) : (
           <UserCantAccessPremiumSystemResourceAlert
             triggerButton={
-              <h3 className="font-medium leading-none hover:cursor-pointer">
+              <h3 className="font-poppins font-medium leading-none hover:cursor-pointer hover:underline">
                 {event.title}
               </h3>
             }
