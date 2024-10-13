@@ -109,6 +109,10 @@ async function findOneById({ sessionId }: FindOneValidByIdParams) {
 }
 
 async function findOneValidFromRequest({ req }: GetSessionParams) {
+  console.log('findOneValidFromRequest');
+  console.log({
+    cookies: req.cookies,
+  });
   const sessionToken = req.cookies?.session_id;
 
   if (!sessionToken) {
