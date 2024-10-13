@@ -139,7 +139,7 @@ export default function EventCard({ event }: EventCardProps) {
       });
 
       successToast({
-        message: 'aula agendada comsucesso',
+        message: 'aula agendada com sucesso',
       });
     } catch (err) {
       const { message, description } = convertErrorMessage({
@@ -164,7 +164,7 @@ export default function EventCard({ event }: EventCardProps) {
               <Tooltip>
                 <TooltipTrigger>
                   <Link href={`/events/${event.id}`}>
-                    <h3 className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left text-lg font-semibold text-brand-yoka-purple-700 transition-all hover:text-brand-yoka-purple-800 hover:underline dark:text-white">
+                    <h3 className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins text-lg font-semibold text-brand-yoka-purple-700 transition-all hover:text-brand-yoka-purple-800 hover:underline dark:text-white">
                       {event.title}
                     </h3>
                   </Link>
