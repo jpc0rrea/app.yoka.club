@@ -87,7 +87,7 @@ export const PLANS: Plan[] = [
   {
     id: 'MONTHLY',
     stripePriceId: webserver.isProduction
-      ? 'price_1OVd8eEsKOl8ftVij3bhjzsO' //TODO: change to new price id
+      ? 'price_1Q9Zd3BSNDpjZ120M6OPVypV'
       : 'price_1Q9DZ5BSNDpjZ120mh4BTfzi',
     billingPeriod: 'monthly',
     checkInsQuantity: 0,
@@ -100,7 +100,7 @@ export const PLANS: Plan[] = [
   {
     id: 'QUARTERLY',
     stripePriceId: webserver.isProduction
-      ? 'price_1OVd99EsKOl8ftVi8fDCrCmI' //TODO: change to new price id
+      ? 'price_1Q9Zd3BSNDpjZ120PJo3Opnc'
       : 'price_1Q9DZ5BSNDpjZ120pr6NtaUv',
     billingPeriod: 'quarterly',
     checkInsQuantity: 0,
