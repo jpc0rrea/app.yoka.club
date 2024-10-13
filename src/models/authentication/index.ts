@@ -80,12 +80,6 @@ async function injectAuthenticatedUser({
     prismaInstance: prisma,
   });
 
-  console.log('injectAuthenticatedUser');
-  console.log({
-    userObject,
-    sessionObject,
-  });
-
   request.context = {
     ...request.context,
     user: userObject,
