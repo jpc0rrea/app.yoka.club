@@ -93,7 +93,7 @@ export default function EventCard({ event }: EventCardProps) {
                     </CardTitle>
                   }
                   title="você não tem permissão para ver essa aula :("
-                  description="somente assinantes tem acesso as aulas exclusivas"
+                  description="somente assinantes tem acesso às aulas exclusivas"
                 />
               )}
             </TooltipTrigger>
@@ -135,7 +135,7 @@ export default function EventCard({ event }: EventCardProps) {
                 />
               }
               title="você não tem permissão para ver essa aula :("
-              description="somente assinantes tem acesso as aulas exclusivas"
+              description="somente assinantes tem acesso às aulas exclusivas"
             />
           )}
         </div>
@@ -161,14 +161,14 @@ export default function EventCard({ event }: EventCardProps) {
       </CardContent>
       <CardFooter className="px-0">
         {userHaveAccess ? (
-          <Button variant="default" asChild>
+          <Button asChild>
             <Link href={`/events/${event.id}`}>ir para aula</Link>
           </Button>
         ) : (
           <UserCantAccessPremiumSystemResourceAlert
             triggerButton={<Button variant="default">ir para aula</Button>}
             title="você não tem permissão para ver essa aula :("
-            description="somente assinantes tem acesso as aulas exclusivas"
+            description="somente assinantes tem acesso às aulas exclusivas"
           />
         )}
       </CardFooter>

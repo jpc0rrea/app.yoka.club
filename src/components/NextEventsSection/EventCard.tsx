@@ -139,7 +139,7 @@ export default function EventCard({ event }: EventCardProps) {
       });
 
       successToast({
-        message: 'check-in realizado com sucesso',
+        message: 'aula agendada comsucesso',
       });
     } catch (err) {
       const { message, description } = convertErrorMessage({
@@ -183,7 +183,7 @@ export default function EventCard({ event }: EventCardProps) {
           </p> */}
           {alreadyCheckedIn ? (
             <span className="mt-1 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-700 dark:text-green-100">
-              check-in realizado :)
+              aula agendada :)
             </span>
           ) : (
             <span className="mt-1 inline-flex items-center rounded-full  px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100"></span>

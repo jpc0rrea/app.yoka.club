@@ -133,9 +133,9 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       data: {
         userId: user.id,
         checkInId: checkIn.id,
-        title: `check-in realizado no evento ${event.title}`,
+        title: `aula agendada no evento ${event.title}`,
         type: 'DEBIT',
-        description: 'check-in realizado com sucesso',
+        description: 'aula agendada com sucesso',
         checkInsQuantity: 1,
         checkInType:
           checkInTypeToDecrement === 'trialCheckInsQuantity'

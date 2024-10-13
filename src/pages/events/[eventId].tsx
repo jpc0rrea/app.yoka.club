@@ -263,7 +263,7 @@ const Event: NextPage = () => {
                           )
                         ) : stillHasVacancy ? (
                           <p className="mb-2 text-sm text-gray-500">
-                            faça check-in para ter acesso ao link da aula ao
+                            agende sua aula para ter acesso ao link da aula ao
                             vivo
                           </p>
                         ) : (
@@ -275,14 +275,14 @@ const Event: NextPage = () => {
                           <CheckInButton event={event} />
                           {canCancelCheckIn && (
                             <Button
-                              variant="secondary"
+                              variant="destructive"
                               onClick={handleCancelCheckIn}
-                              className="ml-4 flex w-32 items-center justify-center rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100"
+                              className="ml-4 flex w-48 items-center justify-center rounded px-2 py-1 font-semibold shadow-sm"
                             >
                               {isCancellingCheckIn ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                               ) : (
-                                'cancelar check-in'
+                                'cancelar agendamento'
                               )}
                             </Button>
                           )}

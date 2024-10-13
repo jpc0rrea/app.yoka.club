@@ -69,7 +69,7 @@ const cancelCheckInRoute = async (
       )
     ) {
       return res.status(400).json({
-        message: 'não é mais possível cancelar check-in nesse evento',
+        message: 'não é mais possível cancelar agendamento nesse evento',
         errorCode: 'event-already-started',
       });
     }

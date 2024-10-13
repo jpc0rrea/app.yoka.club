@@ -200,7 +200,7 @@ export default function Login() {
             <h2 className="text-center text-3xl font-normal tracking-tight text-gray-900">
               crie sua conta
             </h2>
-            <p className="mt-2 text-center text-gray-600">
+            <p className="mt-2 text-center text-sm text-gray-600">
               tenha acesso a mais de{' '}
               <strong className="text-brand-yoka-purple-700">
                 100 práticas

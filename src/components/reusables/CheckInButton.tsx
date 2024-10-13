@@ -1,4 +1,4 @@
-import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
+// import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
 import UserCantAccessPremiumSystemResourceAlert from '@components/Modals/UserCantAccessPremiumSystemResourceAlert';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { successToast } from '@components/Toast/SuccessToast';
@@ -11,6 +11,7 @@ import { EventFromAPI } from '@models/events/types';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@components/ui/button';
+import SubscribeModal from '@components/Modals/SubscribeModal';
 
 interface CheckInButtonProps {
   event: EventFromAPI;
@@ -46,7 +47,7 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
     setIsCheckingIn(true);
     try {
       await checkInAndUpdateUser();
-      successToast({ message: 'check-in realizado com sucesso' });
+      successToast({ message: 'aula agendada com sucesso' });
     } catch (error) {
       const { message, description } = convertErrorMessage({ err: error });
       errorToast({ message, description });
@@ -83,7 +84,7 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
         ) : (
           <UserCantAccessPremiumSystemResourceAlert
             triggerButton={
-              <Button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none">
+              <Button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none ">
                 ir para aula
               </Button>
             }
@@ -104,7 +105,11 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
       return canCheckIn ? (
         checkInButton()
       ) : (
-        <BuyMoreCheckIns {...buyMoreProps} />
+        <SubscribeModal
+          ctaText="agendar aula"
+          title="você não pode agendar aula no plano gratuito"
+          description="assine o plano zen para participar da aula ao vivo"
+        />
       );
     }
     return disabledButton('evento esgotado :(');
@@ -112,14 +117,11 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
 
   function linkButton(url: string, text: string) {
     return (
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={buttonStyle}
-      >
-        {text}
-      </a>
+      <Button asChild>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {text}
+        </a>
+      </Button>
     );
   }
 
@@ -133,11 +135,7 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
 
   function checkInButton() {
     return (
-      <Button
-        variant="secondary"
-        onClick={handleCheckIn}
-        className={buttonStyle}
-      >
+      <Button onClick={handleCheckIn} className={buttonStyle}>
         {isCheckingIn ? (
           <Loader2 className="hButton4 w-4 animate-spin" />
         ) : (
@@ -154,8 +152,8 @@ export default CheckInButton;
 const buttonStyle =
   'flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none';
 
-const buyMoreProps = {
-  ctaText: 'agendar',
-  title: 'você não tem mais check-ins disponíveis :(',
-  description: 'Compre mais check-ins para agendar aula',
-};
+// const buyMoreProps = {
+//   ctaText: 'agendar',
+//   title: 'você não tem mais check-ins disponíveis :(',
+//   description: 'Compre mais check-ins para agendar aula',
+// };
