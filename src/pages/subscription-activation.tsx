@@ -14,7 +14,7 @@ import { sleep } from '@lib/utils';
 import { Button } from '@components/ui/button';
 
 const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1 second
+const INITIAL_RETRY_DELAY = 1000; // 1 second
 
 export default function SubscriptionActivation() {
   const router = useRouter();
@@ -54,7 +54,8 @@ export default function SubscriptionActivation() {
       throw new Error('Plan fetch unsuccessful');
     } catch (error) {
       if (retries < MAX_RETRIES - 1) {
-        await sleep(RETRY_DELAY);
+        const retryDelay = INITIAL_RETRY_DELAY * Math.pow(2, retries);
+        await sleep(retryDelay);
         return await fetchPlanWithRetry(retries + 1);
       }
       return null;
