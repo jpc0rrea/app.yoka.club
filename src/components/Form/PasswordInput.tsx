@@ -7,7 +7,6 @@ import {
 } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { Button } from '@components/ui/button';
 
 interface PasswordInputProps {
   name: string;
@@ -52,13 +51,13 @@ const PasswordInputBase: ForwardRefRenderFunction<
           {label}
         </label>
       )}
-      <div className="relative mt-1 flex flex-grow items-stretch shadow-sm focus-within:z-10">
+      <div className="relative mt-1 flex flex-grow items-stretch rounded-md shadow-sm focus-within:z-10">
         <input
           id={id}
           type={showPassword ? 'text' : 'password'}
           required={required}
           placeholder={placeholder}
-          className={`block w-full appearance-none border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-0 sm:text-sm ${className} ${
+          className={`block w-full appearance-none rounded-none rounded-l-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-0 sm:text-sm ${className} ${
             errorMessage
               ? 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:outline-red-500 focus:ring-red-500'
               : 'focus:border-brand-purple-900 focus:ring-brand-purple-900'
@@ -67,18 +66,19 @@ const PasswordInputBase: ForwardRefRenderFunction<
           ref={ref}
           {...rest}
         />
-        <Button
-          variant={`ghost`}
+        <button
           type="button"
-          className="-ml-px items-center gap-x-1.5 rounded-none rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          onClick={() => setShowPassword(!showPassword)}
+          className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          onClick={() => {
+            setShowPassword(!showPassword);
+          }}
         >
           {showPassword ? (
             <EyeSlashIcon className="-ml-0.5 h-5 w-5 text-gray-400" />
           ) : (
             <EyeIcon className="-ml-0.5 h-5 w-5 text-gray-400" />
           )}
-        </Button>
+        </button>
         {errorMessage && (
           <div className="pointer-events-none absolute inset-y-0 right-[10%] flex items-center pr-3">
             <ExclamationCircleIcon
