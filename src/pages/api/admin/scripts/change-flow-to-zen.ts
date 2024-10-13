@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@server/db';
 import { CheckInTypes, StatementType } from '@prisma/client';
-import { addDays } from 'date-fns';
+import { addDays, isAfter } from 'date-fns';
 
 const changeFlowToZen = async (req: NextApiRequest, res: NextApiResponse) => {
   if (process.env.NODE_ENV !== 'development') {
@@ -14,6 +14,7 @@ const changeFlowToZen = async (req: NextApiRequest, res: NextApiResponse) => {
   const mode = req.query.mode as string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const operations: Record<string, any> = {};
+  const operationsToReturn: Record<string, any> = {};
 
   try {
     const users = await prisma.user.findMany();
@@ -27,9 +28,14 @@ const changeFlowToZen = async (req: NextApiRequest, res: NextApiResponse) => {
         expirationDate,
       } = user;
       const daysFromPaidCheckIns = paidCheckInsQuantity * 3.75;
+
+      const oldExpirationDate = expirationDate;
+
       const newExpirationDate = expirationDate
-        ? addDays(expirationDate, daysFromPaidCheckIns)
-        : null;
+        ? isAfter(expirationDate, new Date())
+          ? addDays(expirationDate, daysFromPaidCheckIns)
+          : addDays(new Date(), daysFromPaidCheckIns)
+        : addDays(new Date(), daysFromPaidCheckIns);
 
       const debitStatement = {
         userId: id,
@@ -62,6 +68,12 @@ const changeFlowToZen = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       };
 
+      operationsToReturn[email] = {
+        oldExpirationDate,
+        paidCheckInsQuantity,
+        newExpirationDate,
+      };
+
       if (mode === 'live') {
         await prisma.statement.create({ data: debitStatement });
         await prisma.statement.create({ data: creditStatement });
@@ -74,7 +86,7 @@ const changeFlowToZen = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json({
       message: mode === 'live' ? 'Operations executed' : 'Dry run completed',
-      operations,
+      operationsToReturn,
     });
   } catch (error) {
     console.error('Error updating users:', error);
