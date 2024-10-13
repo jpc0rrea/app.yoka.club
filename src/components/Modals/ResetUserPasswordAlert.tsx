@@ -9,6 +9,7 @@ import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 interface ResetUserPasswordModalProps {
   user: User;
@@ -114,7 +115,8 @@ export default function ResetUserPasswordAlert({
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                    <button
+                    <Button
+                      variant="secondary"
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                       onClick={handleDeleteEvent}
@@ -127,14 +129,15 @@ export default function ResetUserPasswordAlert({
                       ) : (
                         'sim, redefinir'
                       )}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="secondary"
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => setOpen(false)}
                     >
                       cancelar
-                    </button>
+                    </Button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

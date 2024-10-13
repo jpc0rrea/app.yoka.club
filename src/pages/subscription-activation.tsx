@@ -11,6 +11,7 @@ import useUser from '@hooks/useUser';
 import { queryClient } from '@lib/queryClient';
 import { UserPlan } from '@hooks/useUserPlan';
 import { sleep } from '@lib/utils';
+import { Button } from '@components/ui/button';
 
 export default function SubscriptionActivation() {
   const router = useRouter();
@@ -97,8 +98,8 @@ export default function SubscriptionActivation() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
           className="mx-auto h-12 w-auto"
-          src="/logo-yoga-com-kaka-roxo.png"
-          alt="Logo grupo r3"
+          src="/images/yoka-club/yoka-horizontal-roxo.svg"
+          alt="Logo Yoka Club"
           width={300}
           height={100}
         />
@@ -131,7 +132,8 @@ export default function SubscriptionActivation() {
           </div>
           {!isLoading && (
             <div className="mt-6">
-              <button
+              <Button
+                variant="secondary"
                 type="button"
                 className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
                 onClick={() => {
@@ -143,7 +145,7 @@ export default function SubscriptionActivation() {
                 }}
               >
                 {buttonText}
-              </button>
+              </Button>
             </div>
           )}
         </div>

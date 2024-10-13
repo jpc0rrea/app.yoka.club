@@ -1,5 +1,4 @@
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import { z } from 'zod';
 import { UploadButton } from '@lib/uploadthing';
 // You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
@@ -21,6 +20,7 @@ import { successToast } from '@components/Toast/SuccessToast';
 import { Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import ChangePassword from '@components/ChangePassword';
+import { Button } from '@components/ui/button';
 
 const updateProfileFormSchema = z.object({
   displayName: z.string({
@@ -126,10 +126,6 @@ const Profile: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
@@ -139,7 +135,7 @@ const Profile: NextPage = () => {
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 <Tabs defaultValue="account" className="">
-                  <TabsList className="grid w-[400px] grid-cols-2">
+                  <TabsList className="grid w-full max-w-[400px] grid-cols-2">
                     <TabsTrigger value="account">conta</TabsTrigger>
                     <TabsTrigger value="password">senha</TabsTrigger>
                   </TabsList>
@@ -245,14 +241,15 @@ const Profile: NextPage = () => {
                                   }
                                   alt=""
                                 />
-                                {/* <button
+                                {/* <Button
+                                variant="secondary"
                               type="button"
                               className="ml-5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                               atualizar
-                            </button> */}
+                            </Button> */}
                                 <UploadButton
-                                  className="ml-2 ut-button:h-8 ut-button:bg-purple-800 ut-button:text-sm ut-button:after:bg-purple-900 ut-button:ut-readying:bg-purple-800/50 ut-uploading:cursor-not-allowed"
+                                  className="ml-2 ut-button:h-8 ut-button:bg-brand-yoka-purple-700 ut-button:text-sm ut-button:after:bg-brand-yoka-purple-800 ut-button:ut-readying:bg-brand-yoka-purple-700/50 ut-uploading:cursor-not-allowed"
                                   endpoint="imageUploader"
                                   onClientUploadComplete={async (res) => {
                                     // Do something with the response
@@ -399,7 +396,8 @@ const Profile: NextPage = () => {
                               <CheckIcon className="ml-2 h-4 w-4" />
                             </div>
                           ) : (
-                            <button
+                            <Button
+                            variant="secondary"
                               type="button"
                               onClick={() => {
                                 console.log('conectar agenda');
@@ -407,7 +405,7 @@ const Profile: NextPage = () => {
                               className="inline-flex items-center rounded-md border border-transparent bg-purple-800 px-4 py-2 font-medium text-white shadow-sm hover:bg-purple-900"
                             >
                               conectar
-                            </button>
+                            </Button>
                           )}
                         </div>
                       </div>
@@ -416,23 +414,24 @@ const Profile: NextPage = () => {
 
                       <div className="pt-5">
                         <div className="flex justify-end">
-                          <button
+                          <Button
+                            variant="secondary"
                             type="button"
                             onClick={handleCancelUpdateProfile}
                             className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 "
                           >
                             cancelar
-                          </button>
-                          <button
+                          </Button>
+                          <Button
                             type="submit"
-                            className="ml-3 inline-flex w-16 justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
+                            className="ml-3 inline-flex w-16 justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm"
                           >
                             {isSubmitting ? (
                               <Loader2 className="h-4 w-4 animate-spin" />
                             ) : (
                               'salvar'
                             )}
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </form>

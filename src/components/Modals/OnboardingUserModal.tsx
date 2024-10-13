@@ -40,7 +40,7 @@ export default function OnboardingUserModal() {
       <DialogContent className={`${seeOnboardingVideo ? 'min-w-[80%]' : ''}`}>
         <DialogHeader>
           <DialogTitle className="text-center font-medium text-gray-800">
-            bem vinda a plataforma yoga com kaká
+            bem vinda a plataforma yoka club
           </DialogTitle>
         </DialogHeader>
 

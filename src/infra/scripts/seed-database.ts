@@ -26,6 +26,8 @@ async function seedDevelopmentUsers() {
     password: 'password',
     phoneNumber: '+5522999999999',
     role: 'USER',
+    planCode: 'free',
+    billingPeriod: 'monthly',
   });
 
   await insertUser({
@@ -34,6 +36,8 @@ async function seedDevelopmentUsers() {
     password: 'password',
     phoneNumber: '+5522999999999',
     role: 'ADMIN',
+    planCode: 'free',
+    billingPeriod: 'monthly',
   });
 
   console.log('------------------------------');

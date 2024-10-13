@@ -14,6 +14,7 @@ const brandPurple: MantineColorsTuple = [
 ];
 
 const theme = createTheme({
+  fontFamily: 'Poppins, sans-serif',
   primaryColor: 'brand-purple',
   colors: {
     'brand-purple': brandPurple,

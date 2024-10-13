@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import { startOfMonth } from 'date-fns';
 import {
   BarChart,
@@ -47,10 +46,6 @@ const BusinessInformations: NextPage = () => {
     Intl.NumberFormat('br').format(number).toString();
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">

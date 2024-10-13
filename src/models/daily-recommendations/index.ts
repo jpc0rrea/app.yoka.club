@@ -1,3 +1,4 @@
+import { startOfDay } from 'date-fns';
 import {
   ListDailyRecommendationsParams,
   ListDailyRecommendationsQueryParams,
@@ -36,7 +37,27 @@ async function listDailyRecommendations({
   return dailyRecommendations;
 }
 
+async function getNext7() {
+  const dailyRecommendations = await prisma.dailyRecommendation.findMany({
+    where: {
+      date: {
+        gte: startOfDay(new Date()),
+      },
+    },
+    orderBy: {
+      date: 'asc',
+    },
+    take: 7,
+    include: {
+      event: true,
+    },
+  });
+
+  return dailyRecommendations;
+}
+
 export default Object.freeze({
   convertQueryParamsInListDailyRecommendationsParams,
   listDailyRecommendations,
+  getNext7,
 });

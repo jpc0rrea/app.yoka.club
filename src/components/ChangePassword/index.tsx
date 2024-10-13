@@ -8,6 +8,7 @@ import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
+import { Button } from '@components/ui/button';
 
 const updatePasswordFormSchema = z.object({
   currentPassword: z
@@ -40,7 +41,6 @@ export default function ChangePassword() {
 
   async function handleUpdateProfile(data: UpdatePasswordFormData) {
     try {
-      console.log(data);
       await api.put('/auth/change-password', {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
@@ -83,16 +83,16 @@ export default function ChangePassword() {
           {...register('newPassword')}
         />
       </div>
-      <button
+      <Button
         type="submit"
-        className="mt-6 inline-flex w-32 justify-center rounded-md border border-transparent bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900 "
+        className="mt-6 inline-flex w-32 justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm"
       >
         {isSubmitting ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           'trocar senha'
         )}
-      </button>
+      </Button>
     </form>
   );
 }

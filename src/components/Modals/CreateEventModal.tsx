@@ -167,14 +167,15 @@ export default function CreateEventModal() {
 
   return (
     <>
-      <button
+      <Button
+        variant={`secondary`}
         onClick={() => {
           setOpen(true);
         }}
         className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
       >
         adicionar evento
-      </button>
+      </Button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -478,6 +479,7 @@ export default function CreateEventModal() {
                       </div>
                       <div className="flex w-full items-center justify-center">
                         <Button
+                          variant={`secondary`}
                           type="submit"
                           className="mx-auto w-full md:w-2/4"
                           disabled={form.formState.isSubmitting}

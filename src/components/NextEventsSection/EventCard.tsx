@@ -19,8 +19,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@components/ui/tooltip';
-import BuyMoreCheckIns from '@components/Modals/BuyMoreCheckIns';
 import UserCantAccessPremiumSystemResourceAlert from '@components/Modals/UserCantAccessPremiumSystemResourceAlert';
+import SubscribeModal from '@components/Modals/SubscribeModal';
 
 interface EventCardProps {
   event: EventFromAPI;
@@ -46,13 +46,19 @@ export default function EventCard({ event }: EventCardProps) {
     canCancelCheckIn,
     canEnterTheEvent,
     canViewRecordedEvent,
+    canCheckIn,
   } = getCheckInStatuses({
     event,
     userId,
     userCheckInsQuantity,
     isUserSubscribed: user?.isSubscribed || false,
+    expirationDate: user?.expirationDate,
   });
 
+  console.log({
+    canCheckIn,
+    stillHasVacancy,
+  });
   const recordedUrl = event?.recordedUrl;
 
   const liveUrl = event?.liveUrl;
@@ -158,7 +164,7 @@ export default function EventCard({ event }: EventCardProps) {
               <Tooltip>
                 <TooltipTrigger>
                   <Link href={`/events/${event.id}`}>
-                    <h3 className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left text-lg font-semibold text-brand-purple-900 transition-all hover:text-brand-purple-900 hover:underline dark:text-white">
+                    <h3 className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left text-lg font-semibold text-brand-yoka-purple-700 transition-all hover:text-brand-yoka-purple-800 hover:underline dark:text-white">
                       {event.title}
                     </h3>
                   </Link>
@@ -228,9 +234,9 @@ export default function EventCard({ event }: EventCardProps) {
               ) : (
                 <UserCantAccessPremiumSystemResourceAlert
                   triggerButton={
-                    <button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none">
+                    <Button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none">
                       ir para aula
-                    </button>
+                    </Button>
                   }
                   title="você não tem permissão para ver essa aula :("
                   description="somente assinantes ou alunas que fizeram check-in podem ver a gravação dessa aula"
@@ -267,7 +273,7 @@ export default function EventCard({ event }: EventCardProps) {
               </Button>
             )
           ) : stillHasVacancy ? (
-            userCheckInsQuantity > 0 ? (
+            canCheckIn ? (
               <Button
                 onClick={handleCheckIn}
                 className="mt-2 w-full"
@@ -281,10 +287,10 @@ export default function EventCard({ event }: EventCardProps) {
                 )}
               </Button>
             ) : (
-              <BuyMoreCheckIns
+              <SubscribeModal
                 ctaText="agendar aula"
-                title="você não tem mais check-ins disponíveis :("
-                description="compre mais check-ins para agendar aula"
+                title="você não pode agendar aula no plano gratuito"
+                description="assine o plano zen para participar da aula ao vivo"
                 CTAButton={Button}
               />
             )
@@ -293,7 +299,7 @@ export default function EventCard({ event }: EventCardProps) {
               evento esgotado :(
             </Button>
           )}
-          {/* <Button className="mt-2 w-full" variant="default">
+          {/* <Button variant="secondary" className="mt-2 w-full" variant="default">
             fazer check-in
           </Button> */}
         </div>

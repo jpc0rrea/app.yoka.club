@@ -1,6 +1,6 @@
 import { PrismaInstance } from '@server/db';
 
-export type SystemLogType = 'DAILY_ACTIVE_USERS';
+export type SystemLogType = 'DAILY_ACTIVE_USERS' | 'USER_CREATED';
 
 export interface CreateSystemLogParams {
   prismaInstance: PrismaInstance;

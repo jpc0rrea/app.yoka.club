@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {
-  // CalendarIcon,
-  // CreditCardIcon,
-  LockClosedIcon,
-  // UserIcon,
-} from '@heroicons/react/24/outline';
+
 import { classNames } from '@lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  HistoryIcon,
+  Lock,
   HomeIcon,
   UsersIcon,
   UserIcon,
@@ -39,12 +34,12 @@ export const navigationItems = [
     icon: UserIcon,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
-  {
-    name: 'extrato de check-ins',
-    href: '/extract',
-    icon: HistoryIcon,
-    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
-  },
+  // {
+  //   name: 'extrato de check-ins',
+  //   href: '/extract',
+  //   icon: HistoryIcon,
+  //   role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  // },
   {
     name: 'plano',
     href: '/billing',
@@ -54,7 +49,7 @@ export const navigationItems = [
   {
     name: 'eventos',
     href: '/events/manage',
-    icon: LockClosedIcon,
+    icon: Lock,
     role: ['ADMIN', 'INSTRUCTOR'],
   },
   {

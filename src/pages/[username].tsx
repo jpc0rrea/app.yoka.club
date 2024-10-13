@@ -4,7 +4,6 @@ import { useUserProfile } from '@hooks/useUsers';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Loader2 } from 'lucide-react';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 export default function User() {
@@ -19,10 +18,6 @@ export default function User() {
 
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">

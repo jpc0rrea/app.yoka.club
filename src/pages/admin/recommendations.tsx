@@ -1,6 +1,5 @@
 import Header from '@components/Header';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureWithRole } from '@server/middlewares/withSSREnsureWithRole';
 import Calendar from '@components/Recommendations/Calendar';
@@ -8,10 +7,6 @@ import Calendar from '@components/Recommendations/Calendar';
 const ManageRecommendations: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col bg-white md:pl-64">

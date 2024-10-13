@@ -12,6 +12,7 @@ import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { Loader2 } from 'lucide-react';
 import useUser from '@hooks/useUser';
+import { Button } from '@components/ui/button';
 
 const resetPasswordFormSchema = z
   .object({
@@ -98,8 +99,8 @@ export default function ForgotPassword() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
             className="mx-auto h-12 w-auto"
-            src="/logo-yoga-com-kaka-roxo.png"
-            alt="Logo grupo r3"
+            src="/images/yoka-club/yoka-horizontal-roxo.svg"
+            alt="Logo Yoka Club"
             width={300}
             height={100}
           />
@@ -119,14 +120,14 @@ export default function ForgotPassword() {
 
                 <a
                   href="/login"
-                  className="mt-6 flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className="mt-6 flex w-full justify-center rounded-md border border-transparent bg-brand-yoka-purple-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
                 >
                   ir para o login
                 </a>
               </>
             ) : (
               <>
-                <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
+                <h2 className="mt-2 text-center text-3xl font-normal tracking-tight text-gray-900">
                   redefinição de senha
                 </h2>
 
@@ -149,16 +150,16 @@ export default function ForgotPassword() {
                   />
 
                   <div>
-                    <button
+                    <Button
                       type="submit"
-                      className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                      className="flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none"
                     >
                       {isSubmitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         'cadastrar nova senha'
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </form>
 
@@ -168,7 +169,7 @@ export default function ForgotPassword() {
                       lembrou sua senha?{' '}
                       <Link
                         href="/login"
-                        className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
+                        className="font-medium text-brand-yoka-purple-700 hover:text-brand-yoka-purple-800"
                       >
                         faça login
                       </Link>

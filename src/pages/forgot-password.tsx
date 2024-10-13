@@ -12,6 +12,7 @@ import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { Loader2 } from 'lucide-react';
 import useUser from '@hooks/useUser';
+import { Button } from '@components/ui/button';
 
 const forgotPasswordFormSchema = z.object({
   email: z
@@ -38,11 +39,9 @@ export default function ForgotPassword() {
 
   const handleForgotPassword = async (data: ForgotPasswordFormData) => {
     try {
-      const forgotPasswordResponse = await api.post('/auth/forgot-password', {
+      await api.post('/auth/forgot-password', {
         email: data.email,
       });
-
-      console.log(forgotPasswordResponse);
 
       successToast({
         message: 'e-mail enviado com sucesso',
@@ -73,8 +72,8 @@ export default function ForgotPassword() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
             className="mx-auto h-12 w-auto"
-            src="/logo-yoga-com-kaka-roxo.png"
-            alt="Logo grupo r3"
+            src="/images/yoka-club/yoka-horizontal-roxo.svg"
+            alt="Logo Yoka Club"
             width={300}
             height={100}
           />
@@ -90,14 +89,14 @@ export default function ForgotPassword() {
 
                 <p className="mt-2 text-sm text-gray-600">
                   enviamos um link para redefinir sua senha para o e-mail{' '}
-                  <span className="font-medium text-brand-purple-900">
+                  <span className="font-medium text-brand-yoka-purple-700">
                     {mail}
                   </span>
                 </p>
               </>
             ) : (
               <>
-                <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
+                <h2 className="mt-2 text-center text-3xl font-normal tracking-tight text-gray-900">
                   redefinição de senha
                 </h2>
 
@@ -113,16 +112,16 @@ export default function ForgotPassword() {
                   />
 
                   <div>
-                    <button
+                    <Button
                       type="submit"
-                      className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                      className="flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none"
                     >
                       {isSubmitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         'enviar link por e-mail'
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </form>
 
@@ -132,7 +131,7 @@ export default function ForgotPassword() {
                       lembrou sua senha?{' '}
                       <Link
                         href="/login"
-                        className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
+                        className="hover:text-text-brand-yoka-purple-800 font-medium text-brand-yoka-purple-700"
                       >
                         faça login
                       </Link>

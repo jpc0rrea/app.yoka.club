@@ -45,6 +45,15 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       });
     }
 
+    // checar a data de expiração do usuário
+    if (user.expirationDate && isAfter(new Date(), user.expirationDate)) {
+      return res.status(400).json({
+        message: 'erro ao realizar check-in',
+        description: 'seu plano expirou',
+        errorCode: 'plan-expired',
+      });
+    }
+
     const event = await prisma.event.findUnique({
       where: {
         id: req.query.eventId,

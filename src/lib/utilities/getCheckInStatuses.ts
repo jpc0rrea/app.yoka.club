@@ -6,6 +6,7 @@ interface GetCheckInStatusesParams {
   userId: string;
   userCheckInsQuantity: number;
   isUserSubscribed: boolean;
+  expirationDate: Date | null | undefined;
 }
 
 interface GetCheckInStatusesResponse {
@@ -23,6 +24,7 @@ export default function getCheckInStatuses({
   userId,
   userCheckInsQuantity,
   isUserSubscribed,
+  expirationDate,
 }: GetCheckInStatusesParams): GetCheckInStatusesResponse {
   if (!event.startDate || !event.checkInsMaxQuantity) {
     return {
@@ -56,6 +58,7 @@ export default function getCheckInStatuses({
     event,
     userId,
     userCheckInsQuantity,
+    expirationDate,
   });
 
   const canCancelCheckIn = eventUtils.userCanCancelCheckIn({

@@ -75,7 +75,7 @@ export default function RecordedClassesSection() {
   const { events, totalPages } = data || {};
 
   return (
-    <div className="h-full flex-1 flex-col space-y-4 p-8 md:flex">
+    <div className="h-full flex-1 flex-col space-y-4 px-8 py-4 md:flex">
       <Separator />
       <div className="flex items-center justify-between">
         <div className="flex items-center">

@@ -10,6 +10,7 @@ import getCheckInStatuses from '@lib/utilities/getCheckInStatuses';
 import { EventFromAPI } from '@models/events/types';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@components/ui/button';
 
 interface CheckInButtonProps {
   event: EventFromAPI;
@@ -34,6 +35,7 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
     userId: user?.id || '',
     userCheckInsQuantity: user?.checkInsQuantity || 0,
     isUserSubscribed: user?.isSubscribed || false,
+    expirationDate: user?.expirationDate,
   });
 
   console.log({
@@ -81,9 +83,9 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
         ) : (
           <UserCantAccessPremiumSystemResourceAlert
             triggerButton={
-              <button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none">
+              <Button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none">
                 ir para aula
-              </button>
+              </Button>
             }
             title="você não tem permissão para ver essa aula :("
             description="somente assinantes ou alunas que fizeram check-in podem ver a gravação dessa aula"
@@ -123,21 +125,25 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
 
   function disabledButton(text: string) {
     return (
-      <button disabled className={buttonStyle}>
+      <Button variant="secondary" disabled className={buttonStyle}>
         {text}
-      </button>
+      </Button>
     );
   }
 
   function checkInButton() {
     return (
-      <button onClick={handleCheckIn} className={buttonStyle}>
+      <Button
+        variant="secondary"
+        onClick={handleCheckIn}
+        className={buttonStyle}
+      >
         {isCheckingIn ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="hButton4 w-4 animate-spin" />
         ) : (
           'agendar'
         )}
-      </button>
+      </Button>
     );
   }
 };
@@ -146,7 +152,7 @@ export default CheckInButton;
 
 // Tailwind utility class for button styling
 const buttonStyle =
-  'flex min-w-max max-w-fit justify-center rounded-md border border-transparent bg-brand-purple-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none';
+  'flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none';
 
 const buyMoreProps = {
   ctaText: 'agendar',

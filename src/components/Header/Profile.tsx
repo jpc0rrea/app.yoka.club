@@ -2,12 +2,10 @@ import { Fragment, SVGProps } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { classNames } from '@utils/classNames';
 // import { UserIcon } from '@heroicons/react/20/solid';
-import {
-  ArrowLeftOnRectangleIcon,
-  HomeIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import { LucideIcon, HomeIcon, UserIcon } from 'lucide-react';
 import useUser from '@hooks/useUser';
-import { LucideIcon, UserIcon } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 interface UserNavigation {
   name: string;
@@ -112,11 +110,12 @@ export default function Profile() {
             <Menu.Item key={item.name}>
               {({ active }) =>
                 item.type === 'button' ? (
-                  <button
+                  <Button
+                    variant={`secondary`}
                     onClick={item.onClick}
                     className={classNames(
                       active ? 'bg-gray-100' : '',
-                      'flex w-full px-4 py-2 text-sm text-gray-700'
+                      'flex w-full justify-start rounded-none bg-white px-4 py-2 text-sm text-gray-700'
                     )}
                   >
                     <item.icon
@@ -129,7 +128,7 @@ export default function Profile() {
                       aria-hidden="true"
                     />
                     {item.name}
-                  </button>
+                  </Button>
                 ) : (
                   <a
                     href={item.href}

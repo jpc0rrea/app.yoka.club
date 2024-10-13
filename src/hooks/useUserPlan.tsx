@@ -2,6 +2,7 @@ import { api } from '@lib/api';
 import {
   BillingPeriod,
   PLANS,
+  PlanCode,
   PlanId,
   PlanName,
   PlanType,
@@ -11,15 +12,16 @@ import { useQuery } from '@tanstack/react-query';
 export interface UserPlan {
   id: PlanId;
   type: PlanType;
+  code: PlanCode;
   name: PlanName;
   checkinsQuantity: number;
   price: number;
-  extra: string;
   cancelAtPeriodEnd: boolean;
   canSeeExclusiveContents: boolean;
   expirationDate?: Date;
   nextBillingDate?: Date;
   nextBillingValue?: string;
+  stripeSubscriptionId?: string;
 }
 
 interface GetPlanPricePerMonthParams {

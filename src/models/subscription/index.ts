@@ -155,8 +155,32 @@ async function createSubscriptionCheckoutSession({
   return stripeCheckoutSession.id;
 }
 
+interface ReactivateSubscriptionParams {
+  userId: string;
+}
+
+async function reactivateSubscription({
+  userId,
+}: ReactivateSubscriptionParams) {
+  const userObject = await user.findOneById({
+    userId,
+    prismaInstance: prisma,
+  });
+
+  if (!userObject.subscriptionId) {
+    throw new UnauthorizedError({
+      message: `o usuário não possui uma assinatura ativa.`,
+    });
+  }
+
+  await stripe.subscriptions.update(userObject.subscriptionId, {
+    cancel_at_period_end: false,
+  });
+}
+
 export default Object.freeze({
   renewSubscription,
   cancelSubscription,
   createSubscriptionCheckoutSession,
+  reactivateSubscription,
 });

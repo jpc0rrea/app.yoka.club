@@ -19,12 +19,12 @@ export default function UsersTable() {
                 >
                   nome
                 </th>
-                <th
+                {/* <th
                   scope="col"
                   className="min-w-max px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                 >
                   check-ins restantes
-                </th>
+                </th> */}
                 <th
                   scope="col"
                   className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"

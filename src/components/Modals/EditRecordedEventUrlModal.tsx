@@ -8,6 +8,7 @@ import { successToast } from '@components/Toast/SuccessToast';
 import { queryClient } from '@lib/queryClient';
 import { Input } from '@mantine/core';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 interface EditRecordedEventUrlModalProps {
   eventId: string;
@@ -79,14 +80,15 @@ export default function EditRecordedEventUrlModal({
 
   return (
     <>
-      <button
+      <Button
+        variant={`secondary`}
         onClick={() => {
           setOpen(true);
         }}
         className="hidden rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:block"
       >
         {recordedUrl ? 'editar link gravado' : 'cadastrar link gravado'}
-      </button>
+      </Button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -143,7 +145,8 @@ export default function EditRecordedEventUrlModal({
                     />
                   </Input.Wrapper>
                   <div className="flex w-full items-center">
-                    <button
+                    <Button
+                      variant={`secondary`}
                       onClick={handleEditUrl}
                       className="mx-auto mt-4 flex w-1/2 items-center justify-center rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
                     >
@@ -157,7 +160,7 @@ export default function EditRecordedEventUrlModal({
                       ) : (
                         'cadastrar'
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

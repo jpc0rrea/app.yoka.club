@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import Confetti from '@components/Confetti';
 import useUser from '@hooks/useUser';
 import { api } from '@lib/api';
+import { Button } from '@components/ui/button';
 
 interface ActivationStatusProps {
   isLoading: boolean;
@@ -107,8 +108,8 @@ export default function ActiveUserWithoutPassword() {
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
-          src="/logo-yoga-com-kaka-roxo.png"
-          alt="Logo grupo r3"
+          src="/images/yoka-club/yoka-horizontal-roxo.svg"
+          alt="Logo Yoka Club"
           width={300}
           height={100}
           className="mx-auto"
@@ -142,13 +143,14 @@ export default function ActiveUserWithoutPassword() {
             </>
           )}
           {!(isLoading || isFetching) && (
-            <button
+            <Button
+              variant="secondary"
               type="button"
               className="mt-6 flex w-full justify-center rounded-md border bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
               onClick={navigate}
             >
               {buttonLabel}
-            </button>
+            </Button>
           )}
         </div>
       </div>

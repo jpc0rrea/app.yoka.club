@@ -97,6 +97,7 @@ export interface UserCanCheckInInEventParams {
   event: EventFromAPI;
   userId: string;
   userCheckInsQuantity: number;
+  expirationDate: Date | null | undefined;
 }
 
 export interface UserCanCancelCheckInParams {

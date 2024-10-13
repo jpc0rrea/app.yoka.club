@@ -1,5 +1,6 @@
 import { XCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import toast from 'react-hot-toast';
+import { Button } from '@components/ui/button';
 
 interface ToastProps {
   message: string;
@@ -45,14 +46,15 @@ export default function ErrorToast({
           )}
         </div>
         <div className="ml-4 flex flex-shrink-0">
-          <button
+          <Button
+            variant="secondary"
             type="button"
             className="inline-flex h-min rounded-md bg-red-50 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             onClick={toastDismissFunction}
           >
             <span className="sr-only">Close</span>
             <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import Navbar from './Navbar';
 import useUser from '@hooks/useUser';
+import { Button } from '@components/ui/button';
 
 export default function MainContent() {
   const { logout } = useUser();
@@ -10,16 +11,17 @@ export default function MainContent() {
         <Navbar />
       </nav>
       <div className="mb-4 mt-auto w-full space-y-1 pt-10">
-        <button
+        <Button
+          variant="secondary"
           onClick={logout}
-          className="group flex w-full items-center border-l-4 border-transparent px-4 py-2 text-base font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-800 group-hover:text-gray-800"
+          className="group flex w-full items-center justify-start border-l-4 border-transparent bg-white px-4 py-2 text-base font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-800 group-hover:text-gray-800"
         >
           <ArrowLeftOnRectangleIcon
             className="mr-4 h-6 w-6 text-gray-500 group-hover:text-gray-800"
             aria-hidden="true"
           />
           sair
-        </button>
+        </Button>
       </div>
     </div>
   );

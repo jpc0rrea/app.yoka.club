@@ -2,7 +2,6 @@ import { CalendarIcon } from '@heroicons/react/20/solid';
 
 import Header from '@components/Header';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import { useRouter } from 'next/router';
@@ -20,6 +19,7 @@ import { errorToast } from '@components/Toast/ErrorToast';
 import useUser from '@hooks/useUser';
 import Link from 'next/link';
 import RecordedClass from '@components/RecordedClass';
+import { Button } from '@components/ui/button';
 
 const Event: NextPage = () => {
   const router = useRouter();
@@ -36,10 +36,6 @@ const Event: NextPage = () => {
   if (!event) {
     return (
       <>
-        <Head>
-          <title>plataforma yoga com kaká</title>
-        </Head>
-
         <div>
           <Sidebar />
 
@@ -56,10 +52,6 @@ const Event: NextPage = () => {
   if (!event.isLive) {
     return (
       <>
-        <Head>
-          <title>plataforma yoga com kaká</title>
-        </Head>
-
         <div>
           <Sidebar />
 
@@ -76,10 +68,6 @@ const Event: NextPage = () => {
   if (!event.startDate) {
     return (
       <>
-        <Head>
-          <title>plataforma yoga com kaká</title>
-        </Head>
-
         <div>
           <Sidebar />
 
@@ -103,6 +91,7 @@ const Event: NextPage = () => {
     userId,
     userCheckInsQuantity,
     isUserSubscribed: user?.isSubscribed || false,
+    expirationDate: user?.expirationDate,
   });
 
   const recordedUrl = event?.recordedUrl;
@@ -156,10 +145,6 @@ const Event: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
@@ -289,7 +274,8 @@ const Event: NextPage = () => {
                         <div className="flex">
                           <CheckInButton event={event} />
                           {canCancelCheckIn && (
-                            <button
+                            <Button
+                              variant="secondary"
                               onClick={handleCancelCheckIn}
                               className="ml-4 flex w-32 items-center justify-center rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100"
                             >
@@ -298,7 +284,7 @@ const Event: NextPage = () => {
                               ) : (
                                 'cancelar check-in'
                               )}
-                            </button>
+                            </Button>
                           )}
                         </div>
                       </div>

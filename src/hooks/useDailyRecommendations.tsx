@@ -47,3 +47,18 @@ export function useDailyRecommendations({
       }),
   });
 }
+
+export async function getNext7DailyRecommendations() {
+  const recommendationsResponse = await api.get<{
+    dailyRecommendations: DailyRecommendationWithEvent[];
+  }>(`/daily-recommendations/next-seven`);
+
+  return recommendationsResponse.data.dailyRecommendations;
+}
+
+export function useNext7DailyRecommendations() {
+  return useQuery({
+    queryKey: ['daily-recommendations', 'next-seven'],
+    queryFn: getNext7DailyRecommendations,
+  });
+}

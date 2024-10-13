@@ -8,6 +8,8 @@ export interface CreateUserData {
   password: string;
   name: string;
   phoneNumber: string;
+  planCode: PlanCode;
+  billingPeriod: BillingPeriod;
 }
 
 export interface CreateWithoutPasswordUserData {

@@ -12,6 +12,7 @@ import { getStripeJs } from '@lib/stripe';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@utils';
+import { Button } from '@components/ui/button';
 
 interface SubscribeModalProps {
   label: string;
@@ -65,7 +66,8 @@ export default function SubscribeModal({
 
   return (
     <>
-      <button
+      <Button
+        variant={`secondary`}
         onClick={() => {
           setOpen(true);
         }}
@@ -75,7 +77,7 @@ export default function SubscribeModal({
         )}
       >
         {label}
-      </button>
+      </Button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -119,7 +121,7 @@ export default function SubscribeModal({
                         as="h3"
                         className="mb-2 text-base font-semibold leading-6 text-purple-700"
                       >
-                        planos - yoga com kaká
+                        planos - yoka club
                       </Dialog.Title>
                       <div className="items-center justify-between md:flex">
                         <div className="mt-2">
@@ -223,7 +225,8 @@ export default function SubscribeModal({
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-6">
-                    <button
+                    <Button
+                      variant={`secondary`}
                       className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
                       onClick={handleRedirectToCheckout}
                     >
@@ -232,22 +235,24 @@ export default function SubscribeModal({
                       ) : (
                         'assinar a plataforma'
                       )}
-                    </button>
-                    {/* <button
+                    </Button>
+                    {/* <Button
+                    variant={`secondary`}
                       type="button"
                       className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-2"
                       onClick={() => setOpen(false)}
                     >
                       pagamento avulso (pix)
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                    variant={`secondary`}
                       type="button"
                       className="mt-3 inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-1 sm:mt-0"
                       onClick={() => setOpen(false)}
                       ref={cancelButtonRef}
                     >
                       pagamento recorrente (cartão de crédito)
-                    </button> */}
+                    </Button> */}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
