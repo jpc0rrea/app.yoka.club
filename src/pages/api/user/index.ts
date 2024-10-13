@@ -40,6 +40,10 @@ async function renewSessionIfNecessary(
   response: NextApiResponse,
   next: () => void
 ) {
+  console.log('renewSessionIfNecessary');
+  console.log({
+    context: request.context,
+  });
   let sessionObject = request.context.session;
 
   if (!sessionObject) {
