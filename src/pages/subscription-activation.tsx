@@ -11,6 +11,10 @@ import useUser from '@hooks/useUser';
 import { queryClient } from '@lib/queryClient';
 import { UserPlan } from '@hooks/useUserPlan';
 import { sleep } from '@lib/utils';
+import { Button } from '@components/ui/button';
+
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY = 1000; // 1 second
 
 export default function SubscriptionActivation() {
   const router = useRouter();
@@ -27,6 +31,37 @@ export default function SubscriptionActivation() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchPlanWithRetry = async (
+    retries = 0
+  ): Promise<{
+    plan: UserPlan;
+    message: string;
+    description: string;
+    action: string;
+  } | null> => {
+    try {
+      const response = await api.get<{
+        plan: UserPlan;
+        message: string;
+        description: string;
+        action: string;
+      }>('/user/plan');
+
+      if (response.status === 200 && response.data.plan.type === 'premium') {
+        return response.data;
+      }
+
+      throw new Error('Plan fetch unsuccessful');
+    } catch (error) {
+      if (retries < MAX_RETRIES - 1) {
+        const retryDelay = INITIAL_RETRY_DELAY * Math.pow(2, retries);
+        await sleep(retryDelay);
+        return await fetchPlanWithRetry(retries + 1);
+      }
+      return null;
+    }
+  };
+
   const handleActivateSubscription = async ({
     sessionToken,
   }: {
@@ -42,14 +77,9 @@ export default function SubscriptionActivation() {
 
       await sleep(3000);
 
-      const response = await api.get<{
-        plan: UserPlan;
-        message: string;
-        description: string;
-        action: string;
-      }>('/user/plan');
+      const planData = await fetchPlanWithRetry();
 
-      if (response.status === 200 && response.data.plan.type === 'premium') {
+      if (planData) {
         setIsSuccess(true);
         setGlobalMessage('sua assinatura foi feita com sucesso!');
         setGlobalDescription(
@@ -58,23 +88,11 @@ export default function SubscriptionActivation() {
         setButtonText('ir para a página inicial');
         queryClient.invalidateQueries(['userPlan']);
         await fetchUser();
-
-        return;
-      }
-
-      if (response.status >= 400 && response.status <= 503) {
-        const responseBody = response.data;
-        setGlobalMessage(`${responseBody.message}`);
-        setGlobalDescription(
-          `${responseBody.description || responseBody.action}`
-        );
-        setButtonText('ir para login');
-        setIsSuccess(false);
         return;
       }
 
       setIsSuccess(false);
-      throw new Error(response.statusText);
+      throw new Error('Failed to fetch plan after multiple attempts');
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
@@ -97,8 +115,8 @@ export default function SubscriptionActivation() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
           className="mx-auto h-12 w-auto"
-          src="/logo-yoga-com-kaka-roxo.png"
-          alt="Logo grupo r3"
+          src="/images/yoka-club/yoka-horizontal-roxo.svg"
+          alt="Logo Yoka Club"
           width={300}
           height={100}
         />
@@ -131,7 +149,8 @@ export default function SubscriptionActivation() {
           </div>
           {!isLoading && (
             <div className="mt-6">
-              <button
+              <Button
+                variant="secondary"
                 type="button"
                 className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
                 onClick={() => {
@@ -143,7 +162,7 @@ export default function SubscriptionActivation() {
                 }}
               >
                 {buttonText}
-              </button>
+              </Button>
             </div>
           )}
         </div>

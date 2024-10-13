@@ -6,10 +6,12 @@ import authentication from '@models/authentication';
 import cacheControl from '@models/cache-control';
 import { AuthenticatedRequest } from '@models/controller/types';
 import mercadopago from '@lib/mercadopago';
+import { BillingPeriod, PlanCode } from '@lib/stripe/plans';
 
 export interface CreateMercadoPagoRequest extends AuthenticatedRequest {
   body: {
-    checkInsQuantity: number;
+    billingPeriod: BillingPeriod;
+    planCode: PlanCode;
   };
 }
 
@@ -33,10 +35,12 @@ async function postHandler(
   res: NextApiResponse
 ) {
   const authenticatedUser = req.context.user;
+  const { billingPeriod, planCode } = req.body;
 
-  const checkoutUrl = await mercadopago.createCheckout({
+  const checkoutUrl = await mercadopago.createSubscriptionCheckout({
     userId: authenticatedUser.id,
-    checkInsQuantity: req.body.checkInsQuantity,
+    billingPeriod,
+    planCode,
   });
 
   return res.status(201).json({

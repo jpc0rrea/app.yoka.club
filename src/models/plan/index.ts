@@ -77,22 +77,31 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
     id: 'FREE',
     type: 'free',
     name: 'plano gratuito',
+    code: 'free',
     price: 0,
     checkinsQuantity: 0,
-    extra: 'acesso aos conteúdos gratuitos',
     cancelAtPeriodEnd: false,
     expirationDate: userObject.expirationDate || undefined,
     canSeeExclusiveContents: userObject.expirationDate
       ? isAfter(userObject.expirationDate, new Date())
       : false,
+    stripeSubscriptionId: userObject.subscriptionId || undefined,
   };
 
   if (
-    !userObject.stripeId ||
     !userObject.expirationDate ||
-    isAfter(new Date(), userObject.expirationDate) ||
-    !userObject.subscriptionId
+    isAfter(new Date(), userObject.expirationDate)
   ) {
+    return plan;
+  }
+
+  plan.type = 'premium';
+  plan.code = 'zen';
+  plan.checkinsQuantity = userObject.checkInsQuantity;
+  plan.expirationDate = new Date(userObject.expirationDate);
+  plan.name = 'plano zen';
+
+  if (!userObject.subscriptionId || !userObject.stripeId) {
     return plan;
   }
 
@@ -112,9 +121,14 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
       : subscriptionDetails.plan.checkInsQuantity === 8
       ? 'plano flow'
       : 'plano gratuito';
+  plan.code =
+    subscriptionDetails.plan.checkInsQuantity === 0
+      ? 'zen'
+      : subscriptionDetails.plan.checkInsQuantity === 8
+      ? 'flow'
+      : 'free';
   plan.checkinsQuantity = subscriptionDetails.plan.checkInsQuantity;
   plan.price = subscriptionDetails.plan.fullPricePerBillingPeriod;
-  plan.extra = 'acesso a todas as aulas gravadas e a conteúdos exclusivos';
   plan.cancelAtPeriodEnd = subscriptionDetails.cancelAtPeriodEnd;
 
   return plan;

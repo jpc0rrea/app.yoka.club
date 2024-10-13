@@ -4,6 +4,7 @@ import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 export default function ConfirmEmailAlert() {
   const [isSending, setIsSending] = useState(false);
@@ -57,12 +58,13 @@ export default function ConfirmEmailAlert() {
             ) : (
               <>
                 email não confirmado.{' '}
-                <button
+                <Button
+                  variant={`secondary`}
                   onClick={handleSendConfirmationEmail}
                   className="font-medium text-yellow-700 underline hover:text-yellow-600"
                 >
                   enviar confirmação
-                </button>
+                </Button>
               </>
             )}
           </p>

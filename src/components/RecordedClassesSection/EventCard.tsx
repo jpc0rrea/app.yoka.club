@@ -25,7 +25,6 @@ import { useUserPlan } from '@hooks/useUserPlan';
 import getYouTubeThumbnailURL from '@lib/utilities/getYouTubeThumbnailURL';
 import { EventFromAPI } from '@models/events/types';
 import { hasUserAlreadyCheckedIn } from '@models/events/utils';
-import { format } from 'date-fns';
 import Link from 'next/link';
 
 interface EventCardProps {
@@ -80,7 +79,7 @@ export default function EventCard({ event }: EventCardProps) {
             <TooltipTrigger>
               {userHaveAccess ? (
                 <Link href={`/events/${event.id}`}>
-                  <CardTitle className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left transition-all hover:underline">
+                  <CardTitle className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins text-xl transition-all hover:underline">
                     {event.title}
                   </CardTitle>
                 </Link>
@@ -94,7 +93,7 @@ export default function EventCard({ event }: EventCardProps) {
                     </CardTitle>
                   }
                   title="você não tem permissão para ver essa aula :("
-                  description="somente assinantes tem acesso as aulas exclusivas"
+                  description="somente assinantes tem acesso às aulas exclusivas"
                 />
               )}
             </TooltipTrigger>
@@ -136,7 +135,7 @@ export default function EventCard({ event }: EventCardProps) {
                 />
               }
               title="você não tem permissão para ver essa aula :("
-              description="somente assinantes tem acesso as aulas exclusivas"
+              description="somente assinantes tem acesso às aulas exclusivas"
             />
           )}
         </div>
@@ -145,10 +144,10 @@ export default function EventCard({ event }: EventCardProps) {
             A beginner-friendly yoga lesson to help you get started on your yoga
             journey.
           </p> */}
-          <p className="mt-1 text-xs text-gray-500">
+          {/* <p className="mt-1 text-xs text-gray-500">
             instrutora: {event.instructor.displayName}
-          </p>
-          {isLive && event.startDate ? (
+          </p> */}
+          {/* {isLive && event.startDate ? (
             <p className="mt-1 text-xs text-gray-500">
               aula em:{' '}
               {format(new Date(event.startDate), "dd/MM/yyyy' às 'HH:mm")}
@@ -157,19 +156,19 @@ export default function EventCard({ event }: EventCardProps) {
             <p className="mt-1 text-xs text-gray-500">
               aula gravada em: {format(new Date(event.createdAt), 'dd/MM/yyyy')}
             </p>
-          )}
+          )} */}
         </div>
       </CardContent>
       <CardFooter className="px-0">
         {userHaveAccess ? (
-          <Button variant="default" asChild>
+          <Button asChild>
             <Link href={`/events/${event.id}`}>ir para aula</Link>
           </Button>
         ) : (
           <UserCantAccessPremiumSystemResourceAlert
             triggerButton={<Button variant="default">ir para aula</Button>}
             title="você não tem permissão para ver essa aula :("
-            description="somente assinantes tem acesso as aulas exclusivas"
+            description="somente assinantes tem acesso às aulas exclusivas"
           />
         )}
       </CardFooter>

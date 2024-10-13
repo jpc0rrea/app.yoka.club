@@ -7,6 +7,7 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { queryClient } from '@lib/queryClient';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 interface AddMoreCheckInsToUserProps {
   userId: string;
@@ -122,7 +123,8 @@ export default function AddMoreCheckInsToUser({
                       <p className="text-sm text-gray-500">tipo de check-in</p>
                       <div className="mt-1 flex items-center justify-center space-x-3">
                         {checkInTypesOptions.map((option) => (
-                          <button
+                          <Button
+                            variant={`secondary`}
                             key={option.value}
                             type="button"
                             className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2 ${
@@ -135,7 +137,7 @@ export default function AddMoreCheckInsToUser({
                             }}
                           >
                             {option.label}
-                          </button>
+                          </Button>
                         ))}
                       </div>
                     </div>
@@ -144,7 +146,8 @@ export default function AddMoreCheckInsToUser({
                         número de check-ins
                       </p>
                       <div className="mt-1 flex items-center justify-center">
-                        <button
+                        <Button
+                          variant={`secondary`}
                           type="button"
                           className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2"
                           onClick={() => {
@@ -157,11 +160,12 @@ export default function AddMoreCheckInsToUser({
                             className="h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
-                        </button>
+                        </Button>
                         <p className="mx-2 text-xl font-bold text-purple-800">
                           {checkInsQuantity}
                         </p>
-                        <button
+                        <Button
+                          variant={`secondary`}
                           type="button"
                           className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2"
                           onClick={() => {
@@ -172,13 +176,14 @@ export default function AddMoreCheckInsToUser({
                             className="h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-6">
-                  <button
+                  <Button
+                    variant={`secondary`}
                     type="button"
                     className="mt-3 inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-1 sm:mt-0"
                     onClick={handleAddCheckIn}
@@ -188,7 +193,7 @@ export default function AddMoreCheckInsToUser({
                     ) : (
                       'adicionar'
                     )}
-                  </button>
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

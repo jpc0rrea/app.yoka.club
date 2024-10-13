@@ -9,7 +9,7 @@ import {
   CanUserManageEvent,
 } from './types';
 
-import { differenceInMinutes } from 'date-fns';
+import { differenceInMinutes, isAfter } from 'date-fns';
 import {
   MINUTES_TO_CANCEL_CHECK_IN,
   MINUTES_TO_CHECK_IN,
@@ -63,6 +63,7 @@ function userCanCheckIn({
   event,
   userId,
   userCheckInsQuantity,
+  expirationDate,
 }: UserCanCheckInInEventParams) {
   if (!event.startDate || !event.checkInsMaxQuantity) {
     return false;
@@ -82,6 +83,15 @@ function userCanCheckIn({
   });
 
   if (userHasCheckedIn) {
+    return false;
+  }
+
+  if (!expirationDate) {
+    return false;
+  }
+
+  // se a data de expiração tiver expirado, não pode mais fazer check-in
+  if (isAfter(new Date(), new Date(expirationDate))) {
     return false;
   }
 

@@ -33,8 +33,8 @@ export default function PrivacyPolicy() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
           className="mx-auto h-12 w-auto"
-          src="/logo-yoga-com-kaka-roxo.png"
-          alt="logo yoga com kaká"
+          src="/images/yoka-club/yoka-horizontal-roxo.svg"
+          alt="logo yoka club"
           width={300}
           height={100}
         />

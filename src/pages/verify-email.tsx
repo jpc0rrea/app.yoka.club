@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { LegacyRef, useEffect, useState } from 'react';
+import { Button } from '@components/ui/button';
 
 export default function VerifyEmail() {
   // get the token from the query
@@ -71,8 +72,8 @@ export default function VerifyEmail() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
           className="mx-auto h-12 w-auto"
-          src="/logo-yoga-com-kaka-roxo.png"
-          alt="Logo grupo r3"
+          src="/images/yoka-club/yoka-horizontal-roxo.svg"
+          alt="Logo Yoka Club"
           width={300}
           height={100}
         />
@@ -101,7 +102,8 @@ export default function VerifyEmail() {
             </p>
           </div>
           <div className="mt-6">
-            <button
+            <Button
+              variant="secondary"
               type="button"
               className="flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
               onClick={async () => {
@@ -116,7 +118,7 @@ export default function VerifyEmail() {
               }}
             >
               {buttonText}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

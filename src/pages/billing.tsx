@@ -1,6 +1,5 @@
 import Header from '@components/Header';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import UserPlan from '@components/Billing/UserPlan';
@@ -9,10 +8,6 @@ import UserPayments from '@components/Billing/UserPayments';
 const Billing: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">

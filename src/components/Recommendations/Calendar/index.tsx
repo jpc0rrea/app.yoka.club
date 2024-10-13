@@ -20,6 +20,7 @@ import EventItem from './EventItem';
 import { useDailyRecommendations } from '@hooks/useDailyRecommendations';
 import CreateDailyRecommendationModal from '../CreateDailyRecommendationModal';
 import EditDailyRecommendationModal from '../EditDailyRecommendationModal';
+import { Button } from '@components/ui/button';
 
 const colStartClassByWeekDay = [
   '',
@@ -87,22 +88,24 @@ export default function RecommendationsCalendar() {
           <h2 className="flex-auto font-semibold text-gray-900">
             {format(firstDayCurrentMonth, 'MMMM yyyy', { locale: ptBR })}
           </h2>
-          <button
+          <Button
+            variant="secondary"
             type="button"
             onClick={previousMonth}
             className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
           >
             <span className="sr-only">Previous month</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="secondary"
             type="button"
             onClick={nextMonth}
             className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
           >
             <span className="sr-only">Next month</span>
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
         <div className="mt-10 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
           <div>dom.</div>
@@ -123,7 +126,8 @@ export default function RecommendationsCalendar() {
                 'py-2'
               )}
             >
-              <button
+              <Button
+                variant="secondary"
                 type="button"
                 onClick={() => {
                   setSelectedDay(day);
@@ -156,7 +160,7 @@ export default function RecommendationsCalendar() {
                 <time dateTime={format(day, 'dd-MM-yyyy')}>
                   {format(day, 'd')}
                 </time>
-              </button>
+              </Button>
               <div className="mx-auto mt-1 h-1 w-1">
                 {recommendations &&
                   recommendations.some(

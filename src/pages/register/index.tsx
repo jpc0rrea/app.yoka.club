@@ -21,6 +21,7 @@ import {
   isBrazilianPhoneNumber,
   isValidBrazilianPhoneNumber,
 } from '@lib/utils';
+import { Button } from '@components/ui/button';
 
 const registerFormSchema = z
   .object({
@@ -125,6 +126,8 @@ export default function Login() {
         password: data.password,
         name: data.fullName,
         phoneNumber: String(phoneNumber),
+        planCode: 'free',
+        billingPeriod: 'monthly',
       });
 
       localStorage.setItem('registrationEmail', data.email);
@@ -176,7 +179,7 @@ export default function Login() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
             className="mx-auto h-12 w-auto"
-            src="/logo-yoga-com-kaka-roxo.png"
+            src="/images/yoka-club/yoka-horizontal-roxo.svg"
             alt="Logo grupo r3"
             width={300}
             height={100}
@@ -189,20 +192,20 @@ export default function Login() {
               já possui uma conta?{' '}
               <Link
                 href="/login"
-                className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
+                className="font-medium text-brand-yoka-purple-700 hover:text-brand-yoka-purple-800"
               >
                 entre
               </Link>
             </p>
-            <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
+            <h2 className="text-center text-3xl font-normal tracking-tight text-gray-900">
               crie sua conta
             </h2>
-            <p className="mt-2 text-center text-gray-600">
-              ganhe seu{' '}
-              <strong className="text-brand-purple-800">
-                check-in gratuito
+            <p className="mt-2 text-center text-sm text-gray-600">
+              tenha acesso a mais de{' '}
+              <strong className="text-brand-yoka-purple-700">
+                100 práticas
               </strong>{' '}
-              e comece a praticar
+              gratuitas
             </p>
             <form
               className="mt-6 space-y-4"
@@ -263,7 +266,7 @@ export default function Login() {
                   <Link
                     href="/service-terms"
                     target="_blank"
-                    className="font-medium text-brand-purple-900 hover:text-brand-purple-800 hover:underline"
+                    className="font-medium text-brand-yoka-purple-700 hover:text-brand-yoka-purple-800 hover:underline"
                   >
                     termos de serviço
                   </Link>
@@ -271,9 +274,9 @@ export default function Login() {
               </div>
 
               <div>
-                <button
+                <Button
                   type="submit"
-                  className={`flex h-10 w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none ${
+                  className={`flex h-10 w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none ${
                     isSubmitting || !agreedToTerms
                       ? 'cursor-not-allowed opacity-50'
                       : ''
@@ -285,7 +288,7 @@ export default function Login() {
                   ) : (
                     'criar conta'
                   )}
-                </button>
+                </Button>
               </div>
             </form>
 
@@ -301,7 +304,8 @@ export default function Login() {
 
               <div className="mt-6">
                 <div className="w-full">
-                  <button
+                  <Button
+                  variant={'secondary}
                     onClick={() => {
                       signIn('google', {
                         callbackUrl: '/',
@@ -346,7 +350,7 @@ export default function Login() {
                     <span className="ml-2 text-sm font-semibold">
                       criar conta com o google
                     </span>
-                  </button>
+                  </Button>
 
                   {hasCalendarError && (
                     <p className="mt-2 text-sm text-red-600">

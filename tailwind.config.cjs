@@ -24,7 +24,38 @@ module.exports = withUt({
       },
     },
     extend: {
+      fontFamily: {
+        fraunces: ['Fraunces', 'serif'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
       colors: {
+        'brand-yoka-purple-neutral': {
+          950: '#231A2C',
+          900: '#38284A',
+          800: '#57456E',
+          700: '#695485',
+          600: '#8269A1',
+          500: '#8F7580',
+          400: '#A38FC2',
+          300: '#BAB0D6',
+          200: '#D4CCE5',
+          100: '#E8E3F2',
+          50: '#F2F0F7',
+          10: '#F7F7FA',
+        },
+        'brand-yoka-purple': {
+          950: '#3B0E67',
+          900: '#601A98',
+          800: '#741DBA',
+          700: '#8A23DE',
+          600: '#9A35F2',
+          500: '#A358FA',
+          400: '#B888FD',
+          300: '#C29EFF',
+          200: '#E3D5FF',
+          100: '#F1E8FF',
+          50: '#F7F3FF',
+        },
         'brand-purple': {
           50: '#fbf2ff',
           100: '#f6e2ff',
@@ -54,6 +85,10 @@ module.exports = withUt({
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        'yoka-primary': {
+          DEFAULT: '#8A23DE',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',

@@ -45,6 +45,15 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       });
     }
 
+    // checar a data de expiração do usuário
+    if (user.expirationDate && isAfter(new Date(), user.expirationDate)) {
+      return res.status(400).json({
+        message: 'erro ao realizar check-in',
+        description: 'seu plano expirou',
+        errorCode: 'plan-expired',
+      });
+    }
+
     const event = await prisma.event.findUnique({
       where: {
         id: req.query.eventId,
@@ -124,9 +133,9 @@ const checkInRoute = async (req: CheckInEventRequest, res: NextApiResponse) => {
       data: {
         userId: user.id,
         checkInId: checkIn.id,
-        title: `check-in realizado no evento ${event.title}`,
+        title: `aula agendada no evento ${event.title}`,
         type: 'DEBIT',
-        description: 'check-in realizado com sucesso',
+        description: 'aula agendada com sucesso',
         checkInsQuantity: 1,
         checkInType:
           checkInTypeToDecrement === 'trialCheckInsQuantity'

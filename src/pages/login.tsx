@@ -14,6 +14,7 @@ import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { PasswordInput } from '@components/Form/PasswordInput';
 import { usePostHog } from 'posthog-js/react';
+import { Button } from '@components/ui/button';
 
 const loginFormSchema = z.object({
   email: z
@@ -108,8 +109,8 @@ export default function Login() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
             className="mx-auto h-12 w-auto"
-            src="/logo-yoga-com-kaka-roxo.png"
-            alt="Logo grupo r3"
+            src="/images/yoka-club/yoka-horizontal-roxo.svg"
+            alt="Logo Yoka Club"
             width={300}
             height={100}
           />
@@ -117,14 +118,14 @@ export default function Login() {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-            <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
+            <h2 className="mt-2 text-center text-3xl font-normal tracking-tight text-gray-900">
               entre na plataforma
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               ou{' '}
               <Link
                 href="/register"
-                className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
+                className="font-medium text-brand-yoka-purple-700 hover:text-brand-yoka-purple-800"
               >
                 faça seu cadastro
               </Link>
@@ -148,7 +149,7 @@ export default function Login() {
                   <div className="text-sm">
                     <Link
                       href="/forgot-password"
-                      className="font-medium text-brand-purple-900 hover:text-brand-purple-800"
+                      className="font-medium text-brand-yoka-purple-700 hover:text-brand-yoka-purple-800"
                     >
                       esqueceu sua senha?
                     </Link>
@@ -157,16 +158,16 @@ export default function Login() {
               </div>
 
               <div>
-                <button
+                <Button
                   type="submit"
-                  className="flex h-10 w-full justify-center rounded-md border border-transparent bg-brand-purple-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-800 focus:outline-none"
+                  className="flex h-10 w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none"
                 >
                   {isSubmitting ? (
                     <Loader2 className="mt-1 h-4 w-4 animate-spin" />
                   ) : (
                     'entrar'
                   )}
-                </button>
+                </Button>
               </div>
             </form>
 
@@ -182,7 +183,8 @@ export default function Login() {
 
               <div className="mt-6">
                 <div className="w-full">
-                  <button
+                  <Button
+                  variant="secondary"
                     onClick={() => {
                       signIn('google', {
                         callbackUrl: '/',
@@ -223,7 +225,7 @@ export default function Login() {
                     <span className="ml-2 text-sm font-semibold">
                       entrar com o google
                     </span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div> */}

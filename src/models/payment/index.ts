@@ -16,6 +16,7 @@ import user from '@models/user';
 import statement from '@models/statement';
 import eventLogs from '@models/event-logs';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
+import activation from '@models/activation';
 
 async function handleStripeInvoicePaid({
   stripeInvoice,
@@ -24,17 +25,25 @@ async function handleStripeInvoicePaid({
     invoice: stripeInvoice,
   });
 
+  console.log('subscription', subscription);
+
   const price = await stripeUtils.getInvoicePrice({
     invoice: stripeInvoice,
   });
+
+  console.log('price', price);
 
   const userObject = await stripeUtils.getInvoiceUser({
     invoice: stripeInvoice,
   });
 
+  console.log('userObject', userObject);
+
   const balanceTransaction = await stripeUtils.getInvoiceBalanceTransaction({
     invoice: stripeInvoice,
   });
+
+  console.log('balanceTransaction', balanceTransaction);
 
   const grossValue = balanceTransaction.amount;
   const netValue = balanceTransaction.net;
@@ -52,6 +61,8 @@ async function handleStripeInvoicePaid({
   }
 
   const planObject = await plan.getPlanByStripePriceId(price.id);
+
+  console.log('planObject', planObject);
 
   const planId = planObject.id;
 
@@ -76,6 +87,11 @@ async function handleStripeInvoicePaid({
         subscriptionId: subscription.id,
         planId,
         paymentId: payment.id,
+        prismaInstance: tx,
+      });
+
+      await activation.activateUserByUserId({
+        userId: userObject.id,
         prismaInstance: tx,
       });
     },

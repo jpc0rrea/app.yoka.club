@@ -4,6 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSidebar } from '@hooks/useSidebar';
 import Image from 'next/image';
 import MainContent from './MainContext';
+import { Button } from '@components/ui/button';
 
 export default function Sidebar() {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
@@ -54,24 +55,24 @@ export default function Sidebar() {
                   leaveTo="opacity-0"
                 >
                   <div className="absolute right-0 top-0  pt-2">
-                    <button
-                      type="button"
-                      className="flex h-10 w-10 items-center justify-center rounded-full"
+                    <Button
+                      variant="icon"
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-white"
                       onClick={() => setIsSidebarOpen(false)}
                     >
                       <span className="sr-only">Close sidebar</span>
                       <XMarkIcon
-                        className="h-6 w-6 text-gray-500"
+                        className="h-6 w-6 shrink-0 text-gray-500"
                         aria-hidden="true"
                       />
-                    </button>
+                    </Button>
                   </div>
                 </Transition.Child>
                 <div className="flex flex-shrink-0 items-center px-4">
                   <Image
-                    className="h-8 w-auto"
-                    src="/logo-yoga-com-kaka-roxo.png"
-                    alt="Logo grupo r3"
+                    className="h-7 w-auto"
+                    src="/images/yoka-club/yoka-horizontal-roxo.svg"
+                    alt="Logo Yoka Club"
                     width={300}
                     height={100}
                   />
@@ -87,14 +88,14 @@ export default function Sidebar() {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
+      <div className="md:flex-cols hidden md:fixed md:inset-y-0 md:flex md:w-64">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5">
-          <div className="flex flex-shrink-0 items-center px-4">
+          <div className="flex flex-shrink-0 items-center px-6">
             <Image
-              className="h-8 w-auto"
-              src="/logo-yoga-com-kaka-roxo.png"
-              alt="Logo grupo r3"
+              className="h-7 w-auto"
+              src="/images/yoka-club/yoka-horizontal-roxo.svg"
+              alt="Logo Yoka Club"
               width={300}
               height={100}
             />

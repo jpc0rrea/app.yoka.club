@@ -16,6 +16,8 @@ import user from '@models/user';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 import mailLists from '@lib/mail/mailLists';
 import { ClintCRMService } from '@lib/crm/ClintCRMService';
+import { User } from '@prisma/client';
+import { PrismaInstance } from '@server/db';
 
 async function createAndSendActivationEmail({
   user,
@@ -123,57 +125,81 @@ async function activateUserUsingTokenId({
   // await checkin.giveTrialCheckin({ userId: userToActivate.id });
 
   // enviar email de boas vindas
+  await welcomeUser({ user: userToActivate });
+
+  return tokenObject;
+}
+
+interface ActivateUserByUserIdParams {
+  userId: string;
+  prismaInstance: PrismaInstance;
+}
+
+async function activateUserByUserId({
+  userId,
+  prismaInstance,
+}: ActivateUserByUserIdParams) {
+  const userToActivate = await user.findOneById({
+    userId,
+    prismaInstance,
+  });
+
+  await prismaInstance.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      isUserActivated: true,
+    },
+  });
+
+  await welcomeUser({ user: userToActivate, sendEmail: false });
+}
+
+interface WelcomeUserParams {
+  user: User;
+  sendEmail?: boolean;
+}
+
+async function welcomeUser({ user, sendEmail = true }: WelcomeUserParams) {
   const mailService = new SendGridMailService();
 
   await mailService.addContact({
-    email: userToActivate.email,
-    firstName: userToActivate.displayName,
+    email: user.email,
+    firstName: user.displayName,
     listIds: [mailLists['user-onboarding']],
   });
 
-  await mailService.send({
-    template: 'welcomeEmail',
-    to: userToActivate.email,
-    templateData: {
-      userName: userToActivate.displayName,
-      buttonLink: webserver.host,
-    },
-  });
+  if (sendEmail) {
+    await mailService.send({
+      template: 'welcomeEmail',
+      to: user.email,
+      templateData: {
+        userName: user.displayName,
+        buttonLink: webserver.host,
+      },
+    });
+  }
 
   const CRMService = new ClintCRMService();
 
   await CRMService.addContact({
-    name: userToActivate.name,
-    email: userToActivate.email,
-    phone: userToActivate.phoneNumber,
+    name: user.name,
+    email: user.email,
+    phone: user.phoneNumber,
     origin: 'app',
   });
 
   await sendMessageToYogaComKakaTelegramGroup(
     `
 🎉🎉🎉
-o usuário ${userToActivate.displayName} acabou de ativar sua conta!
+o usuário ${user.displayName} acabou de ativar sua conta!
 
-    email: ${userToActivate.email}
-    telefone: ${userToActivate.phoneNumber}
+    email: ${user.email}
+    telefone: ${user.phoneNumber}
 `
   );
-
-  return tokenObject;
 }
-
-// async function activateUserByUserId({ userId }: ActivateUserByUserIdParams) {
-//   const userToActivate = await user.findOneById({ userId });
-
-//   await prisma.user.update({
-//     where: {
-//       id: userToActivate.id,
-//     },
-//     data: {
-//       isUserActivated: true,
-//     },
-//   });
-// }
 
 async function findOneTokenById(tokenId: string) {
   const activationToken = await prisma.activateAccountToken.findUnique({
@@ -197,4 +223,5 @@ export default Object.freeze({
   createAndSendActivationEmail,
   getActivationApiEndpoint,
   activateUserUsingTokenId,
+  activateUserByUserId,
 });

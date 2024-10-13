@@ -94,8 +94,8 @@ export default function ActiveUser() {
     if (hasBeenActivated) {
       setActivationDetails({
         message: 'sua conta já foi ativada!',
-        description: 'você já ganhou 1 aula ao vivo gratuita :)',
-        buttonLabel: 'ver horários disponíveis',
+        description: 'você já pode explorar a plataforma :)',
+        buttonLabel: 'ir para a plataforma',
         isSuccess: true,
         isLoading: false,
       });
@@ -112,8 +112,8 @@ export default function ActiveUser() {
     <div className="flex min-h-full flex-col justify-center bg-white py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
-          src="/logo-yoga-com-kaka-roxo.png"
-          alt="Logo grupo r3"
+          src="/images/yoka-club/yoka-horizontal-roxo.svg"
+          alt="Logo Yoka Club"
           width={300}
           height={100}
           className="mx-auto"
@@ -130,7 +130,7 @@ export default function ActiveUser() {
           <p className="mt-2 text-center text-sm text-gray-600">
             {description}
           </p>
-          {isSuccess && (
+          {/* {isSuccess && (
             <>
               <p className="mt-0.5 text-center text-sm text-gray-600">
                 assista o vídeo para entender como agendar uma aula:
@@ -145,15 +145,15 @@ export default function ActiveUser() {
                 ></iframe>
               </div>
             </>
-          )}
+          )} */}
           {!isLoading && (
-            <button
+            <a
               type="button"
               className="mt-4 flex w-full justify-center rounded-md border border-transparent bg-brand-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-purple-700 focus:outline-none focus:ring-2 focus:ring-brand-purple-500 focus:ring-offset-2"
-              onClick={() => router.push(isSuccess ? '/' : '/login')}
+              href={isSuccess ? '/' : '/login'}
             >
               {buttonLabel}
-            </button>
+            </a>
           )}
         </div>
       </div>

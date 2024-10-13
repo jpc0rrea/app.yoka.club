@@ -80,7 +80,7 @@ export default function DailyRecommendation({
                 />
               }
               title="você não tem permissão para ver essa aula :("
-              description="somente assinantes tem acesso as aulas exclusivas"
+              description="somente assinantes tem acesso às aulas exclusivas"
             />
           )}
         </div>
@@ -98,7 +98,7 @@ export default function DailyRecommendation({
               </h3>
             }
             title="você não tem permissão para ver essa aula :("
-            description="somente assinantes tem acesso as aulas exclusivas"
+            description="somente assinantes tem acesso às aulas exclusivas"
           />
         )}
         <p className="text-xs text-muted-foreground">

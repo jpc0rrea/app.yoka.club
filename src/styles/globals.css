@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 input {
-  @apply ring-0 transition-all duration-300 ease-in-out focus-visible:outline-1 focus-visible:outline-brand-purple-800 focus-visible:ring-0;
+  @apply focus-visible:outline-brand-purple-800 ring-0 transition-all duration-300 ease-in-out focus-visible:outline-1 focus-visible:ring-0;
 }
 
 button {
-  @apply transition-all duration-300 ease-in-out focus-visible:outline-1 focus-visible:outline-brand-purple-800 focus-visible:ring-0;
+  @apply focus-visible:outline-brand-purple-800 transition-all duration-300 ease-in-out focus-visible:outline-1 focus-visible:ring-0;
 }
 
 span {
@@ -101,5 +101,15 @@ input::-webkit-inner-spin-button {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Poppins', serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: 'Fraunces', sans-serif;
+    font-weight: 700;
   }
 }

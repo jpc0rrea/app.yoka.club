@@ -1,6 +1,5 @@
 import Header from '@components/Header';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureWithRole } from '@server/middlewares/withSSREnsureWithRole';
 import CreateEventModal from '@components/Modals/CreateEventModal';
@@ -76,10 +75,6 @@ const Event: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">

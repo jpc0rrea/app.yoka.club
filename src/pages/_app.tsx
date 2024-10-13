@@ -15,6 +15,7 @@ import { SidebarProvider } from '@contexts/SidebarContext';
 import { queryClient } from '@lib/queryClient';
 import { UserProvider } from '@hooks/useUser';
 import theme from '@styles/mantine/theme';
+import Head from 'next/head';
 
 dayjs.extend(customParseFormat);
 
@@ -35,27 +36,32 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   }
 
   return (
-    <PostHogProvider client={posthog}>
-      <MantineProvider theme={theme}>
-        <UserProvider>
-          <QueryClientProvider client={queryClient}>
-            <SidebarProvider>
-              <Toaster
-                toastOptions={{
-                  duration: 4000,
-                  position: 'top-right',
-                  style: {
-                    padding: '0px',
-                  },
-                }}
-              />
+    <>
+      <Head>
+        <title>yoka club</title>
+      </Head>
+      <PostHogProvider client={posthog}>
+        <MantineProvider theme={theme}>
+          <UserProvider>
+            <QueryClientProvider client={queryClient}>
+              <SidebarProvider>
+                <Toaster
+                  toastOptions={{
+                    duration: 4000,
+                    position: 'top-right',
+                    style: {
+                      padding: '0px',
+                    },
+                  }}
+                />
 
-              <Component {...pageProps} />
-            </SidebarProvider>
-          </QueryClientProvider>
-        </UserProvider>
-      </MantineProvider>
-    </PostHogProvider>
+                <Component {...pageProps} />
+              </SidebarProvider>
+            </QueryClientProvider>
+          </UserProvider>
+        </MantineProvider>
+      </PostHogProvider>
+    </>
   );
 };
 

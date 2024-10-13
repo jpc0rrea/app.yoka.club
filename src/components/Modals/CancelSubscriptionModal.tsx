@@ -8,6 +8,7 @@ import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
 import { queryClient } from '@lib/queryClient';
+import { Button } from '@components/ui/button';
 
 interface CancelSubscriptionModalProps {
   expirationDate: Date;
@@ -52,14 +53,15 @@ export default function CancelSubscriptionModal({
 
   return (
     <>
-      <button
+      <Button
+        variant={`secondary`}
         onClick={() => {
           setOpen(true);
         }}
         className="rounded bg-red-50 px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100"
       >
         cancelar plano
-      </button>
+      </Button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -118,16 +120,11 @@ export default function CancelSubscriptionModal({
                           .
                         </p>
                       </div>
-                      <div className="mt-1">
-                        <p className="text-sm text-gray-500">
-                          não se preocupe, você ainda poderá usar seus check-ins
-                          restantes após o plano expirar :)
-                        </p>
-                      </div>
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                    <button
+                    <Button
+                      variant={`secondary`}
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                       onClick={handleCancelSubscription}
@@ -137,15 +134,16 @@ export default function CancelSubscriptionModal({
                       ) : (
                         'sim, cancelar o meu plano'
                       )}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant={`secondary`}
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => setOpen(false)}
                       ref={cancelButtonRef}
                     >
                       não
-                    </button>
+                    </Button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

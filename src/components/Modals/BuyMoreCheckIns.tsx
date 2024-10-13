@@ -17,6 +17,7 @@ import { api } from '@lib/api';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 interface BuyMoreCheckInsProps {
   title?: string;
@@ -80,14 +81,14 @@ export default function BuyMoreCheckIns({
           {ctaText}
         </CTAButton>
       ) : (
-        <button
+        <Button
           onClick={() => {
             setOpen(true);
           }}
-          className="rounded bg-brand-purple-900 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-purple-800"
+          className="rounded px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm"
         >
           {ctaText}
-        </button>
+        </Button>
       )}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -128,7 +129,8 @@ export default function BuyMoreCheckIns({
                       />
                     </div> */}
                     <div className="absolute right-0 top-0  pt-2">
-                      <button
+                      <Button
+                        variant={`secondary`}
                         type="button"
                         className="flex h-10 w-10 items-center justify-center rounded-full"
                         onClick={() => setOpen(false)}
@@ -138,7 +140,7 @@ export default function BuyMoreCheckIns({
                           className="h-6 w-6 text-gray-500"
                           aria-hidden="true"
                         />
-                      </button>
+                      </Button>
                     </div>
                     <div className="mt text-center sm:mt-5">
                       <Dialog.Title
@@ -153,7 +155,8 @@ export default function BuyMoreCheckIns({
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">{description}</p>
                         <div className="mt-1 flex items-center justify-center">
-                          <button
+                          <Button
+                            variant={`secondary`}
                             type="button"
                             className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
                             onClick={() => {
@@ -166,11 +169,12 @@ export default function BuyMoreCheckIns({
                               className="h-5 w-5 text-gray-400"
                               aria-hidden="true"
                             />
-                          </button>
+                          </Button>
                           <p className="mx-2 text-xl font-bold text-purple-800">
                             {checkInsQuantity}
                           </p>
-                          <button
+                          <Button
+                            variant={`secondary`}
                             type="button"
                             className="inline-flex items-center justify-center rounded-full border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
                             onClick={() => {
@@ -181,7 +185,7 @@ export default function BuyMoreCheckIns({
                               className="h-5 w-5 text-gray-400"
                               aria-hidden="true"
                             />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                       <div className="mt-3 flex flex-col items-center ">
@@ -205,7 +209,8 @@ export default function BuyMoreCheckIns({
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-6">
-                    <button
+                    <Button
+                      variant={`secondary`}
                       type="button"
                       className="inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-2"
                       onClick={handleCreatePaymentWithPix}
@@ -215,15 +220,16 @@ export default function BuyMoreCheckIns({
                       ) : (
                         `comprar ${checkInsQuantity} check-ins`
                       )}
-                    </button>
-                    {/* <button
+                    </Button>
+                    {/* <Button
+                    variant={`secondary`}
                       type="button"
                       className="mt-3 inline-flex w-full items-center justify-center rounded-md bg-purple-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 sm:col-start-1 sm:mt-0"
                       onClick={() => setOpen(false)}
                       ref={cancelButtonRef}
                     >
                       pagar com cartão de crédito
-                    </button> */}
+                    </Button> */}
                   </div>
                   <div className="mt-4 text-center text-sm">
                     <span className="text-gray-600">desconto progressivo</span>

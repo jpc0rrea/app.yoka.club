@@ -69,21 +69,14 @@ const PasswordInputBase: ForwardRefRenderFunction<
         <button
           type="button"
           className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          onClick={() => {
+            setShowPassword(!showPassword);
+          }}
         >
           {showPassword ? (
-            <EyeSlashIcon
-              className="-ml-0.5 h-5 w-5 text-gray-400"
-              onClick={() => {
-                setShowPassword(false);
-              }}
-            />
+            <EyeSlashIcon className="-ml-0.5 h-5 w-5 text-gray-400" />
           ) : (
-            <EyeIcon
-              className="-ml-0.5 h-5 w-5 text-gray-400"
-              onClick={() => {
-                setShowPassword(true);
-              }}
-            />
+            <EyeIcon className="-ml-0.5 h-5 w-5 text-gray-400" />
           )}
         </button>
         {errorMessage && (

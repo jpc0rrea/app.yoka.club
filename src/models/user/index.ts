@@ -33,6 +33,7 @@ import {
 } from '@lib/utils';
 import { ClintCRMService } from '@lib/crm/ClintCRMService';
 import { BILLING_PERIODS, PLAN_CODES } from '@lib/stripe/plans';
+import systemLogs from '@models/system-logs';
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -53,7 +54,22 @@ async function create(userData: CreateUserData) {
       phoneNumber,
       username,
       displayName,
+      checkInsQuantity: 999999,
+      trialCheckInsQuantity: 0,
+      freeCheckInsQuantity: 999999,
+      paidCheckInsQuantity: 0,
     },
+  });
+
+  // TODO: criar o system log ou metadata para o log de criação de usuário
+  await systemLogs.createSystemLog({
+    log: 'USER_CREATED',
+    metadata: {
+      userId: user.id,
+      planCode: userData.planCode,
+      billingPeriod: userData.billingPeriod,
+    },
+    prismaInstance: prisma,
   });
 
   return user;
@@ -221,7 +237,8 @@ async function findOneByEmail({ email }: FindOneByEmailParams) {
 }
 
 function validateRegisterUserRequest(req: RegisterRequest) {
-  const { email, password, name, phoneNumber } = req.body;
+  const { email, password, name, phoneNumber, planCode, billingPeriod } =
+    req.body;
 
   if (!email || !password || !name || !phoneNumber) {
     throw new ValidationError({
@@ -286,11 +303,47 @@ function validateRegisterUserRequest(req: RegisterRequest) {
     });
   }
 
+  if (!planCode) {
+    throw new ValidationError({
+      message: `O campo "planCode" é obrigatório.`,
+    });
+  }
+
+  if (!PLAN_CODES.includes(planCode)) {
+    throw new ValidationError({
+      message: `O campo "planCode" deve ser "free", "flow" ou "zen".`,
+    });
+  }
+
+  if (planCode === 'flow') {
+    throw new ValidationError({
+      message: `O plano "flow" ainda não está disponível.`,
+      stack: new Error().stack,
+      errorLocationCode:
+        'MODEL:USER:VALIDATE_REGISTER_USER_REQUEST:PLAN_NOT_AVAILABLE',
+      key: 'planCode',
+    });
+  }
+
+  if (!billingPeriod) {
+    throw new ValidationError({
+      message: `O campo "billingPeriod" é obrigatório.`,
+    });
+  }
+
+  if (!BILLING_PERIODS.includes(billingPeriod)) {
+    throw new ValidationError({
+      message: `O campo "billingPeriod" deve ser "monthly" ou "quarterly".`,
+    });
+  }
+
   return {
     email: email.toLowerCase().trim(),
     password: password.trim(),
     name: name.trim(),
     phoneNumber: phoneNumber.trim(),
+    planCode: planCode.trim(),
+    billingPeriod: billingPeriod.trim(),
   } as CreateUserData;
 }
 
@@ -538,6 +591,8 @@ async function updateUserSubscription({
               }`,
       },
     });
+
+    // ativar a conta do usuário
   }
 
   const updatedUser = prismaInstance.user.update({
@@ -631,8 +686,6 @@ async function updateProfile({
       username,
     },
   });
-
-  console.log('updatedUser', updatedUser);
 
   await eventLogs.createEventLog({
     userId,

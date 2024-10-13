@@ -1,6 +1,5 @@
 import Header from '@components/Header';
 import { type NextPage } from 'next';
-import Head from 'next/head';
 
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
@@ -10,10 +9,6 @@ import RecommendationsOfTheWeek from '@components/Recommendations/Recommendation
 const RecordedClassesPage: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>plataforma yoga com kaká</title>
-      </Head>
-
       <div className="bg-white">
         <Sidebar />
         <div className="flex flex-1 flex-col bg-white md:pl-64">

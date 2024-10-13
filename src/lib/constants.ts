@@ -11,3 +11,4 @@ export const MINUTES_TO_CANCEL_CHECK_IN = 10;
 export const MINUTES_TO_CHECK_IN = 10;
 export const TOLERANCE_MINUTES_TO_ENTER_EVENT = 30;
 export const LIMIT_TIME_TO_WATCH_SESSION_IN_HOURS = 6;
+export const DEFAULT_HEADER_TITLE = `yoka club`;

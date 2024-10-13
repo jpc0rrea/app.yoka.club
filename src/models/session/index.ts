@@ -113,7 +113,7 @@ async function findOneValidFromRequest({ req }: GetSessionParams) {
 
   if (!sessionToken) {
     throw new UnauthorizedError({
-      message: `usuário não possui sessão ativa.`,
+      message: `nenhuma sessão foi encontrada nos cookies.`,
       action: `verifique se este usuário está logado.`,
     });
   }
@@ -122,7 +122,7 @@ async function findOneValidFromRequest({ req }: GetSessionParams) {
 
   if (!sessionObject) {
     throw new UnauthorizedError({
-      message: `usuário não possui sessão ativa.`,
+      message: `não foi possível encontrar uma sessão válida com o token dos cookies.`,
       action: `verifique se este usuário está logado.`,
     });
   }

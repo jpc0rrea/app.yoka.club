@@ -1,9 +1,9 @@
 import { User } from '@prisma/client';
-import { CircleMinus, CirclePlus, Ellipsis, RotateCcw } from 'lucide-react';
+import { Ellipsis, RotateCcw } from 'lucide-react';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
-import AddMoreCheckInsToUser from '@components/Modals/AddMoreCheckInsToUser';
-import RemoveCheckInsFromUser from '@components/Modals/RemoveCheckInsFromUser';
+// import AddMoreCheckInsToUser from '@components/Modals/AddMoreCheckInsToUser';
+// import RemoveCheckInsFromUser from '@components/Modals/RemoveCheckInsFromUser';
 import { Button } from '@components/ui/button';
 import {
   DropdownMenu,
@@ -21,10 +21,10 @@ interface UserRowProps {
 export default function UserRow({ user }: UserRowProps) {
   const [isResetUserPasswordModalOpen, setIsResetUserPasswordModalOpen] =
     useState(false);
-  const [isRemovingCheckInsModalOpen, setIsRemovingCheckInsModalOpen] =
-    useState(false);
-  const [isAddingCheckInsModalOpen, setIsAddingCheckInsModalOpen] =
-    useState(false);
+  // const [isRemovingCheckInsModalOpen, setIsRemovingCheckInsModalOpen] =
+  //   useState(false);
+  // const [isAddingCheckInsModalOpen, setIsAddingCheckInsModalOpen] =
+  //   useState(false);
 
   return (
     <tr key={user.email}>
@@ -33,7 +33,7 @@ export default function UserRow({ user }: UserRowProps) {
         setOpen={setIsResetUserPasswordModalOpen}
         user={user}
       />
-      <RemoveCheckInsFromUser
+      {/* <RemoveCheckInsFromUser
         userId={user.id}
         open={isRemovingCheckInsModalOpen}
         setOpen={setIsRemovingCheckInsModalOpen}
@@ -42,7 +42,7 @@ export default function UserRow({ user }: UserRowProps) {
         userId={user.id}
         open={isAddingCheckInsModalOpen}
         setOpen={setIsAddingCheckInsModalOpen}
-      />
+      /> */}
       <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
         <div className="flex items-center">
           <div className="h-11 w-11 flex-shrink-0">
@@ -80,9 +80,9 @@ export default function UserRow({ user }: UserRowProps) {
                         Active
                       </span>
                     </td> */}
-      <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+      {/* <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
         {user.checkInsQuantity}
-      </td>
+      </td> */}
       <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
         {formatPhoneNumberIntl(user.phoneNumber)}
       </td>
@@ -106,7 +106,7 @@ export default function UserRow({ user }: UserRowProps) {
               <RotateCcw className="mr-2 h-4 w-4" />
               redefinir senha
             </DropdownMenuItem>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => setIsAddingCheckInsModalOpen(true)}
               className="w-[180px]"
             >
@@ -119,7 +119,7 @@ export default function UserRow({ user }: UserRowProps) {
             >
               <CircleMinus className="mr-2 h-4 w-4" />
               remover check-ins
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       </td>

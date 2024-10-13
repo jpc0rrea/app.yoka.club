@@ -1,43 +1,33 @@
-import 'dayjs/locale/pt-br';
-import { Fragment, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-
-import convertErrorMessage from '@lib/error/convertErrorMessage';
-import { errorToast } from '@components/Toast/ErrorToast';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
-import { queryClient } from '@lib/queryClient';
-import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
+import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { errorToast } from '@components/Toast/ErrorToast';
 import { Loader2 } from 'lucide-react';
-import { EventFromAPI } from '@models/events/types';
+import { queryClient } from '@lib/queryClient';
 import { Button } from '@components/ui/button';
 
-interface DeleteEventModalProps {
-  event: EventFromAPI;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
+export default function ReactivateSubscriptionModal() {
+  const [open, setOpen] = useState(false);
+  const [isReactivating, setIsReactivating] = useState(false);
 
-export default function DeleteEventModal({
-  event,
-  open,
-  setOpen,
-}: DeleteEventModalProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const handleDeleteEvent = async () => {
+  const cancelButtonRef = useRef(null);
+
+  const handleReactivateSubscription = async () => {
+    setIsReactivating(true);
+
     try {
-      setIsDeleting(true);
-      await api.delete(`events/delete?id=${event.id}`);
-
-      queryClient.invalidateQueries({
-        queryKey: ['events'],
-      });
+      await api.post('/user/reactivate-subscription');
 
       successToast({
-        message: 'evento deletado com sucesso',
+        message: 'Plano reativado com sucesso',
+        description:
+          'Seu plano foi reativado e você terá acesso imediato aos conteúdos exclusivos.',
       });
 
-      setIsDeleting(false);
+      queryClient.invalidateQueries(['userPlan']);
       setOpen(false);
     } catch (err) {
       const { message, description } = convertErrorMessage({
@@ -48,19 +38,24 @@ export default function DeleteEventModal({
         message,
         description,
       });
-      setIsDeleting(false);
     }
+
+    setIsReactivating(false);
   };
 
   return (
     <>
+      <Button
+        variant="default"
+        onClick={() => {
+          setOpen(true);
+        }}
+        className="rounded px-2.5 py-1.5 text-sm font-semibold shadow-sm"
+      >
+        Reativar plano
+      </Button>
       <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-40"
-          // initialFocus={cancelButtonRef}
-          onClose={setOpen}
-        >
+        <Dialog as="div" className="relative z-40" onClose={setOpen}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -86,9 +81,9 @@ export default function DeleteEventModal({
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                   <div className="sm:flex sm:items-start">
-                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <ExclamationTriangleIcon
-                        className="h-6 w-6 text-rose-500"
+                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <CheckCircleIcon
+                        className="h-6 w-6 text-green-600"
                         aria-hidden="true"
                       />
                     </div>
@@ -97,40 +92,38 @@ export default function DeleteEventModal({
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        deletar evento
+                        Reativar plano
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          tem certeza que quer deletar o evento{' '}
-                          <strong>{event.title}</strong>? essa ação é
-                          irreversível
+                          Você tem certeza que deseja reativar o seu plano? Você
+                          terá acesso imediato aos conteúdos exclusivos e sua
+                          assinatura será renovada.
                         </p>
                       </div>
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                     <Button
-                      variant={`secondary`}
+                      variant="default"
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                      onClick={handleDeleteEvent}
+                      className="inline-flex w-full justify-center rounded-md  px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto"
+                      onClick={handleReactivateSubscription}
                     >
-                      {isDeleting ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          deletando
-                        </>
+                      {isReactivating ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        'sim, deletar'
+                        'Sim, reativar meu plano'
                       )}
                     </Button>
                     <Button
-                      variant={`secondary`}
+                      variant="secondary"
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => setOpen(false)}
+                      ref={cancelButtonRef}
                     >
-                      cancelar
+                      Não
                     </Button>
                   </div>
                 </Dialog.Panel>
