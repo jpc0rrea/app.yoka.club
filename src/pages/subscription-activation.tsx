@@ -55,7 +55,7 @@ export default function SubscriptionActivation() {
     } catch (error) {
       if (retries < MAX_RETRIES - 1) {
         await sleep(RETRY_DELAY);
-        return fetchPlanWithRetry(retries + 1);
+        return await fetchPlanWithRetry(retries + 1);
       }
       return null;
     }
