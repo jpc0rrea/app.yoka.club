@@ -243,7 +243,7 @@ export default function EventCard({ event }: EventCardProps) {
                 />
               )
             ) : (
-              <Button disabled className="mt-2 w-full" variant="default">
+              <Button disabled className="mt-2 w-full">
                 link ainda não disponível
               </Button>
             )
@@ -268,7 +268,7 @@ export default function EventCard({ event }: EventCardProps) {
                 </Link>
               </Button>
             ) : (
-              <Button disabled className="mt-2 w-full" variant="default">
+              <Button disabled className="mt-2 w-full">
                 link ainda não disponível
               </Button>
             )

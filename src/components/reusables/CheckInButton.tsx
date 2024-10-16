@@ -118,7 +118,12 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
   function linkButton(url: string, text: string) {
     return (
       <Button asChild>
-        <a href={url} target="_blank" rel="noopener noreferrer">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-max"
+        >
           {text}
         </a>
       </Button>
@@ -127,7 +132,7 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
 
   function disabledButton(text: string) {
     return (
-      <Button variant="secondary" disabled className={buttonStyle}>
+      <Button disabled className={buttonStyle}>
         {text}
       </Button>
     );
@@ -137,7 +142,7 @@ const CheckInButton: React.FC<CheckInButtonProps> = ({ event }) => {
     return (
       <Button onClick={handleCheckIn} className={buttonStyle}>
         {isCheckingIn ? (
-          <Loader2 className="hButton4 w-4 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           'agendar'
         )}
@@ -150,7 +155,7 @@ export default CheckInButton;
 
 // Tailwind utility class for button styling
 const buttonStyle =
-  'flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none';
+  'flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none disabled:cursor-not-allowed';
 
 // const buyMoreProps = {
 //   ctaText: 'agendar',

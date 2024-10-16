@@ -80,8 +80,8 @@ export default function Calendar() {
   }
 
   return (
-    <div className="lg:grid lg:grid-cols-2 lg:divide-x lg:divide-gray-200">
-      <div className="lg:pr-14">
+    <div className="xl:grid xl:grid-cols-2 xl:divide-x xl:divide-gray-200">
+      <div className="xl:pr-14">
         <div className="flex items-center">
           <h2 className="flex-auto font-semibold text-gray-900">
             {format(firstDayCurrentMonth, 'MMMM yyyy', { locale: ptBR })}
@@ -172,7 +172,7 @@ export default function Calendar() {
           ))}
         </div>
       </div>
-      <section className="mt-12 lg:mt-0 lg:pl-8">
+      <section className="mt-12 xl:mt-0 xl:pl-8">
         <h2 className="font-semibold text-gray-900">
           eventos do dia{' '}
           <time dateTime={format(selectedDay, 'dd-MM-yyyy')}>

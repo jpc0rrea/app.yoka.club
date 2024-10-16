@@ -96,7 +96,7 @@ export default function RecordedClass({ event }: RecordedClassProps) {
             <span className="aspect-video w-full rounded-md bg-muted" />
           </div>
           <div className="grid gap-2 py-2">
-            <h1 className="line-clamp-2 text-xl font-semibold text-brand-yoka-purple-700">
+            <h1 className="line-clamp-2 font-poppins text-xl font-semibold text-brand-yoka-purple-700">
               {event.title}
             </h1>
             {/* <p className="text-sm text-gray-500 dark:text-gray-400">
