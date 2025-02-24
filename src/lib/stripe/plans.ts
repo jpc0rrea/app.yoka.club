@@ -87,8 +87,8 @@ export const PLANS: Plan[] = [
   {
     id: 'MONTHLY',
     stripePriceId: webserver.isProduction
-      ? 'price_1Q9Zd3BSNDpjZ120M6OPVypV'
-      : 'price_1Q9DZ5BSNDpjZ120mh4BTfzi',
+      ? 'price_1QvoI0Ak5STM82fxv4TTnzfP'
+      : 'price_1QvpEgAk5STM82fx1tnIAcm7',
     billingPeriod: 'monthly',
     checkInsQuantity: 0,
     fullPricePerBillingPeriod: 89.9,
@@ -100,8 +100,8 @@ export const PLANS: Plan[] = [
   {
     id: 'QUARTERLY',
     stripePriceId: webserver.isProduction
-      ? 'price_1Q9Zd3BSNDpjZ120PJo3Opnc'
-      : 'price_1Q9DZ5BSNDpjZ120pr6NtaUv',
+      ? 'price_1QvoI0Ak5STM82fxkvjafAmG'
+      : 'price_1QvpEgAk5STM82fxAQsD5AFn',
     billingPeriod: 'quarterly',
     checkInsQuantity: 0,
     fullPricePerBillingPeriod: 179.7,
