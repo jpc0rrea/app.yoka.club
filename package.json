@@ -16,8 +16,9 @@
     "migration:seed": "ts-node -r dotenv-expand/config -r tsconfig-paths/register --project tsconfig.json src/infra/scripts/seed-database.ts"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@formkit/auto-animate": "^1.0.0-beta.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/server": "^11.11.0",
+    "@formkit/auto-animate": "^0.8.2",
     "@headlessui/react": "^1.7.17",
     "@headlessui/tailwindcss": "^0.2.0",
     "@heroicons/react": "^2.0.13",

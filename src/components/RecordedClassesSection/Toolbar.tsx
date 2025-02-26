@@ -93,10 +93,10 @@ export default function Toolbar({
           className="mb-2 h-8 w-[250px] xl:mb-0 "
           error={undefined}
         />
-        <div className="space-y-2 lg:space-y-0">
+        <div className="space-y-1 lg:space-y-0">
           <Toggle
             aria-label="Toggle favorites"
-            className="mr-2 h-8 border border-dashed"
+            className="mr-2 h-6 md:h-8 border border-dashed"
             pressed={favoritesFilter}
             size="sm"
             onPressedChange={(pressed: boolean) => {
@@ -124,7 +124,7 @@ export default function Toolbar({
             }}
           >
             <Heart
-              className={`mr-2 h-4 w-4 ${
+              className={`mr-2 h-3 md:h-4 w-3 md:w-4 ${
                 favoritesFilter ? 'fill-brand-purple-800' : 'fill-transparent'
               }`}
             />
@@ -132,7 +132,7 @@ export default function Toolbar({
           </Toggle>
           <Toggle
             aria-label="Toggle live"
-            className="mr-2 h-8 min-w-max border border-dashed"
+            className="mr-2 h-6 md:h-8 min-w-max border border-dashed"
             pressed={liveFilter}
             size="sm"
             onPressedChange={(pressed: boolean) => {
@@ -163,7 +163,7 @@ export default function Toolbar({
             }}
           >
             <Video
-              className={`mr-2 h-4 w-4 ${
+              className={`mr-2 h-3 md:h-4 w-3 md:w-4 ${
                 liveFilter ? 'fill-brand-purple-800' : 'fill-transparent'
               }`}
             />
@@ -172,7 +172,7 @@ export default function Toolbar({
           {liveFilter && (
             <Toggle
               aria-label="Toggle checkd in"
-              className="ml-2 h-8 min-w-max border border-dashed"
+              className=" h-6 md:h-8 min-w-max border border-dashed"
               pressed={hasCheckedInFilter}
               size="sm"
               onPressedChange={(pressed: boolean) => {
@@ -200,7 +200,7 @@ export default function Toolbar({
               }}
             >
               <Check
-                className={`mr-2 h-4 w-4 ${
+                className={`mr-2 h-3 md:h-4 w-3 md:w-4 ${
                   hasCheckedInFilter ? '' : 'fill-transparent'
                 }`}
               />
