@@ -557,8 +557,7 @@ async function updateUserSubscription({
       : 12
   );
 
-  const isSubscribing =
-    !userObject.subscriptionId || userObject.subscriptionId !== subscriptionId;
+  const isSubscribing = !userObject.subscriptionId;
 
   if (isSubscribing) {
     const mailService = new SendGridMailService();
