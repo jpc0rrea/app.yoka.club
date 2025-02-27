@@ -5,6 +5,7 @@ import { NotFoundError } from '@errors/index';
 import user from '@models/user';
 import { UserPlan } from '@hooks/useUserPlan';
 import { isAfter } from 'date-fns';
+import { PlanId } from '@lib/stripe/plans';
 // import { PlanId } from '@lib/stripe/plans';
 
 async function create({
@@ -105,26 +106,31 @@ async function getUserPlan({ userId }: GetUserPlanParams) {
     return plan;
   }
 
-  // const subscriptionDetails = await stripeUtils.getSubscriptionDetails({
-  //   stripeCustomerId: userObject.stripeId,
-  //   stripeSubscriptionId: userObject.subscriptionId,
-  // });
+  const subscriptionDetails = userObject.subscriptionId.includes('_sched')
+    ? await stripeUtils.getScheduledSubscriptionDetails({
+        stripeCustomerId: userObject.stripeId,
+        stripeScheduledSubscriptionId: userObject.subscriptionId,
+      })
+    : await stripeUtils.getSubscriptionDetails({
+        stripeCustomerId: userObject.stripeId,
+        stripeSubscriptionId: userObject.subscriptionId,
+      });
 
   plan.expirationDate = new Date(userObject.expirationDate);
   plan.type = 'premium';
-  // plan.nextBillingValue = subscriptionDetails.nextBillingValue;
-  plan.nextBillingValue = 'R$ 89,90';
-  // plan.nextBillingDate = new Date(subscriptionDetails.nextBillingTime);
-  plan.nextBillingDate = new Date('2025-03-24T14:00:00.000Z');
-  // plan.id = subscriptionDetails.plan.id as PlanId;
-  plan.id = 'MONTHLY';
+  plan.nextBillingValue = subscriptionDetails.nextBillingValue;
+  // plan.nextBillingValue = 'R$ 89,90';
+  plan.nextBillingDate = new Date(subscriptionDetails.nextBillingTime);
+  // plan.nextBillingDate = new Date('2025-03-24T14:00:00.000Z');
+  plan.id = subscriptionDetails.plan.id as PlanId;
+  // plan.id = 'MONTHLY';
   plan.name = 'plano zen';
   plan.code = 'zen';
-  // plan.checkinsQuantity = subscriptionDetails.plan.checkInsQuantity;
-  // plan.price = subscriptionDetails.plan.fullPricePerBillingPeriod;
-  plan.price = 89.9;
-  // plan.cancelAtPeriodEnd = subscriptionDetails.cancelAtPeriodEnd;
-  plan.cancelAtPeriodEnd = false;
+  plan.checkinsQuantity = subscriptionDetails.plan.checkInsQuantity;
+  plan.price = subscriptionDetails.plan.fullPricePerBillingPeriod;
+  // plan.price = 89.9;
+  plan.cancelAtPeriodEnd = subscriptionDetails.cancelAtPeriodEnd;
+  // plan.cancelAtPeriodEnd = false;
   return plan;
 }
 

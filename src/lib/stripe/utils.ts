@@ -285,6 +285,129 @@ async function getSubscriptionDetails({
   };
 }
 
+interface GetScheduledSubscriptionDetailsParams {
+  stripeScheduledSubscriptionId: string;
+  stripeCustomerId: string;
+}
+
+async function getScheduledSubscriptionDetails({
+  stripeScheduledSubscriptionId,
+  stripeCustomerId,
+}: GetScheduledSubscriptionDetailsParams) {
+  const scheduledSubscription = await stripe.subscriptionSchedules.retrieve(
+    stripeScheduledSubscriptionId
+  );
+
+  if (!scheduledSubscription) {
+    throw new NotFoundError({
+      message: `a assinatura agendada não foi encontrada.`,
+      action: `verifique se a assinatura agendada existe e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SCHEDULED_SUBSCRIPTION_DETAILS:MISSING_SCHEDULED_SUBSCRIPTION',
+    });
+  }
+
+  if (!scheduledSubscription.phases || !scheduledSubscription.phases.length) {
+    throw new NotFoundError({
+      message: `a assinatura agendada não possui fases.`,
+      action: `verifique se a assinatura agendada possui fases e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SCHEDULED_SUBSCRIPTION_DETAILS:MISSING_SCHEDULED_SUBSCRIPTION_PHASES',
+    });
+  }
+
+  const currentPhase = scheduledSubscription.phases[0];
+
+  if (!currentPhase) {
+    throw new NotFoundError({
+      message: `a fase atual da assinatura agendada não foi encontrada.`,
+      action: `verifique se a fase atual da assinatura agendada existe e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SCHEDULED_SUBSCRIPTION_DETAILS:MISSING_SCHEDULED_SUBSCRIPTION_PHASE',
+    });
+  }
+
+  if (!currentPhase.end_date) {
+    throw new NotFoundError({
+      message: `a fase atual da assinatura agendada não possui uma data de término.`,
+      action: `verifique se a fase atual da assinatura agendada possui uma data de término e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SCHEDULED_SUBSCRIPTION_DETAILS:MISSING_SCHEDULED_SUBSCRIPTION_PHASE_END_DATE',
+    });
+  }
+
+  if (
+    !currentPhase.items ||
+    !currentPhase.items.length ||
+    !currentPhase.items[0] ||
+    !currentPhase.items[0].price
+  ) {
+    throw new NotFoundError({
+      message: `a fase atual da assinatura agendada não possui itens.`,
+      action: `verifique se a fase atual da assinatura agendada possui itens e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SCHEDULED_SUBSCRIPTION_DETAILS:MISSING_SCHEDULED_SUBSCRIPTION_PHASE_ITEMS',
+    });
+  }
+
+  const price = await stripe.prices.retrieve(
+    currentPhase.items[0].price.toString()
+  );
+
+  const plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+
+  if (!plan) {
+    throw new NotFoundError({
+      message: `o plano não foi encontrado.`,
+      action: `verifique se o plano existe e tente novamente.`,
+      errorLocationCode:
+        'MODEL:STRIPE:UTILS:GET_SCHEDULED_SUBSCRIPTION_DETAILS:MISSING_PLAN',
+    });
+  }
+
+  const nextBillingTime = new Date(
+    currentPhase.start_date * 1000
+  ).toISOString();
+
+  console.log('TODELETE 0');
+
+  if (scheduledSubscription.end_behavior === 'cancel') {
+    return {
+      plan,
+      nextBillingTime,
+      nextBillingValue: undefined,
+      cancelAtPeriodEnd: true,
+    };
+  }
+
+  let nextInvoice: Stripe.Response<Stripe.UpcomingInvoice>;
+
+  try {
+    nextInvoice = await stripe.invoices.retrieveUpcoming({
+      customer: stripeCustomerId,
+    });
+  } catch (error) {
+    console.log(error);
+    return {
+      plan,
+      nextBillingTime,
+      nextBillingValue: undefined,
+      cancelAtPeriodEnd: true,
+    };
+  }
+
+  const nextBillingValue = convertNumberToReal(
+    (nextInvoice.amount_due || nextInvoice.total) / 100
+  );
+
+  return {
+    plan,
+    nextBillingTime,
+    nextBillingValue,
+    cancelAtPeriodEnd: false,
+  };
+}
+
 export default Object.freeze({
   getInvoicePrice,
   getInvoiceSubscription,
@@ -292,4 +415,5 @@ export default Object.freeze({
   getInvoiceBalanceTransaction,
   getPriceByPriceId,
   getSubscriptionDetails,
+  getScheduledSubscriptionDetails,
 });

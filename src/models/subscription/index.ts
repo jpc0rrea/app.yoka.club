@@ -72,9 +72,13 @@ async function cancelSubscription({ userId }: CancelSubscriptionParams) {
     });
   }
 
-  await stripe.subscriptions.update(userObject.subscriptionId, {
-    cancel_at_period_end: true,
-  });
+  if (userObject.subscriptionId.includes('_sched')) {
+    await stripe.subscriptionSchedules.cancel(userObject.subscriptionId);
+  } else {
+    await stripe.subscriptions.update(userObject.subscriptionId, {
+      cancel_at_period_end: true,
+    });
+  }
 
   await eventLogs.createEventLog({
     userId,
