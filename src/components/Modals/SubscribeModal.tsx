@@ -238,6 +238,7 @@ function Plan({
         />
       </div>
       <Button
+        id="subscribe-modal-button"
         onClick={() =>
           redirectToRecurringCheckout({
             planCode: code,
