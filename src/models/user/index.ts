@@ -31,9 +31,26 @@ import {
   isBrazilianPhoneNumber,
   isValidBrazilianPhoneNumber,
 } from '@lib/utils';
-import { ClintCRMService } from '@lib/crm/ClintCRMService';
 import { BILLING_PERIODS, PLAN_CODES } from '@lib/stripe/plans';
 import systemLogs from '@models/system-logs';
+
+function createPlanName({
+  checkInsPerMonth,
+  recurrencePeriod,
+  checkInsQuantity,
+}: {
+  checkInsPerMonth: number;
+  recurrencePeriod: string;
+  checkInsQuantity: number;
+}) {
+  if (checkInsPerMonth === 0) return undefined;
+
+  const periodName = recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral';
+  const totalCheckIns =
+    recurrencePeriod === 'MONTHLY' ? '' : ` (${checkInsQuantity} ao total)`;
+
+  return `${periodName} - ${checkInsPerMonth} check-ins/ mês${totalCheckIns}`;
+}
 
 async function create(userData: CreateUserData) {
   const { email, password, name, phoneNumber } = userData;
@@ -120,15 +137,6 @@ async function createWithoutPassword(userData: CreateWithoutPasswordUserData) {
       buttonLink: `${webserver.host}/profile`,
       password: generatedPassword,
     },
-  });
-
-  const CRMService = new ClintCRMService();
-
-  await CRMService.addContact({
-    name,
-    email,
-    phone: phoneNumber,
-    origin: 'ad',
   });
 
   await sendMessageToYogaComKakaTelegramGroup(
@@ -559,16 +567,22 @@ async function updateUserSubscription({
 
   const isSubscribing = !userObject.subscriptionId;
 
+  const checkInsPerMonth =
+    checkInsQuantity /
+    (recurrencePeriod === 'MONTHLY'
+      ? 1
+      : recurrencePeriod === 'QUARTERLY'
+      ? 3
+      : 12);
+
+  const planName = createPlanName({
+    checkInsPerMonth,
+    recurrencePeriod,
+    checkInsQuantity,
+  });
+
   if (isSubscribing) {
     const mailService = new SendGridMailService();
-
-    const checkInsPerMonth =
-      checkInsQuantity /
-      (recurrencePeriod === 'MONTHLY'
-        ? 1
-        : recurrencePeriod === 'QUARTERLY'
-        ? 3
-        : 12);
 
     await mailService.send({
       template:
@@ -578,20 +592,9 @@ async function updateUserSubscription({
       to: userObject.email,
       templateData: {
         userName: userObject.displayName,
-        planName:
-          checkInsPerMonth === 0
-            ? undefined
-            : `${
-                recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
-              } - ${checkInsPerMonth} check-ins/ mês${
-                recurrencePeriod === 'MONTHLY'
-                  ? ''
-                  : ` (${checkInsQuantity} ao total)`
-              }`,
+        planName,
       },
     });
-
-    // ativar a conta do usuário
   }
 
   const updatedUser = prismaInstance.user.update({

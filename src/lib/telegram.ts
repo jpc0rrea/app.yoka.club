@@ -26,7 +26,7 @@ export default async function sendMessageToYogaComKakaTelegramGroup(
     } else {
       console.log(message);
       // send message to telegram using the fetch API
-      // await fetch(encodeURI(url));
+      await fetch(encodeURI(url));
     }
   }
 }

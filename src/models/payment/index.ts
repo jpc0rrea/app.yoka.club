@@ -10,13 +10,14 @@ import { prisma } from '@server/db';
 import stripeUtils from '@lib/stripe/utils';
 import plan from '@models/plan';
 import subscriptions from '@models/subscription';
-import { roundNumber } from '@lib/utils';
+import { convertNumberToReal, roundNumber } from '@lib/utils';
 import mercadopago from '@lib/mercadopago';
 import user from '@models/user';
 import statement from '@models/statement';
 import eventLogs from '@models/event-logs';
 import { SendGridMailService } from '@lib/mail/SendGridMailService';
 import activation from '@models/activation';
+import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 
 async function handleStripeInvoicePaid({
   stripeInvoice,
@@ -94,6 +95,22 @@ async function handleStripeInvoicePaid({
         userId: userObject.id,
         prismaInstance: tx,
       });
+
+      const isSubscribing = !userObject.subscriptionId;
+
+      const planObject = await plan.getPlanByPlanId(planId);
+
+      await sendMessageToYogaComKakaTelegramGroup(
+        `
+        O usuário ${userObject.displayName} acabou de ${
+          isSubscribing ? 'se inscrever no' : 'renovar o'
+        }  plano ${
+          planObject.recurrencePeriod === 'MONTHLY' ? 'mensal' : 'trimestral'
+        }
+    
+        Valor: ${convertNumberToReal(planObject.price / 100)}
+        `
+      );
     },
     {
       maxWait: 20000, // default: 2000
