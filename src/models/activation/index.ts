@@ -15,7 +15,6 @@ import user from '@models/user';
 // import checkin from '@models/checkin';
 import sendMessageToYogaComKakaTelegramGroup from '@lib/telegram';
 import mailLists from '@lib/mail/mailLists';
-import { ClintCRMService } from '@lib/crm/ClintCRMService';
 import { User } from '@prisma/client';
 import { PrismaInstance } from '@server/db';
 
@@ -180,15 +179,6 @@ async function welcomeUser({ user, sendEmail = true }: WelcomeUserParams) {
       },
     });
   }
-
-  const CRMService = new ClintCRMService();
-
-  await CRMService.addContact({
-    name: user.name,
-    email: user.email,
-    phone: user.phoneNumber,
-    origin: 'app',
-  });
 
   await sendMessageToYogaComKakaTelegramGroup(
     `

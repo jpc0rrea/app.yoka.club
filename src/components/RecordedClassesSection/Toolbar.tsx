@@ -7,6 +7,7 @@ import convertQueryToSearchParams from '@lib/utilities/convertQueryInSearchParam
 import { useRouter } from 'next/router';
 import { intensityOptions } from '@models/events/types';
 import { Toggle } from '@components/ui/toggle';
+import { useUserPlan } from '@hooks/useUserPlan';
 
 export const durationOptions = [
   { label: '15 min', value: '15' },
@@ -60,6 +61,9 @@ export default function Toolbar({
 }: ToolbarProps) {
   const router = useRouter();
   const [searchToShowOnInput, setSearchToShowOnInput] = useState(search);
+  const { data: userPlan } = useUserPlan();
+
+  const isFreeUser = !userPlan?.canSeeExclusiveContents;
 
   return (
     <div className="flex items-center justify-between">
@@ -223,7 +227,7 @@ export default function Toolbar({
             queryParamName="intensity"
             className="mr-2"
           />
-          {!liveFilter && (
+          {!liveFilter && isFreeUser && (
             <Filter
               filteredValues={premiumFilter}
               setFilteredValues={setPremiumFilter}
