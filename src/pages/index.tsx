@@ -5,8 +5,12 @@ import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import RecordedClassesSection from '@components/RecordedClassesSection';
 import RecommendationsOfTheWeek from '@components/Recommendations/RecommendationsOfTheWeek';
+import { BottomNavBar } from '@components/bottom-nav-bar';
+import { RecommendationClassSection } from '@components/recommention-class-section';
+import { useRouter } from 'next/navigation';
 
 const RecordedClassesPage: NextPage = () => {
+  const router = useRouter();
   return (
     <>
       <div className="bg-white">
@@ -16,7 +20,9 @@ const RecordedClassesPage: NextPage = () => {
 
           <main className="flex-1 bg-white">
             <RecommendationsOfTheWeek />
+
             <RecordedClassesSection />
+            <BottomNavBar activeSection="home" />
           </main>
         </div>
       </div>

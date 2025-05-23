@@ -12,10 +12,27 @@ import {
   PlayCircleIcon,
   RocketIcon,
   MousePointerClick,
+  LucideIcon,
 } from 'lucide-react';
 import useUser from '@hooks/useUser';
+import yogaLiveColor from '../../../public/images/icons/nav-bar/reshot-icon-bow-color.png';
+import yogaLiveWhithoutColor from '../../../public/images/icons/nav-bar/reshot-icon-bow-without-color.png';
+import yogaRecordedColor from '../../../public/images/icons/nav-bar/reshot-icon-triangle-color.png';
+import yogaRecordedWhithoutColor from '../../../public/images/icons/nav-bar/reshot-icon-triangle-without-color.png';
+import yogaTrailsColor from '../../../public/images/icons/nav-bar/reshot-icon-cobra-color.png';
+import yogaTrailsWhithoutColor from '../../../public/images/icons/nav-bar/reshot-icon-cobra-without-color.png';
+import Image, { StaticImageData } from 'next/image';
 
-export const navigationItems = [
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: LucideIcon | StaticImageData;
+  iconSelected?: LucideIcon | StaticImageData;
+  customIcon?: boolean;
+  role: string[];
+}
+
+export const navigationItems: NavigationItem[] = [
   {
     name: 'início',
     href: '/',
@@ -23,9 +40,27 @@ export const navigationItems = [
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
+    name: 'trilhas',
+    href: '/trails',
+    icon: yogaTrailsWhithoutColor,
+    iconSelected: yogaTrailsColor,
+    customIcon: true,
+    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  },
+  {
     name: 'aulas ao vivo',
     href: '/live-classes',
-    icon: PlayCircleIcon,
+    icon: yogaLiveWhithoutColor,
+    iconSelected: yogaLiveColor,
+    customIcon: true,
+    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  },
+  {
+    name: 'aulas gravadas',
+    href: '/recorded-classes',
+    icon: yogaRecordedWhithoutColor,
+    iconSelected: yogaRecordedColor,
+    customIcon: true,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
@@ -97,15 +132,30 @@ export default function Navbar() {
               )}
               aria-current={isCurrent ? 'page' : undefined}
             >
-              <item.icon
-                className={classNames(
-                  isCurrent
-                    ? 'text-gray-500'
-                    : 'text-gray-400 group-hover:text-gray-500',
-                  'mr-3 h-6 w-6 flex-shrink-0'
-                )}
-                aria-hidden="true"
-              />
+              {item.customIcon ? (
+                <Image
+                  src={
+                    (isCurrent
+                      ? item.iconSelected
+                      : item.icon) as StaticImageData
+                  }
+                  alt={item.name}
+                  width={32}
+                  height={32}
+                  className="mr-3 h-8 w-8 min-w-8 flex-shrink-0"
+                />
+              ) : (
+                // @ts-expect-error - This is actually a valid Lucide icon
+                <item.icon
+                  className={classNames(
+                    isCurrent
+                      ? 'text-gray-500'
+                      : 'min-w-8 justify-start font-extrabold text-gray-400 group-hover:text-gray-500',
+                    'mr-3 h-7 w-7 flex-shrink-0'
+                  )}
+                  aria-hidden="true"
+                />
+              )}
               {item.name}
             </Link>
           );
