@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
+          <BottomNavBar />
 
           <main className="flex-1 bg-white">
             <OnboardingUserModal />

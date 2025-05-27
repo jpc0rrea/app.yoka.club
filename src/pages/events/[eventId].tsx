@@ -20,6 +20,7 @@ import useUser from '@hooks/useUser';
 import Link from 'next/link';
 import RecordedClass from '@components/RecordedClass';
 import { Button } from '@components/ui/button';
+import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const Event: NextPage = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const Event: NextPage = () => {
           <Sidebar />
 
           <div className="flex flex-1 flex-col md:pl-64">
-            <Header />
+            <BottomNavBar />
 
             <Loader2 className="m-2 mt-4 h-4 w-4 animate-spin" />
           </div>
@@ -56,7 +57,7 @@ const Event: NextPage = () => {
           <Sidebar />
 
           <div className="flex flex-1 flex-col md:pl-64">
-            <Header />
+            <BottomNavBar />
 
             <RecordedClass event={event} />
           </div>
@@ -72,7 +73,7 @@ const Event: NextPage = () => {
           <Sidebar />
 
           <div className="flex flex-1 flex-col md:pl-64">
-            <Header />
+            <BottomNavBar />
 
             <Loader2 className="m-2 mt-4 h-4 w-4 animate-spin" />
           </div>
@@ -148,9 +149,9 @@ const Event: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
+          <BottomNavBar />
 
-          <main className="flex-1">
+          <main className="flex-1 pb-20 md:pb-0">
             <div className="py-8 xl:py-10">
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 xl:grid xl:max-w-5xl xl:grid-cols-3">
                 <div className="xl:col-span-2 xl:border-r xl:border-gray-200 xl:pr-8">

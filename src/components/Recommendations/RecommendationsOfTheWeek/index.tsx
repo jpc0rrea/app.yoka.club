@@ -10,6 +10,8 @@ import Link from 'next/link';
 import { RecommendationClassSection } from '@components/recommention-class-section';
 import getYouTubeThumbnailURL from '@lib/utilities/getYouTubeThumbnailURL';
 import { TrailsDashboardSection } from '@components/trail/trail-dashboard';
+import NextEventsSection from '@components/NextEventsSection';
+import RecordedClassDashboardSection from '@components/RecordedClassesSection/RecordedClassDashboardSection';
 
 export default function RecommendationsOfTheWeek() {
   const { data: next7Recommendations } = useNext7DailyRecommendations();
@@ -58,28 +60,9 @@ export default function RecommendationsOfTheWeek() {
 
         <Separator />
         <div className="w-full space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-md font-semibold text-gray-900 md:text-xl">
-              pratique ao vivo
-            </h2>
-          </div>
-
-          <div className="flex max-w-2xl flex-row items-center justify-between space-x-4 p-1 text-xs md:text-base">
-            <p className="w-2/3 rounded-md p-2 text-muted-foreground">
-              escolha o melhor dia e horário para praticar ao vivo
-            </p>
-            {/* <Button>agendar aula</Button> */}
-            <Button
-              className="w-1/3 text-sm sm:text-sm md:text-base"
-              variant="default"
-              asChild
-            >
-              <Link href={'/live-classes'} rel="noopener noreferrer">
-                agendar
-              </Link>
-            </Button>
-          </div>
+          <NextEventsSection />
         </div>
+        <RecordedClassDashboardSection />
       </div>
     </div>
   );

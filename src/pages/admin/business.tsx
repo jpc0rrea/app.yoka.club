@@ -23,6 +23,7 @@ import {
   CardTitle,
 } from '@components/ui/card';
 import NewUsersTable from '@components/Business/NewUsersTable';
+import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const BusinessInformations: NextPage = () => {
   const [dates, setDates] = useState<DateRangePickerValue>({
@@ -49,7 +50,7 @@ const BusinessInformations: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
+          <BottomNavBar />
 
           <main className="flex-1 bg-white">
             <div className="p-8 xl:p-10">

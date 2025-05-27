@@ -14,9 +14,7 @@ const RecordedClassesPage: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
-
-          <main className="flex-1 bg-white">
+          <main className="flex-1 bg-white pb-20 md:pb-0">
             <RecordedClassesSection />
             <BottomNavBar activeSection="record" />
           </main>
