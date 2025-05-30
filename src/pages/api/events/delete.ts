@@ -14,6 +14,12 @@ interface DeleteEventRequest extends EnsureAuthenticatedRequest {
 
 const editEvent = async (req: DeleteEventRequest, res: NextApiResponse) => {
   try {
+    // Remove event from all trails first
+    await prisma.trailEvent.deleteMany({
+      where: { eventId: req.query.id },
+    });
+
+    // Delete the event
     await prisma.event.delete({
       where: {
         id: req.query.id,

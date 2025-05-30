@@ -13,7 +13,7 @@ export default function NextEventsSection() {
         </h2>
         <a
           className="text-sm text-brand-yoka-purple-700 hover:underline"
-          href="#next-events-section"
+          href="/live-classes"
         >
           mostrar mais
         </a>

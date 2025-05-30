@@ -1,11 +1,16 @@
 import 'dayjs/locale/pt-br';
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@components/ui/button';
-import { NumberInput, NumberInputHandlers, Group } from '@mantine/core';
+import {
+  NumberInput,
+  NumberInputHandlers,
+  Group,
+  Autocomplete,
+} from '@mantine/core';
 import {
   Form,
   FormControl,
@@ -29,6 +34,7 @@ import { successToast } from '@components/Toast/SuccessToast';
 import { createEventFormSchema } from './CreateEventModal';
 import { queryClient } from '@lib/queryClient';
 import { EventFromAPI, intensityOptions } from '@models/events/types';
+import { useTrails } from '@hooks/useTrails';
 import {
   Select,
   SelectContent,
@@ -37,6 +43,21 @@ import {
   SelectValue,
 } from '@components/ui/select';
 import { Checkbox } from '@components/ui/checkbox';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@components/ui/command';
+import { cn } from '@utils';
+import { Check, ChevronsUpDown } from 'lucide-react';
 
 export type EditEventFormData = z.infer<typeof createEventFormSchema>;
 
@@ -52,6 +73,20 @@ export default function EditEventModal({
   setOpen,
 }: EditEventModalProps) {
   const handlers = useRef<NumberInputHandlers>(null);
+  const [selectedTrailId, setSelectedTrailId] = useState('');
+
+  const { data: trailsData, isLoading: isTrailsLoading } = useTrails({
+    enabled: open, // Only fetch when modal is open
+    page: 1,
+    pageSize: 100,
+  });
+
+  const trailsOptions = trailsData?.trails
+    ? trailsData.trails.map((trail) => ({
+        value: trail.id,
+        label: trail.title,
+      }))
+    : [];
 
   const form = useForm<EditEventFormData>({
     resolver: zodResolver(createEventFormSchema),
@@ -67,8 +102,57 @@ export default function EditEventModal({
       startDate: event.startDate ? new Date(event.startDate) : undefined,
       intensity: event.intensity || undefined,
       isPremium: event.isPremium,
+      trailIds: [],
     },
   });
+
+  // Filter out already selected trails
+  const availableTrails = trailsOptions.filter(
+    (trail) => !form.watch('trailIds').includes(trail.value)
+  );
+
+  const addTrailToEvent = (trailId: string) => {
+    const currentTrailIds = form.getValues('trailIds');
+    if (!currentTrailIds.includes(trailId)) {
+      form.setValue('trailIds', [...currentTrailIds, trailId]);
+    }
+    setSelectedTrailId('');
+  };
+
+  const removeTrailFromEvent = (trailId: string) => {
+    const currentTrailIds = form.getValues('trailIds');
+    form.setValue(
+      'trailIds',
+      currentTrailIds.filter((id) => id !== trailId)
+    );
+  };
+
+  const getSelectedTrails = () => {
+    const selectedIds = form.watch('trailIds');
+    return trailsOptions.filter((trail) => selectedIds.includes(trail.value));
+  };
+
+  // Initialize trail search when modal opens and trails data is available
+  useEffect(() => {
+    if (open && trailsData?.trails && form.watch('trailIds').length === 0) {
+      // Find the trails that contain this event
+      const eventTrails = trailsData.trails.filter((trail) =>
+        trail.trailEvents.some((te) => te.event.id === event.id)
+      );
+
+      if (eventTrails.length > 0) {
+        const trailIds = eventTrails.map((trail) => trail.id);
+        form.setValue('trailIds', trailIds);
+      }
+    }
+  }, [open, trailsData, event.id, form]);
+
+  // Reset trail selection when modal closes
+  useEffect(() => {
+    if (!open) {
+      setSelectedTrailId('');
+    }
+  }, [open]);
 
   const handleEditEvent = async (data: EditEventFormData) => {
     try {
@@ -266,6 +350,102 @@ export default function EditEventModal({
                             </FormItem>
                           )}
                         />
+                      )}
+
+                      {!isTrailsLoading && (
+                        <div className="space-y-4">
+                          <label className="text-sm font-medium">
+                            trilhas (opcional)
+                          </label>
+
+                          {/* Trail Selection Dropdown */}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className={cn(
+                                  'w-full justify-between text-gray-800',
+                                  !selectedTrailId && 'text-muted-foreground'
+                                )}
+                                disabled={availableTrails.length === 0}
+                              >
+                                {availableTrails.length === 0
+                                  ? 'todas as trilhas foram selecionadas'
+                                  : 'adicionar trilha ao evento'}
+                                <div className="flex items-center">
+                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </div>
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                              <Command>
+                                <CommandInput placeholder="procurar trilha..." />
+                                <CommandList>
+                                  <CommandEmpty>
+                                    nenhuma trilha encontrada :(
+                                  </CommandEmpty>
+                                  <CommandGroup>
+                                    {availableTrails.map((trail) => (
+                                      <CommandItem
+                                        value={trail.label}
+                                        key={trail.value}
+                                        onSelect={() => {
+                                          addTrailToEvent(trail.value);
+                                        }}
+                                      >
+                                        <Check
+                                          className={cn(
+                                            'mr-2 h-4 w-4 opacity-0'
+                                          )}
+                                        />
+                                        <span>{trail.label}</span>
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+
+                          {/* Selected Trails Display */}
+                          {getSelectedTrails().length > 0 && (
+                            <div className="space-y-2">
+                              <p className="text-sm font-medium text-gray-700">
+                                trilhas selecionadas (
+                                {getSelectedTrails().length}):
+                              </p>
+                              <div className="max-h-40 space-y-2 overflow-y-auto rounded-md border p-3">
+                                {getSelectedTrails().map((trail, index) => (
+                                  <div
+                                    key={trail.value}
+                                    className="flex items-center justify-between rounded-md bg-gray-50 p-2"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs font-medium text-gray-500">
+                                        {index + 1}.
+                                      </span>
+                                      <span className="text-sm font-medium">
+                                        {trail.label}
+                                      </span>
+                                    </div>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() =>
+                                        removeTrailFromEvent(trail.value)
+                                      }
+                                      className="h-6 w-6 p-0 text-gray-400 hover:text-red-600"
+                                    >
+                                      <XIcon className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       )}
 
                       <DateTimePicker

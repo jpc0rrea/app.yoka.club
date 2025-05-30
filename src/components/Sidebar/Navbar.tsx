@@ -13,6 +13,7 @@ import {
   RocketIcon,
   MousePointerClick,
   LucideIcon,
+  FlagTriangleRight,
 } from 'lucide-react';
 import useUser from '@hooks/useUser';
 import yogaLiveColor from '../../../public/images/icons/nav-bar/reshot-icon-bow-color.png';
@@ -105,6 +106,12 @@ export const navigationItems: NavigationItem[] = [
     icon: RocketIcon,
     role: ['ADMIN'],
   },
+  {
+    name: 'trilha admin',
+    href: '/admin/trails',
+    icon: FlagTriangleRight,
+    role: ['ADMIN'],
+  },
 ];
 
 export default function Navbar() {
@@ -148,12 +155,11 @@ export default function Navbar() {
                 // @ts-expect-error - This is actually a valid Lucide icon
                 <item.icon
                   className={classNames(
-                    isCurrent
-                      ? 'text-gray-500'
-                      : 'min-w-8 justify-start font-extrabold text-gray-400 group-hover:text-gray-500',
+                    'black min-w-8 justify-start font-extrabold group-hover:text-gray-500',
                     'mr-3 h-7 w-7 flex-shrink-0'
                   )}
                   aria-hidden="true"
+                  strokeWidth={1}
                 />
               )}
               {item.name}

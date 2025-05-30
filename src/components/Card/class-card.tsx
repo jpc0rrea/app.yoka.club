@@ -60,7 +60,7 @@ export default function ClassCard({
           recomendação do dia
         </h2>
         <Link
-          href="#recorded-classes-section"
+          href="/recorded-classes"
           className="text-sm text-brand-yoka-purple-700 hover:underline"
         >
           mostrar mais

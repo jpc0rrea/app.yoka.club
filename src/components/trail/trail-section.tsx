@@ -91,7 +91,7 @@ export const TrailsSection = ({
           <a
             className="text-sm text-brand-yoka-purple-700 hover:underline"
             onClick={onActionClick}
-            href="#recorded-classes-section"
+            href="/trails"
           >
             {actionLabel}
           </a>

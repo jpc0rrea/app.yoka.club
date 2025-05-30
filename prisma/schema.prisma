@@ -110,6 +110,7 @@ model Event {
     WatchSession         WatchSession[]
     favorites            Favorite[]
     dailyRecommendations DailyRecommendation[]
+    trailEvents          TrailEvent[]
 
     @@map("events")
 }
@@ -276,4 +277,30 @@ model DailyRecommendation {
 
     @@index([date])
     @@map("daily_recommendations")
+}
+
+model Trail {
+    id              String   @id @default(cuid())
+    title           String
+    description     String?
+    coverImageUrl   String   @map("cover_image_url")
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
+
+    trailEvents TrailEvent[]
+
+    @@map("trails")
+}
+
+model TrailEvent {
+    id       String @id @default(cuid())
+    trailId  String @map("trail_id")
+    eventId  String @map("event_id")
+    order    Int    @default(autoincrement())
+    
+    trail Trail @relation(fields: [trailId], references: [id], onDelete: Cascade)
+    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@unique([trailId, eventId])
+    @@map("trail_events")
 }
