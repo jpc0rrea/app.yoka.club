@@ -4,6 +4,7 @@ import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import UserCheckIns from '@components/Extract/UserCheckIns';
 import UserCheckInExtract from '@components/Extract/UserCheckInExtract';
+import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const Extract: NextPage = () => {
   return (
@@ -11,7 +12,7 @@ const Extract: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
+          <BottomNavBar />
 
           <main className="flex-1">
             <div className="py-6">

@@ -7,16 +7,17 @@ import Calendar from '@components/Calendar';
 import NextEventsSection from '@components/NextEventsSection';
 import HappeningNowEvents from '@components/HappeningNowEvents';
 import OnboardingUserModal from '@components/Modals/OnboardingUserModal';
+import { BottomNavBar } from '@components/bottom-nav-bar';
+import { useRouter } from 'next/navigation';
 
 const Home: NextPage = () => {
+  const router = useRouter();
   return (
     <>
       <div>
         <Sidebar />
-        <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
-
-          <main className="flex-1 bg-white">
+        <div className="flex flex-1 flex-col pt-4 md:pl-64">
+          <main className="flex-1 bg-white pb-20 md:pb-0">
             <OnboardingUserModal />
             <HappeningNowEvents />
             <NextEventsSection />
@@ -34,6 +35,7 @@ const Home: NextPage = () => {
                 {/* /End replace */}
               </div>
             </div>
+            <BottomNavBar activeSection="live" />
           </main>
         </div>
       </div>

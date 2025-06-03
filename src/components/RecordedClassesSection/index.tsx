@@ -75,14 +75,19 @@ export default function RecordedClassesSection() {
   const { events, totalPages } = data || {};
 
   return (
-    <div className="h-full flex-1 flex-col space-y-4 px-8 py-4 md:flex">
-      <Separator />
+    <div
+      id="recorded-classes-section"
+      className="h-full flex-1 flex-col space-y-4 px-2 py-4 sm:px-4 md:flex md:px-4 xl:px-8"
+    >
       <div className="flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex flex-col items-start">
           {/* <h2 className="text-2xl font-bold tracking-tight">
               aulas gravadas
             </h2> */}
-          <p className="text-muted-foreground">
+          <h2 className="text-md font-semibold text-gray-900 md:text-xl">
+            prátique onde e quando quiser :)
+          </h2>
+          <p className="text-sm text-muted-foreground md:text-base">
             procure a prática que deseja e seja feliz :)
           </p>
           {isFetching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}

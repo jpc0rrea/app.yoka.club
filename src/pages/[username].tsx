@@ -1,3 +1,4 @@
+import { BottomNavBar } from '@components/bottom-nav-bar';
 import Header from '@components/Header';
 import Sidebar from '@components/Sidebar';
 import { useUserProfile } from '@hooks/useUsers';
@@ -21,7 +22,7 @@ export default function User() {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <Header />
+          <BottomNavBar />
 
           <main className="flex-1 bg-white">
             <div className="py-6">
