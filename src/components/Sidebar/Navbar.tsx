@@ -108,7 +108,7 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     name: 'trilha admin',
-    href: '/admin/trails',
+    href: '/trails/manage',
     icon: FlagTriangleRight,
     role: ['ADMIN'],
   },

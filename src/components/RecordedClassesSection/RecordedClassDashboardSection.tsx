@@ -75,7 +75,7 @@ export default function RecordedClassDashboardSection() {
 
   return (
     <section id="recorded-classes-section" className="bg-white py-2">
-      <div className="mb-4 flex w-full items-center justify-between px-4 md:px-8">
+      <div className="mb-4 flex w-full items-center justify-between">
         <h2 className="text-md font-semibold text-gray-900 md:text-xl">
           aulas gravadas
         </h2>

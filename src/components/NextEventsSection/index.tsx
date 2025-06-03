@@ -11,12 +11,6 @@ export default function NextEventsSection() {
         <h2 className="text-md font-semibold text-gray-900 md:text-xl">
           próximas aulas ao vivo :)
         </h2>
-        <a
-          className="text-sm text-brand-yoka-purple-700 hover:underline"
-          href="/live-classes"
-        >
-          mostrar mais
-        </a>
       </div>
 
       <div className="relative mt-4">

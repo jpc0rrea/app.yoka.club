@@ -125,6 +125,7 @@ function BottomNavProfile() {
                         'mr-3 h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden="true"
+                      strokeWidth={1}
                     />
                     {item.name}
                   </Button>
@@ -145,6 +146,7 @@ function BottomNavProfile() {
                         'mr-3 h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden="true"
+                      strokeWidth={1}
                     />
                     {item.name}
                   </a>
@@ -225,7 +227,7 @@ export const BottomNavBar = ({ activeSection }: BottomNavBarProps) => {
                 />
               ) : (
                 // @ts-expect-error - This is actually a valid Lucide icon
-                <item.icon size={24} />
+                <item.icon size={24} strokeWidth={1} />
               )}
               <span className="mt-1 text-xs font-medium">{item.label}</span>
             </Link>

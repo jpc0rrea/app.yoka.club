@@ -12,6 +12,7 @@ import getYouTubeThumbnailURL from '@lib/utilities/getYouTubeThumbnailURL';
 import { TrailsDashboardSection } from '@components/trail/trail-dashboard';
 import NextEventsSection from '@components/NextEventsSection';
 import RecordedClassDashboardSection from '@components/RecordedClassesSection/RecordedClassDashboardSection';
+import Greeting from '@components/greeting';
 
 export default function RecommendationsOfTheWeek() {
   const { data: next7Recommendations } = useNext7DailyRecommendations();
@@ -28,10 +29,8 @@ export default function RecommendationsOfTheWeek() {
 
   return (
     <div className="px-2 pt-4 sm:px-4 md:px-4 md:pt-12 xl:px-8">
-      <h2 className="text-xl font-semibold tracking-tight">
-        oie, {user.displayName} 👋🏽
-      </h2>
-      <div className="mt-4 space-y-4">
+      <Greeting />
+      <div className=" mt-4 flex flex max-w-[100vw] flex-col space-x-4 space-y-4 pb-4 md:max-w-2xl">
         {next7Recommendations.length > 0 && next7Recommendations[0] && (
           <>
             <div className="mt-1 space-y-1 lg:space-y-4">

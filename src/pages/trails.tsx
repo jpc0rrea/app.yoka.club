@@ -27,12 +27,17 @@ const TrailsPage: NextPage = () => {
             <div className=" max-w-4xl px-4 py-4 sm:px-6 lg:px-8">
               {/* Page Header */}
               <div className="mb-4">
-                <h1 className="text-md font-bold text-gray-900 sm:text-4xl md:text-xl">
-                  trilhas
-                </h1>
-                <p className="md:text-md mt-2 text-sm text-gray-600">
-                  descubra jornadas completas para transformar sua prática
-                </p>
+                <div className="flex flex-col items-start">
+                  {/* <h2 className="text-2xl font-bold tracking-tight">
+              aulas gravadas
+            </h2> */}
+                  <h2 className="text-md font-semibold text-gray-900 md:text-xl">
+                    conheça nossas trilhas :)
+                  </h2>
+                  <p className="md:text-md mt-2 text-sm text-gray-600">
+                    descubra jornadas completas para transformar sua prática
+                  </p>
+                </div>
               </div>
 
               {/* Loading State */}
