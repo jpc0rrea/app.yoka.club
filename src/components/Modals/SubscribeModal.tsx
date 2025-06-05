@@ -59,9 +59,9 @@ export const plans = [
     checkInsQuantityPerMonth: 0,
     featured: true,
     price: {
-      monthly: 'R$ 89,90',
-      quarterly: 'R$ 59,90',
-      fullQuarterlyPrice: 'R$ 179,70',
+      monthly: 'R$ 99,90',
+      quarterly: 'R$ 69,90',
+      fullQuarterlyPrice: 'R$ 209,70',
     },
     description:
       'você está começando a praticar yoga e quer ter acesso a todas as aulas e a nossa comunidade',
@@ -175,11 +175,11 @@ function Plan({
         >
           <span>{name}</span>
         </h3>
-        {/* {featured ? (
+        {featured && activePeriod === 'quarterly' ? (
           <p className="rounded-full bg-brand-purple-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-brand-purple-600">
             mais popular
           </p>
-        ) : null} */}
+        ) : null}
       </div>
       <p
         className={clsx(
