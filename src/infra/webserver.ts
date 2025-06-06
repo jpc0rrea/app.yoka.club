@@ -2,8 +2,7 @@ const isServerlessRuntime = !!process.env.NEXT_PUBLIC_VERCEL_ENV;
 
 const isBuildTime = !!process.env.CI;
 
-const isProduction = true;
-// const isProduction = process.env.NEXT_PUBLIC_VERCEL_ENV === 'production';
+const isProduction = process.env.NEXT_PUBLIC_VERCEL_ENV === 'production';
 
 const host = isProduction
   ? `https://${process.env.NEXT_PUBLIC_WEBSERVER_HOST}`
