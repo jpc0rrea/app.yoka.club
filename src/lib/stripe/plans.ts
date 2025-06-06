@@ -113,3 +113,35 @@ export const PLANS: Plan[] = [
     type: 'premium',
   },
 ];
+
+// Planos antigos, que foram removidos
+export const OLD_PLANS: Plan[] = [
+  {
+    id: 'MONTHLY',
+    stripePriceId: webserver.isProduction
+      ? 'price_1QvoI0Ak5STM82fxv4TTnzfP'
+      : 'price_1RWl5KAk5STM82fxYnPIx5G7',
+    // stripePriceId: 'price_1QvoI0Ak5STM82fxv4TTnzfP',
+    billingPeriod: 'monthly',
+    checkInsQuantity: 0,
+    fullPricePerBillingPeriod: 89.9,
+    pricePerMonth: 89.9,
+    name: 'plano zen',
+    code: 'zen',
+    type: 'premium',
+  },
+  {
+    id: 'QUARTERLY',
+    stripePriceId: webserver.isProduction
+      ? 'price_1QvoI0Ak5STM82fxkvjafAmG'
+      : 'price_1RWlP5Ak5STM82fxu9NJVRED',
+    // stripePriceId: 'price_1QvoI0Ak5STM82fxkvjafAmG',
+    billingPeriod: 'quarterly',
+    checkInsQuantity: 0,
+    fullPricePerBillingPeriod: 179.7,
+    pricePerMonth: 59.9,
+    name: 'plano zen',
+    code: 'zen',
+    type: 'premium',
+  },
+];
