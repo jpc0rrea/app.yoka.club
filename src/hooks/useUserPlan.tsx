@@ -1,6 +1,7 @@
 import { api } from '@lib/api';
 import {
   BillingPeriod,
+  OLD_PLANS,
   PLANS,
   PlanCode,
   PlanId,
@@ -33,9 +34,15 @@ export function getPlanPricePerMonth({
   billingPeriod,
   checkInsQuantity,
 }: GetPlanPricePerMonthParams) {
-  const plan = PLANS.find(
+  let plan = PLANS.find(
     (plan) => plan.id === `${billingPeriod.toUpperCase()}_${checkInsQuantity}`
   );
+
+  if (!plan) {
+    plan = OLD_PLANS.find(
+      (plan) => plan.id === `${billingPeriod.toUpperCase()}_${checkInsQuantity}`
+    );
+  }
 
   return plan?.pricePerMonth || 0;
 }
@@ -44,9 +51,15 @@ export function getFullPricePerBillingPeriod({
   billingPeriod,
   checkInsQuantity,
 }: GetPlanPricePerMonthParams) {
-  const plan = PLANS.find(
+  let plan = PLANS.find(
     (plan) => plan.id === `${billingPeriod.toUpperCase()}_${checkInsQuantity}`
   );
+
+  if (!plan) {
+    plan = OLD_PLANS.find(
+      (plan) => plan.id === `${billingPeriod.toUpperCase()}_${checkInsQuantity}`
+    );
+  }
 
   return plan?.fullPricePerBillingPeriod || 0;
 }
