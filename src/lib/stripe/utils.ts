@@ -370,7 +370,16 @@ async function getScheduledSubscriptionDetails({
     currentPhase.items[0].price.toString()
   );
 
-  const plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+  let plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+
+  if (!plan) {
+    plan = OLD_PLANS.find((plan) => plan.stripePriceId === price.id);
+  }
+
+  console.log({
+    plan,
+    price,
+  });
 
   if (!plan) {
     throw new NotFoundError({
