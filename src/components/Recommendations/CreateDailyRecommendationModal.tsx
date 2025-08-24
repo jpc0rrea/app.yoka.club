@@ -31,7 +31,7 @@ import { api } from '@lib/api';
 import { successToast } from '@components/Toast/SuccessToast';
 import { errorToast } from '@components/Toast/ErrorToast';
 import { queryClient } from '@lib/queryClient';
-import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
+// import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
 
 interface CreateDailyRecommendationModalProps {
   date: Date;
@@ -165,9 +165,9 @@ export default function CreateDailyRecommendationModal({
                                 )}
                               />
                               {event.label}
-                              <div className="ml-1">
+                              {/* <div className="ml-1">
                                 <IsPremiumBadge isPremium={event.isPremium} />
-                              </div>
+                              </div> */}
                             </CommandItem>
                           ))}
                         </CommandGroup>
