@@ -18,11 +18,11 @@ export const fbq = (...args: unknown[]) => {
 export const FacebookPixelEvents = {
   // Standard events
   pageView: () => fbq('track', 'PageView'),
-  purchase: (value: number, currency: string = 'BRL') =>
+  purchase: (value: number, currency = 'BRL') =>
     fbq('track', 'Purchase', { value, currency }),
-  addToCart: (value: number, currency: string = 'BRL') =>
+  addToCart: (value: number, currency = 'BRL') =>
     fbq('track', 'AddToCart', { value, currency }),
-  initiateCheckout: (value: number, currency: string = 'BRL') =>
+  initiateCheckout: (value: number, currency = 'BRL') =>
     fbq('track', 'InitiateCheckout', { value, currency }),
   completeRegistration: () => fbq('track', 'CompleteRegistration'),
   lead: () => fbq('track', 'Lead'),

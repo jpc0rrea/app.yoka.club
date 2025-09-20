@@ -240,7 +240,7 @@ export class FacebookEventTracker {
    */
   async trackAddToCart(
     value: number,
-    currency: string = 'BRL',
+    currency = 'BRL',
     customData?: TrackingDataCustomData
   ): Promise<string> {
     return this.trackEvent({
@@ -258,7 +258,7 @@ export class FacebookEventTracker {
    */
   async trackInitiateCheckout(
     value: number,
-    currency: string = 'BRL',
+    currency = 'BRL',
     userData?: TrackingDataUserData,
     customData?: TrackingDataCustomData
   ): Promise<string> {
@@ -280,7 +280,7 @@ export class FacebookEventTracker {
     contentName: string,
     contentCategory?: string,
     value?: number,
-    currency: string = 'BRL',
+    currency = 'BRL',
     customData?: Record<string, any>
   ): Promise<string> {
     return this.trackEvent({
@@ -343,7 +343,7 @@ export class FacebookEventTracker {
    */
   async trackSubscribe(
     value?: number,
-    currency: string = 'BRL',
+    currency = 'BRL',
     customData?: Record<string, any>,
     userData?: Record<string, any>
   ): Promise<string> {
@@ -362,7 +362,7 @@ export class FacebookEventTracker {
    */
   async trackStartTrial(
     value?: number,
-    currency: string = 'BRL',
+    currency = 'BRL',
     customData?: Record<string, any>
   ): Promise<string> {
     return this.trackEvent({

@@ -46,7 +46,7 @@ export function standardizeEmail(email: string): string {
  */
 export function standardizePhone(
   phone: string,
-  defaultCountryCode: string = '55'
+  defaultCountryCode = '55'
 ): string {
   if (!phone || typeof phone !== 'string') {
     return '';
@@ -163,10 +163,7 @@ export function standardizeCity(city: string): string {
  * Input: "Arizona"
  * Output: "az"
  */
-export function standardizeState(
-  state: string,
-  country: string = 'br'
-): string {
+export function standardizeState(state: string, country = 'br'): string {
   if (!state || typeof state !== 'string') {
     return '';
   }
@@ -289,10 +286,7 @@ export function standardizeState(
  * Input: "M1 1AE" (UK)
  * Output: "m11ae"
  */
-export function standardizeZipCode(
-  zipCode: string,
-  country: string = 'br'
-): string {
+export function standardizeZipCode(zipCode: string, country = 'br'): string {
   if (!zipCode || typeof zipCode !== 'string') {
     return '';
   }
@@ -439,7 +433,7 @@ export function standardizeUserData(
     zip_code?: string;
     country?: string;
   },
-  defaultCountryCode: string = '55'
+  defaultCountryCode = '55'
 ): {
   email?: string;
   phone?: string;
