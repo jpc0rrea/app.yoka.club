@@ -465,7 +465,7 @@ export async function trackLead({
  */
 export async function trackInitiateCheckout(
   value: number,
-  currency: string = 'BRL',
+  currency = 'BRL',
   userData?: TrackingDataUserData,
   customData?: TrackingDataCustomData
 ): Promise<string | null> {
@@ -479,7 +479,7 @@ export async function trackInitiateCheckout(
  */
 export async function trackAddToCart(
   value: number,
-  currency: string = 'BRL',
+  currency = 'BRL',
   customData?: Record<string, any>
 ): Promise<string | null> {
   const tracker = getFacebookTracker();
@@ -495,7 +495,7 @@ export async function trackViewContent(
   contentName: string,
   contentCategory?: string,
   value?: number,
-  currency: string = 'BRL',
+  currency = 'BRL',
   customData?: Record<string, any>
 ): Promise<string | null> {
   const tracker = getFacebookTracker();
