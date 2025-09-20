@@ -16,10 +16,18 @@ import { queryClient } from '@lib/queryClient';
 import { UserProvider } from '@hooks/useUser';
 import theme from '@styles/mantine/theme';
 import Head from 'next/head';
+import FacebookPixel from '@components/FacebookPixel';
+import { useEffect, useRef } from 'react';
+import { trackPageView } from '@utils/facebook-tracking';
+import { useRouter } from 'next/router';
 
 dayjs.extend(customParseFormat);
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
+  const router = useRouter();
+
+  const facebookPixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
+
   if (typeof window !== 'undefined') {
     // checks that we are client-side
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -35,11 +43,31 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
     });
   }
 
+  // Ensure PageView is sent once per route, avoiding double fire in React Strict Mode
+  const hasTrackedInitialRef = useRef(false);
+  useEffect(() => {
+    if (!hasTrackedInitialRef.current) {
+      hasTrackedInitialRef.current = true;
+      // Fire one Conversion API PageView per load (includes fbq when available)
+      trackPageView();
+    }
+
+    const handleRouteChange = () => {
+      trackPageView();
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <>
       <Head>
         <title>yoka club</title>
       </Head>
+      {facebookPixelId && <FacebookPixel pixelId={facebookPixelId} />}
       <PostHogProvider client={posthog}>
         <MantineProvider theme={theme}>
           <UserProvider>

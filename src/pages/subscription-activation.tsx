@@ -12,13 +12,14 @@ import { queryClient } from '@lib/queryClient';
 import { UserPlan } from '@hooks/useUserPlan';
 import { sleep } from '@lib/utils';
 import { Button } from '@components/ui/button';
+import { trackPurchase } from '@utils/facebook-tracking';
 
 const MAX_RETRIES = 3;
 const INITIAL_RETRY_DELAY = 1000; // 1 second
 
 export default function SubscriptionActivation() {
   const router = useRouter();
-  const { fetchUser } = useUser();
+  const { fetchUser, user } = useUser();
   const { sessionToken } = router.query;
 
   const [globalMessage, setGlobalMessage] = useState(
@@ -87,7 +88,24 @@ export default function SubscriptionActivation() {
         );
         setButtonText('ir para a página inicial');
         queryClient.invalidateQueries(['userPlan']);
-        await fetchUser();
+        const freshUser = await fetchUser();
+        trackPurchase({
+          value: planData.plan.price,
+          currency: 'BRL',
+          customData: {
+            content_name: planData.plan.name,
+            content_category: planData.plan.type,
+            content_ids: [planData.plan.id],
+          },
+          userData:
+            freshUser || user
+              ? {
+                  email: (freshUser || user)!.email,
+                  first_name: (freshUser || user)!.name.split(' ')[0],
+                  last_name: (freshUser || user)!.name.split(' ')[1],
+                }
+              : undefined,
+        });
         return;
       }
 
