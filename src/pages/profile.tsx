@@ -21,7 +21,6 @@ import { Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import ChangePassword from '@components/ChangePassword';
 import { Button } from '@components/ui/button';
-import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const updateProfileFormSchema = z.object({
   displayName: z.string({
@@ -130,9 +129,9 @@ const Profile: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <BottomNavBar />
+          <Header />
 
-          <main className="flex-1 bg-white pb-20 md:pb-0">
+          <main className="flex-1 bg-white">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 <Tabs defaultValue="account" className="">

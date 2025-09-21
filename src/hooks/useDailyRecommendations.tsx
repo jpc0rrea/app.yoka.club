@@ -1,6 +1,6 @@
 import { api } from '@lib/api';
 import convertParamsInQueryParams from '@lib/utilities/convertParamsInQueryParams';
-import { DailyRecommendation, Event, Prisma } from '@prisma/client';
+import { DailyRecommendation, Event } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 
 interface GetDailyRecommendationsParams {
@@ -9,15 +9,7 @@ interface GetDailyRecommendationsParams {
 }
 
 interface DailyRecommendationWithEvent extends DailyRecommendation {
-  event: Prisma.EventGetPayload<{
-    include: {
-      instructor: {
-        select: {
-          displayName: true,
-        };
-      };
-    };
-  }>;
+  event: Event;
 }
 
 export async function getDailyRecommendations({

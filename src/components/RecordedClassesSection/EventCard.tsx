@@ -76,7 +76,7 @@ export default function EventCard({ event }: EventCardProps) {
             <TooltipTrigger>
               {userHaveAccess ? (
                 <Link href={`/events/${event.id}`}>
-                  <CardTitle className="md:text-md line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins text-sm transition-all hover:underline">
+                  <CardTitle className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins text-xl transition-all hover:underline">
                     {event.title}
                   </CardTitle>
                 </Link>
@@ -84,7 +84,7 @@ export default function EventCard({ event }: EventCardProps) {
                 <UserCantAccessPremiumSystemResourceAlert
                   triggerButton={
                     <CardTitle
-                      className={`md:text-md line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins text-sm transition-all`}
+                      className={`text-md line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins transition-all`}
                     >
                       {event.title}
                     </CardTitle>

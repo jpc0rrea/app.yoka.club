@@ -12,7 +12,6 @@ import useDebounce from '@hooks/useDebounce';
 import Pagination from '@components/reusables/Pagination';
 import EventsSection from '@components/ManageEventsSection/EventsSection';
 import Toolbar from '@components/ManageEventsSection/Toolbar';
-import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const Event: NextPage = () => {
   const { user } = useUser();
@@ -79,7 +78,7 @@ const Event: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <BottomNavBar />
+          <Header />
 
           <main className="flex-1 bg-white">
             <div className="p-8 xl:p-10">

@@ -94,13 +94,13 @@ export default function Filter({
         <Button
           variant="outline"
           size="sm"
-          className={`h-6 md:h-8 border-dashed ${className}`}
+          className={`h-8 border-dashed ${className}`}
         >
-          <PlusCircleIcon className="mr-2 h-3 md:h-4 w-3 md:w-4" />
+          <PlusCircleIcon className="mr-2 h-4 w-4" />
           {label}
           {filteredValues.length > 0 && (
             <>
-              <Separator orientation="vertical" className="mx-2 h-3 md:h-4" />
+              <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
                 className="min-w-max rounded-sm px-1 font-normal xl:hidden"
@@ -158,13 +158,13 @@ export default function Filter({
                   >
                     <div
                       className={cn(
-                        'mr-2 flex h-3 md:h-4 w-3 md:w-4 items-center justify-center rounded-sm border border-primary',
+                        'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
                         isSelected
                           ? 'bg-primary text-primary-foreground'
                           : 'opacity-50 [&_svg]:invisible'
                       )}
                     >
-                      <CheckIcon className={cn('h-3 md:h-4 w-3 md:w-4')} />
+                      <CheckIcon className={cn('h-4 w-4')} />
                     </div>
                     {/* {option.icon && (
                       <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />

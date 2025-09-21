@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: plataforma_r3_main_db
     ports:
-      - '5435:5432'
+      - '5432:5432'
     environment:
       POSTGRES_DB: yoga-com-kaka
       POSTGRES_USER: plataforma

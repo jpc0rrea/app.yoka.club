@@ -51,34 +51,6 @@ export const ourFileRouter = {
         profilePictureUrl: file.url,
       });
     }),
-
-  // Trail cover image uploader
-  trailCoverUploader: f({ image: { maxFileSize: '4MB' } })
-    .middleware(async ({ req, res }) => {
-      const user = await authRequest(req, res);
-
-      if (!user) {
-        throw new UnauthorizedError({
-          message: 'você precisa estar logado para fazer upload de imagens.',
-        });
-      }
-
-      // Only admins can upload trail covers
-      if (user.role !== 'ADMIN') {
-        throw new UnauthorizedError({
-          message:
-            'apenas administradores podem fazer upload de capas de trilhas.',
-        });
-      }
-
-      return { userId: user.id };
-    })
-    .onUploadComplete(async ({ metadata, file }) => {
-      console.log('Trail cover upload complete for userId:', metadata.userId);
-      console.log('Trail cover file url', file.url);
-
-      // File URL will be available in the frontend callback
-    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

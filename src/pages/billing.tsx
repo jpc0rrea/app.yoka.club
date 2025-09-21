@@ -4,7 +4,6 @@ import Sidebar from '@components/Sidebar';
 import { withSSREnsureSubscribed } from 'server/middlewares/withSSREnsureSubscribed';
 import UserPlan from '@components/Billing/UserPlan';
 import UserPayments from '@components/Billing/UserPayments';
-import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const Billing: NextPage = () => {
   return (
@@ -12,7 +11,7 @@ const Billing: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <BottomNavBar />
+          <Header />
 
           <main className="flex-1">
             <div className="py-6">

@@ -164,7 +164,7 @@ export default function EventCard({ event }: EventCardProps) {
               <Tooltip>
                 <TooltipTrigger>
                   <Link href={`/events/${event.id}`}>
-                    <h3 className="text-md line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins font-semibold text-brand-yoka-purple-700 transition-all hover:text-brand-yoka-purple-800 hover:underline dark:text-white md:text-lg">
+                    <h3 className="line-clamp-2 h-14 cursor-pointer overflow-hidden text-ellipsis text-left font-poppins text-lg font-semibold text-brand-yoka-purple-700 transition-all hover:text-brand-yoka-purple-800 hover:underline dark:text-white">
                       {event.title}
                     </h3>
                   </Link>
@@ -175,7 +175,7 @@ export default function EventCard({ event }: EventCardProps) {
               </Tooltip>
             </TooltipProvider>
           </div>
-          {/* <p className="mt-1 text-xs md:text-sm text-gray-500 dark:text-gray-300">
+          {/* <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
             instrutor:{' '}
             <strong className="text-gray-600">
               {event.instructor.displayName}
@@ -188,7 +188,7 @@ export default function EventCard({ event }: EventCardProps) {
           ) : (
             <span className="mt-1 inline-flex items-center rounded-full  px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100"></span>
           )}
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-300 md:text-sm">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
             data:{' '}
             <strong className="text-gray-600">
               {format(new Date(event.startDate), "ccc', 'dd/MM' às 'HH:mm", {
@@ -196,11 +196,11 @@ export default function EventCard({ event }: EventCardProps) {
               })}
             </strong>
           </p>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-300 md:text-sm">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
             duração:{' '}
             <strong className="text-gray-600">{event.duration} minutos</strong>
           </p>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-300 md:text-sm">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
             vagas restantes:{' '}
             <strong className="text-gray-600">
               {event.checkInsMaxQuantity - event.checkIns.length}
@@ -215,22 +215,14 @@ export default function EventCard({ event }: EventCardProps) {
               </Link>
             </Button>
           ) : (
-            <Button
-              asChild
-              className="mt-4 w-full text-xs md:text-sm"
-              variant="secondary"
-            >
+            <Button asChild className="mt-4 w-full" variant="secondary">
               <Link href={`/events/${event.id}`}>ver detalhes</Link>
             </Button>
           )}
           {eventAlreadyStarted && !canEnterTheEvent ? (
             recordedUrl ? (
               canViewRecordedEvent ? (
-                <Button
-                  className="mt-2 w-full text-xs md:text-sm"
-                  variant="default"
-                  asChild
-                >
+                <Button className="mt-2 w-full" variant="default" asChild>
                   <Link
                     href={recordedUrl}
                     target="_blank"
@@ -242,7 +234,7 @@ export default function EventCard({ event }: EventCardProps) {
               ) : (
                 <UserCantAccessPremiumSystemResourceAlert
                   triggerButton={
-                    <Button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-xs font-medium text-white shadow-sm focus:outline-none md:text-sm">
+                    <Button className="flex min-w-max max-w-fit justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium text-white shadow-sm focus:outline-none">
                       ir para aula
                     </Button>
                   }
@@ -251,14 +243,14 @@ export default function EventCard({ event }: EventCardProps) {
                 />
               )
             ) : (
-              <Button disabled className="mt-2 w-full text-xs md:text-sm">
+              <Button disabled className="mt-2 w-full">
                 link ainda não disponível
               </Button>
             )
           ) : alreadyCheckedIn ? (
             liveUrl && canCancelCheckIn ? (
               <Button
-                className="mt-2 w-full text-xs md:text-sm"
+                className="mt-2 w-full"
                 variant="destructive"
                 onClick={handleCancelCheckIn}
                 disabled={isCancellingCheckIn}
@@ -270,17 +262,13 @@ export default function EventCard({ event }: EventCardProps) {
                 )}
               </Button>
             ) : liveUrl ? (
-              <Button
-                className="mt-2 w-full text-xs md:text-sm"
-                variant="default"
-                asChild
-              >
+              <Button className="mt-2 w-full" variant="default" asChild>
                 <Link href={liveUrl} target="_blank" rel="noopener noreferrer">
                   ir para aula
                 </Link>
               </Button>
             ) : (
-              <Button disabled className="mt-2 w-full text-xs md:text-sm">
+              <Button disabled className="mt-2 w-full">
                 link ainda não disponível
               </Button>
             )
@@ -288,7 +276,7 @@ export default function EventCard({ event }: EventCardProps) {
             canCheckIn ? (
               <Button
                 onClick={handleCheckIn}
-                className="mt-2 w-full text-xs md:text-sm"
+                className="mt-2 w-full"
                 variant="default"
                 disabled={isCheckingIn}
               >
@@ -304,15 +292,10 @@ export default function EventCard({ event }: EventCardProps) {
                 title="você não pode agendar aula no plano gratuito"
                 description="assine o plano zen para participar da aula ao vivo"
                 CTAButton={Button}
-                className="text-xs md:text-sm"
               />
             )
           ) : (
-            <Button
-              disabled
-              className="mt-2 w-full text-xs md:text-sm"
-              variant="default"
-            >
+            <Button disabled className="mt-2 w-full" variant="default">
               evento esgotado :(
             </Button>
           )}

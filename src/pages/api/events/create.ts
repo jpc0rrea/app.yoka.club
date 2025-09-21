@@ -27,7 +27,6 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
     intensity,
     instructorId: instructorIdFromRequest,
     isPremium,
-    trailIds = [],
   } = req.body;
 
   try {
@@ -95,24 +94,6 @@ const createEvent = async (req: CreateEventRequest, res: NextApiResponse) => {
         isPremium: isLive ? true : isPremium,
       },
     });
-
-    // If a trail is specified, add the event to the trail
-    if (trailIds.length > 0) {
-      for (const trailId of trailIds) {
-        // Get the current number of events in the trail to set the order
-        const trailEventsCount = await prisma.trailEvent.count({
-          where: { trailId },
-        });
-
-        await prisma.trailEvent.create({
-          data: {
-            trailId,
-            eventId: event.id,
-            order: trailEventsCount + 1,
-          },
-        });
-      }
-    }
 
     return res.status(201).json(event);
   } catch (err) {

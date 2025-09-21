@@ -3,7 +3,6 @@ import { type NextPage } from 'next';
 import Sidebar from '@components/Sidebar';
 import { withSSREnsureWithRole } from '@server/middlewares/withSSREnsureWithRole';
 import UsersTable from '@components/Admin/UsersTable';
-import { BottomNavBar } from '@components/bottom-nav-bar';
 
 const ManageUsers: NextPage = () => {
   return (
@@ -11,7 +10,7 @@ const ManageUsers: NextPage = () => {
       <div>
         <Sidebar />
         <div className="flex flex-1 flex-col md:pl-64">
-          <BottomNavBar />
+          <Header />
 
           <main className="flex-1">
             <div className="p-8 xl:p-10">

@@ -25,7 +25,7 @@ import { Input } from '@components/ui/input';
 import { Switch } from '@components/ui/switch';
 
 import { DateTimePicker } from '@mantine/dates';
-import { Loader2, Minus, Plus, XIcon, ChevronsUpDown } from 'lucide-react';
+import { Loader2, Minus, Plus, XIcon } from 'lucide-react';
 import { MAX_CHECK_IN_AMOUNT, MIN_CHECK_IN_AMOUNT } from '@lib/constants';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
 import { errorToast } from '@components/Toast/ErrorToast';
@@ -34,7 +34,6 @@ import { successToast } from '@components/Toast/SuccessToast';
 import { queryClient } from '@lib/queryClient';
 import useUser from '@hooks/useUser';
 import { useInstructors } from '@hooks/useInstructors';
-import { useTrails } from '@hooks/useTrails';
 import {
   intensityOptions,
   intensityPossibleValues,
@@ -47,21 +46,6 @@ import {
   SelectValue,
 } from '@components/ui/select';
 import { Checkbox } from '@components/ui/checkbox';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@components/ui/popover';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@components/ui/command';
-import { cn } from '@utils';
-import { Check } from 'lucide-react';
 
 export const createEventFormSchema = z
   .object({
@@ -95,7 +79,6 @@ export const createEventFormSchema = z
       }, 'intensidade inválida')
       .optional(),
     instructorId: z.string().optional(),
-    trailIds: z.array(z.string()).optional().default([]),
   })
   .refine((data) => (data.isLive ? data.startDate : true), {
     message: 'data de início é obrigatória para eventos ao vivo',
@@ -120,29 +103,15 @@ export default function CreateEventModal() {
   const { user } = useUser();
   const [open, setOpen] = useState(false);
   const [instructorSearch, setInstructorSearch] = useState('');
-  const [selectedTrailId, setSelectedTrailId] = useState<string>('');
   const handlers = useRef<NumberInputHandlers>(null);
 
   const { data: instructors, isLoading: isInstructorsLoading } =
     useInstructors();
 
-  const { data: trailsData, isLoading: isTrailsLoading } = useTrails({
-    enabled: !!user && user.role === 'ADMIN',
-    page: 1,
-    pageSize: 100,
-  });
-
   const instructorsOptions = instructors
     ? instructors.map((instructor) => ({
         value: instructor.id,
         label: instructor.name,
-      }))
-    : [];
-
-  const trailsOptions = trailsData?.trails
-    ? trailsData.trails.map((trail) => ({
-        value: trail.id,
-        label: trail.title,
       }))
     : [];
 
@@ -153,35 +122,8 @@ export default function CreateEventModal() {
       maxCheckinsQuantity: 15,
       duration: 60,
       isPremium: true,
-      trailIds: [],
     },
   });
-
-  // Filter out already selected trails
-  const availableTrails = trailsOptions.filter(
-    (trail) => !form.watch('trailIds').includes(trail.value)
-  );
-
-  const addTrailToEvent = (trailId: string) => {
-    const currentTrailIds = form.getValues('trailIds');
-    if (!currentTrailIds.includes(trailId)) {
-      form.setValue('trailIds', [...currentTrailIds, trailId]);
-    }
-    setSelectedTrailId('');
-  };
-
-  const removeTrailFromEvent = (trailId: string) => {
-    const currentTrailIds = form.getValues('trailIds');
-    form.setValue(
-      'trailIds',
-      currentTrailIds.filter((id) => id !== trailId)
-    );
-  };
-
-  const getSelectedTrails = () => {
-    const selectedIds = form.watch('trailIds');
-    return trailsOptions.filter((trail) => selectedIds.includes(trail.value));
-  };
 
   useEffect(() => {
     if (user && user.role === 'ADMIN' && !form.watch('instructorId')) {
@@ -211,9 +153,6 @@ export default function CreateEventModal() {
       });
 
       setOpen(false);
-      form.reset();
-      setInstructorSearch('');
-      setSelectedTrailId('');
     } catch (err) {
       const { message, description } = convertErrorMessage({
         err,
@@ -424,102 +363,6 @@ export default function CreateEventModal() {
                           data={instructorsOptions}
                           error={form.formState.errors?.instructorId?.message}
                         />
-                      )}
-
-                      {user?.role === 'ADMIN' && !isTrailsLoading && (
-                        <div className="space-y-4">
-                          <label className="text-sm font-medium">
-                            trilhas (opcional)
-                          </label>
-
-                          {/* Trail Selection Dropdown */}
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  'w-full justify-between text-gray-800',
-                                  !selectedTrailId && 'text-muted-foreground'
-                                )}
-                                disabled={availableTrails.length === 0}
-                              >
-                                {availableTrails.length === 0
-                                  ? 'todas as trilhas foram selecionadas'
-                                  : 'adicionar trilha ao evento'}
-                                <div className="flex items-center">
-                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </div>
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-full p-0">
-                              <Command>
-                                <CommandInput placeholder="procurar trilha..." />
-                                <CommandList>
-                                  <CommandEmpty>
-                                    nenhuma trilha encontrada :(
-                                  </CommandEmpty>
-                                  <CommandGroup>
-                                    {availableTrails.map((trail) => (
-                                      <CommandItem
-                                        value={trail.label}
-                                        key={trail.value}
-                                        onSelect={() => {
-                                          addTrailToEvent(trail.value);
-                                        }}
-                                      >
-                                        <Check
-                                          className={cn(
-                                            'mr-2 h-4 w-4 opacity-0'
-                                          )}
-                                        />
-                                        <span>{trail.label}</span>
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-
-                          {/* Selected Trails Display */}
-                          {getSelectedTrails().length > 0 && (
-                            <div className="space-y-2">
-                              <p className="text-sm font-medium text-gray-700">
-                                trilhas selecionadas (
-                                {getSelectedTrails().length}):
-                              </p>
-                              <div className="max-h-40 space-y-2 overflow-y-auto rounded-md border p-3">
-                                {getSelectedTrails().map((trail, index) => (
-                                  <div
-                                    key={trail.value}
-                                    className="flex items-center justify-between rounded-md bg-gray-50 p-2"
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs font-medium text-gray-500">
-                                        {index + 1}.
-                                      </span>
-                                      <span className="text-sm font-medium">
-                                        {trail.label}
-                                      </span>
-                                    </div>
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() =>
-                                        removeTrailFromEvent(trail.value)
-                                      }
-                                      className="h-6 w-6 p-0 text-gray-400 hover:text-red-600"
-                                    >
-                                      <XIcon className="h-4 w-4" />
-                                    </Button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
                       )}
 
                       <DateTimePicker

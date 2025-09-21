@@ -49,15 +49,7 @@ async function getNext7() {
     },
     take: 7,
     include: {
-      event: {
-        include: {
-          instructor: {
-            select: {
-              displayName: true,
-            },
-          },
-        },
-      },
+      event: true,
     },
   });
 

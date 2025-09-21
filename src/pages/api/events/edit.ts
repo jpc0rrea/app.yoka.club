@@ -26,7 +26,6 @@ const editEvent = async (req: EditEventRequest, res: NextApiResponse) => {
     duration,
     intensity,
     isPremium,
-    trailIds = [],
   } = req.body;
 
   try {
@@ -79,30 +78,6 @@ const editEvent = async (req: EditEventRequest, res: NextApiResponse) => {
         isPremium: isLive ? true : isPremium,
       },
     });
-
-    // Handle trail assignment
-    // Always remove event from all trails first
-    await prisma.trailEvent.deleteMany({
-      where: { eventId: req.query.id },
-    });
-
-    // If multiple trails are provided, add the event to each one
-    if (trailIds.length > 0) {
-      for (const trailId of trailIds) {
-        // Get the current number of events in the trail to set the order
-        const trailEventsCount = await prisma.trailEvent.count({
-          where: { trailId },
-        });
-
-        await prisma.trailEvent.create({
-          data: {
-            trailId,
-            eventId: req.query.id,
-            order: trailEventsCount + 1,
-          },
-        });
-      }
-    }
 
     return res.status(201).json(event);
   } catch (err) {

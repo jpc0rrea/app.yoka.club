@@ -76,6 +76,8 @@ async function createSessionHandler(
   res: NextApiResponse
 ) {
   let storedUser;
+
+  console.log('TODELETE DATABASE_URL:', process.env.DATABASE_URL);
   try {
     storedUser = await user.findOneByEmail({
       email: req.body.email,
