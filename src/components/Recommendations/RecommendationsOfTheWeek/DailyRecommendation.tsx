@@ -1,6 +1,6 @@
 import UserCantAccessPremiumSystemResourceAlert from '@components/Modals/UserCantAccessPremiumSystemResourceAlert';
 import DurationBadge from '@components/reusables/DurationBadge';
-import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
+// import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
 import { Skeleton } from '@components/ui/skeleton';
 import { useUserPlan } from '@hooks/useUserPlan';
 import getRelativeDateString from '@lib/utilities/getRelativeDateString';
@@ -47,7 +47,7 @@ export default function DailyRecommendation({
       <div className="space-y-1">
         <div className="flex flex-wrap gap-2">
           <DurationBadge duration={event.duration} style="simple" />
-          <IsPremiumBadge isPremium={event.isPremium} style="simple" />
+          {/* <IsPremiumBadge isPremium={event.isPremium} style="simple" /> */}
         </div>
         <div className="overflow-hidden rounded-md">
           {userHaveAccess ? (

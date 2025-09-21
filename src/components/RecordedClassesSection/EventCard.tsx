@@ -3,7 +3,7 @@ import CheckedInBadge from '@components/reusables/CheckedInBadge';
 import DurationBadge from '@components/reusables/DurationBadge';
 import FavoriteButton from '@components/reusables/FavoriteButton';
 import IntensityBadge from '@components/reusables/IntensityBadge';
-import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
+// import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
 import { Button } from '@components/ui/button';
 import {
   Card,
@@ -66,11 +66,8 @@ export default function EventCard({ event }: EventCardProps) {
           <div className="flex flex-wrap gap-2">
             <DurationBadge duration={event.duration} />
             {event.intensity && <IntensityBadge intensity={event.intensity} />}
-            {isLive ? (
-              <CheckedInBadge hasCheckedIn={hasCheckedIn} />
-            ) : (
-              <IsPremiumBadge isPremium={event.isPremium} />
-            )}
+            {isLive ? <CheckedInBadge hasCheckedIn={hasCheckedIn} /> : null}
+            {/* <IsPremiumBadge isPremium={event.isPremium} /> */}
           </div>
           <FavoriteButton eventId={event.id} />
         </CardDescription>

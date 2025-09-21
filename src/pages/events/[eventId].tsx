@@ -159,7 +159,7 @@ const Event: NextPage = () => {
                     <div>
                       <div className="md:flex md:items-center md:justify-between md:space-x-4 xl:border-b xl:pb-6">
                         <div>
-                          <h1 className="font-poppins text-2xl font-bold text-purple-800">
+                          <h1 className="font-poppins text-2xl font-bold text-brand-yoka-purple-600">
                             {event.title}
                           </h1>
                           <p className="mt-2 flex text-sm text-gray-500">
@@ -175,7 +175,7 @@ const Event: NextPage = () => {
                                 }
                                 alt=""
                               />
-                              <div className="mx-1 min-w-max text-sm font-medium text-purple-800">
+                              <div className="mx-1 min-w-max text-sm font-medium text-brand-yoka-purple-600">
                                 {event.instructor.displayName}
                               </div>
                             </a>
@@ -186,7 +186,7 @@ const Event: NextPage = () => {
                         </div>
                         <div className="mt-4 flex items-center space-x-2 md:mt-0">
                           <CalendarIcon
-                            className="h-5 w-5 text-purple-800"
+                            className="h-5 w-5 text-brand-yoka-purple-600"
                             aria-hidden="true"
                           />
                           <span className="text-sm font-medium text-gray-900">
@@ -202,7 +202,7 @@ const Event: NextPage = () => {
                                 check-in feito :)
                               </p>
                             ) : (
-                              <button className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800">
+                              <button className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-yoka-purple-600">
                                 fazer check-in
                               </button>
                             )}
@@ -213,7 +213,7 @@ const Event: NextPage = () => {
                           recordedUrl ? (
                             <a
                               href={recordedUrl}
-                              className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
+                              className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-yoka-purple-600"
                             >
                               acesse a aula gravada aqui
                             </a>
@@ -227,7 +227,7 @@ const Event: NextPage = () => {
                           liveUrl ? (
                             <a
                               href={liveUrl}
-                              className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800"
+                              className="rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-yoka-purple-600"
                             >
                               acesse a aula ao vivo aqui
                             </a>
@@ -243,7 +243,7 @@ const Event: NextPage = () => {
                               faça check-in para ter acesso ao link da aula ao
                               vivo
                             </p>
-                            <button className="mt-2 rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-800">
+                            <button className="mt-2 rounded bg-purple-700 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-yoka-purple-600">
                               fazer check-in
                             </button>
                           </div>
@@ -312,7 +312,7 @@ const Event: NextPage = () => {
                             </div> */}
                         {/* <div className="flex items-center space-x-2">
                               <CalendarIcon
-                                className="h-5 w-5 text-purple-800"
+                                className="h-5 w-5 text-brand-yoka-purple-600"
                                 aria-hidden="true"
                               />
                               <span className="text-sm font-medium text-gray-900">
@@ -358,7 +358,7 @@ const Event: NextPage = () => {
                                           </div>
                                           <div className="text-xs font-medium leading-5 text-gray-500 ">
                                             <Link
-                                              className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
+                                              className="whitespace-nowrap text-sm text-gray-800 hover:text-brand-yoka-purple-600 hover:underline"
                                               href={`/@${checkIn.user.username}`}
                                             >
                                               {checkIn.user.displayName}
@@ -438,7 +438,7 @@ const Event: NextPage = () => {
                       </div> */}
                   {/* <div className="flex items-center space-x-2">
                          <BoltIcon
-                          className="h-5 w-5 text-purple-800"
+                          className="h-5 w-5 text-brand-yoka-purple-600"
                           aria-hidden="true"
                         /> 
                         <span className="text-sm font-medium text-gray-900">
@@ -447,7 +447,7 @@ const Event: NextPage = () => {
                       </div> */}
                   {/* <div className="flex items-center space-x-2">
                         <CalendarIcon
-                          className="h-5 w-5 text-purple-800"
+                          className="h-5 w-5 text-brand-yoka-purple-600"
                           aria-hidden="true"
                         />
                         <span className="text-sm font-medium text-gray-900">
@@ -493,7 +493,7 @@ const Event: NextPage = () => {
                                     </div>
                                     <div className="text-xs font-medium leading-5 text-gray-500">
                                       <Link
-                                        className="whitespace-nowrap text-sm text-gray-800 hover:text-purple-800 hover:underline"
+                                        className="whitespace-nowrap text-sm text-gray-800 hover:text-brand-yoka-purple-600 hover:underline"
                                         href={`/@${checkIn.user.username}`}
                                       >
                                         {checkIn.user.displayName}

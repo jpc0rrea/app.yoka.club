@@ -1,7 +1,7 @@
 import { EventFromAPI } from '@models/events/types';
 import IntensityBadge from '@components/reusables/IntensityBadge';
 import DurationBadge from '@components/reusables/DurationBadge';
-import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
+// import IsPremiumBadge from '@components/reusables/IsPremiumBadge';
 import { useUserPlan } from '@hooks/useUserPlan';
 import { Loader2 } from 'lucide-react';
 import { LockIcon } from 'lucide-react';
@@ -87,7 +87,7 @@ export default function RecordedClass({ event }: RecordedClassProps) {
           <div className="flex flex-wrap gap-2">
             {event.intensity && <IntensityBadge intensity={event.intensity} />}
             <DurationBadge duration={event.duration} />
-            <IsPremiumBadge isPremium={event.isPremium} />
+            {/* <IsPremiumBadge isPremium={event.isPremium} /> */}
           </div>
           {/* <RecomendedVideos /> */}
         </div>

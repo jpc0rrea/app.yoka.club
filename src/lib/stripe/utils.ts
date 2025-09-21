@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 import { stripe } from '.';
 import user from '@models/user';
 import { convertNumberToReal } from '@lib/utils';
-import { PLANS } from './plans';
+import { OLD_PLANS, PLANS } from './plans';
 
 interface GetInvoiceInfoParams {
   invoice: Stripe.Invoice;
@@ -245,7 +245,11 @@ async function getSubscriptionDetails({
     subscription.items.data[0].price.id
   );
 
-  const plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+  let plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+
+  if (!plan) {
+    plan = OLD_PLANS.find((plan) => plan.stripePriceId === price.id);
+  }
 
   if (!plan) {
     throw new NotFoundError({
@@ -260,7 +264,7 @@ async function getSubscriptionDetails({
     subscription.current_period_end * 1000
   ).toISOString();
 
-  if (subscription.cancel_at_period_end) {
+  if (subscription.cancel_at_period_end || subscription.status === 'canceled') {
     return {
       plan,
       nextBillingTime,
@@ -269,9 +273,21 @@ async function getSubscriptionDetails({
     };
   }
 
-  const nextInvoice = await stripe.invoices.retrieveUpcoming({
-    customer: stripeCustomerId,
-  });
+  let nextInvoice: Stripe.Response<Stripe.UpcomingInvoice>;
+
+  try {
+    nextInvoice = await stripe.invoices.retrieveUpcoming({
+      customer: stripeCustomerId,
+    });
+  } catch (error) {
+    console.log(error);
+    return {
+      plan,
+      nextBillingTime,
+      nextBillingValue: undefined,
+      cancelAtPeriodEnd: true,
+    };
+  }
 
   const nextBillingValue = convertNumberToReal(
     (nextInvoice.amount_due || nextInvoice.total) / 100
@@ -354,7 +370,16 @@ async function getScheduledSubscriptionDetails({
     currentPhase.items[0].price.toString()
   );
 
-  const plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+  let plan = PLANS.find((plan) => plan.stripePriceId === price.id);
+
+  if (!plan) {
+    plan = OLD_PLANS.find((plan) => plan.stripePriceId === price.id);
+  }
+
+  console.log({
+    plan,
+    price,
+  });
 
   if (!plan) {
     throw new NotFoundError({

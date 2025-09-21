@@ -2,6 +2,9 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "next build && npx prisma generate",
     "next": "next dev",
@@ -16,6 +19,8 @@
     "migration:seed": "ts-node -r dotenv-expand/config -r tsconfig-paths/register --project tsconfig.json src/infra/scripts/seed-database.ts"
   },
   "dependencies": {
+    "facebook-nodejs-business-sdk": "^23.0.1",
+    "@types/facebook-nodejs-business-sdk": "^22.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@formkit/auto-animate": "^0.8.2",

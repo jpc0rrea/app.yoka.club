@@ -54,10 +54,7 @@ export interface UserContextData {
   user: null | UserInContext;
   isLoading: boolean;
   error: ErrorInUserContext | undefined;
-  fetchUser: () => Promise<{
-    id: string;
-    email: string;
-  } | void>;
+  fetchUser: () => Promise<UserInContext | void>;
   logout: () => Promise<void>;
   favoriteEvents: string[];
   setFavoriteEvents: (favoriteEvents: string[]) => void;
@@ -116,10 +113,7 @@ export function UserProvider({ children }: UserProviderProps) {
         localStorage.setItem('user', JSON.stringify(cachedUserProperties));
         localStorage.removeItem('reloadTime');
 
-        return {
-          id: fetchedUser.id,
-          email: fetchedUser.email,
-        };
+        return fetchedUser;
       }
 
       if (fetchUserResponse.status >= 400) {
