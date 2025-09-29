@@ -112,6 +112,7 @@ export default function SubscriptionActivation() {
       setIsSuccess(false);
       throw new Error('Failed to fetch plan after multiple attempts');
     } catch (err) {
+      console.log('TODELETE ACTIVATION:', err);
       const { message, description } = convertErrorMessage({
         err,
       });
