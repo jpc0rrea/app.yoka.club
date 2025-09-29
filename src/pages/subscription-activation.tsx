@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { Loader2 } from 'lucide-react';
 
@@ -31,6 +31,8 @@ export default function SubscriptionActivation() {
   const [buttonText, setButtonText] = useState('home');
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const purchaseTrackedRef = useRef(false);
 
   const fetchPlanWithRetry = async (
     retries = 0
@@ -89,23 +91,26 @@ export default function SubscriptionActivation() {
         setButtonText('ir para a página inicial');
         queryClient.invalidateQueries(['userPlan']);
         const freshUser = await fetchUser();
-        trackPurchase({
-          value: planData.plan.price,
-          currency: 'BRL',
-          customData: {
-            content_name: planData.plan.name,
-            content_category: planData.plan.type,
-            content_ids: [planData.plan.id],
-          },
-          userData:
-            freshUser || user
-              ? {
-                  email: (freshUser || user)!.email,
-                  first_name: (freshUser || user)!.name.split(' ')[0],
-                  last_name: (freshUser || user)!.name.split(' ')[1],
-                }
-              : undefined,
-        });
+        if (!purchaseTrackedRef.current) {
+          purchaseTrackedRef.current = true;
+          trackPurchase({
+            value: planData.plan.price,
+            currency: 'BRL',
+            customData: {
+              content_name: planData.plan.name,
+              content_category: planData.plan.type,
+              content_ids: [planData.plan.id],
+            },
+            userData:
+              freshUser || user
+                ? {
+                    email: (freshUser || user)!.email,
+                    first_name: (freshUser || user)!.name.split(' ')[0],
+                    last_name: (freshUser || user)!.name.split(' ')[1],
+                  }
+                : undefined,
+          });
+        }
         return;
       }
 
