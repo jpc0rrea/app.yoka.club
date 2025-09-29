@@ -42,6 +42,7 @@ async function onNoMatchHandler(
   request: NextApiRequest & { [key: string]: any },
   response: NextApiResponse
 ) {
+  console.log('TODELETE ON NO MATCH HANDLER:', request);
   injectRequestMetadata(request);
   const publicErrorObject = new NotFoundError({
     message: '',
@@ -64,6 +65,7 @@ function onErrorHandler(
   request: NextApiRequest & { [key: string]: any },
   response: NextApiResponse
 ) {
+  console.log('TODELETE ON ERROR HANDLER:', error);
   if (
     error instanceof ValidationError ||
     error instanceof NotFoundError ||
