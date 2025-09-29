@@ -17,6 +17,8 @@ import clsx from 'clsx';
 import { Button } from '@components/ui/button';
 import { BillingPeriod, PlanCode } from '@lib/stripe/plans';
 import convertErrorMessage from '@lib/error/convertErrorMessage';
+import { trackInitiateCheckout } from '@utils/facebook-tracking';
+import useUser from '@hooks/useUser';
 
 interface SubscribeModalProps {
   title?: string;
@@ -322,6 +324,7 @@ export function PlanFeatures({
 export function ChoosePlan() {
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
   const [isRedirectingToCheckout, setIsRedirectingToCheckout] = useState(false);
+  const { user } = useUser();
 
   const handleRedirectToRecurringCheckout = async ({
     planCode,
@@ -353,6 +356,22 @@ export function ChoosePlan() {
         setIsRedirectingToCheckout(false);
         return;
       }
+
+      trackInitiateCheckout({
+        value: parseFloat(
+          plans.find((plan) => plan.code === planCode)?.price.monthly || '0'
+        ),
+        currency: 'BRL',
+        customData: {
+          planCode,
+          billingPeriod,
+        },
+        userData: {
+          email: user?.email,
+          first_name: user?.name.split(' ')[0],
+          last_name: user?.name.split(' ')[1],
+        },
+      });
 
       await stripe.redirectToCheckout({ sessionId });
     } catch (err) {

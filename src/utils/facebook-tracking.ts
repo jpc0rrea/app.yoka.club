@@ -258,7 +258,7 @@ export class FacebookEventTracker {
    */
   async trackInitiateCheckout(
     value: number,
-    currency = 'BRL',
+    currency: string = 'BRL',
     userData?: TrackingDataUserData,
     customData?: TrackingDataCustomData
   ): Promise<string> {
@@ -463,12 +463,17 @@ export async function trackLead({
 /**
  * Convenience function to track InitiateCheckout event
  */
-export async function trackInitiateCheckout(
-  value: number,
+export async function trackInitiateCheckout({
+  value,
   currency = 'BRL',
-  userData?: TrackingDataUserData,
-  customData?: TrackingDataCustomData
-): Promise<string | null> {
+  userData,
+  customData,
+}: {
+  value: number;
+  currency: string;
+  userData?: TrackingDataUserData;
+  customData?: TrackingDataCustomData;
+}): Promise<string | null> {
   const tracker = getFacebookTracker();
   if (!tracker) return null;
   return tracker.trackInitiateCheckout(value, currency, userData, customData);
