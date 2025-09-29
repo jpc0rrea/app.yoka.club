@@ -14,7 +14,7 @@ import { sleep } from '@lib/utils';
 import { Button } from '@components/ui/button';
 import { trackPurchase } from '@utils/facebook-tracking';
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 15;
 const INITIAL_RETRY_DELAY = 1000; // 1 second
 
 export default function SubscriptionActivation() {
