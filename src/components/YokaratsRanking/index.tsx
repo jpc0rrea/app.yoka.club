@@ -192,7 +192,7 @@ export default function YokaratsRanking() {
               >
                 {/* Position */}
                 <div
-                  className={`flex h-11 w-11 items-center justify-center rounded-full border text-base font-medium shadow-sm ${getRankBadgeColor(
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium shadow-sm sm:h-11 sm:w-11 sm:text-base ${getRankBadgeColor(
                     position
                   )}`}
                 >
@@ -201,7 +201,7 @@ export default function YokaratsRanking() {
 
                 {/* User Avatar */}
                 <div className="flex-shrink-0">
-                  <div className="relative h-11 w-11 overflow-hidden rounded-full bg-gray-100 shadow-sm ring-1 ring-gray-200/50">
+                  <div className="relative h-8 w-8 overflow-hidden rounded-full bg-gray-100 shadow-sm ring-1 ring-gray-200/50 sm:h-11 sm:w-11">
                     {entry.userImageUrl ? (
                       <Image
                         src={entry.userImageUrl}
@@ -210,7 +210,7 @@ export default function YokaratsRanking() {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 text-base font-medium text-purple-600">
+                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 text-sm font-medium text-purple-600 sm:text-base">
                         {entry.userDisplayName.charAt(0).toUpperCase()}
                       </div>
                     )}
@@ -220,13 +220,13 @@ export default function YokaratsRanking() {
                 {/* User Name */}
                 <div className="min-w-0 flex-1">
                   <p
-                    className={`truncate text-base font-medium ${
+                    className={`truncate text-sm font-medium sm:text-base ${
                       isCurrentUserEntry ? 'text-purple-800' : 'text-gray-700'
                     }`}
                   >
                     {entry.userDisplayName}
                     {isCurrentUserEntry && (
-                      <span className="ml-2 text-sm font-normal text-purple-500">
+                      <span className="ml-1 text-xs font-normal text-purple-500 sm:ml-2 sm:text-sm">
                         (você)
                       </span>
                     )}
@@ -234,12 +234,15 @@ export default function YokaratsRanking() {
                 </div>
 
                 {/* Active Days */}
-                <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 px-4 py-1.5 shadow-sm ring-1 ring-orange-100/50">
-                  <Flame className="h-4 w-4 text-orange-500" strokeWidth={2} />
-                  <span className="font-semibold text-orange-700">
+                <div className="flex items-center gap-1 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 px-2 py-1 shadow-sm ring-1 ring-orange-100/50 sm:gap-2 sm:px-4 sm:py-1.5">
+                  <Flame
+                    className="h-3 w-3 text-orange-500 sm:h-4 sm:w-4"
+                    strokeWidth={2}
+                  />
+                  <span className="text-sm font-semibold text-orange-700 sm:text-base">
                     {entry.activeDays}
                   </span>
-                  <span className="text-xs text-orange-600/80">
+                  <span className="hidden text-xs text-orange-600/80 sm:inline">
                     {entry.activeDays === 1 ? 'dia' : 'dias'}
                   </span>
                 </div>

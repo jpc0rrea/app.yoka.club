@@ -28,84 +28,111 @@ export default function YokaratsWidget() {
   const currentUserEntry =
     currentUserPosition !== -1 ? data.ranking[currentUserPosition] : null;
 
+  const getMonthYearLabel = () => {
+    const months = [
+      'janeiro',
+      'fevereiro',
+      'março',
+      'abril',
+      'maio',
+      'junho',
+      'julho',
+      'agosto',
+      'setembro',
+      'outubro',
+      'novembro',
+      'dezembro',
+    ];
+    const monthName = months[currentMonth - 1];
+    return `${monthName} - ${currentYear}`;
+  };
+
   return (
     <Link
       href="/yokarats"
-      className="group flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-2 py-3 shadow-sm transition-all hover:border-purple-200 hover:shadow-md"
+      className="group flex flex-col gap-2 rounded-lg border border-gray-200 bg-white px-2 py-3 shadow-sm transition-all hover:border-purple-200 hover:shadow-md"
     >
-      <div className="flex items-center gap-2">
-        🔥
-        <span className="text-sm font-medium text-gray-700">yokarats</span>
-      </div>
-
-      {/* Leader */}
-      <div className="flex items-center gap-2">
-        {leader.userImageUrl ? (
-          <div className="relative h-8 w-8 overflow-hidden rounded-full">
-            <Image
-              src={leader.userImageUrl}
-              alt={leader.userDisplayName}
-              fill
-              className="object-cover"
-            />
-          </div>
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-sm font-medium text-purple-600">
-            {leader.userDisplayName.charAt(0).toUpperCase()}
-          </div>
-        )}
-        <div className="flex flex-col">
-          <span className="text-xs  font-semibold text-orange-600">
-            {leader.activeDays} dias ativos
-          </span>
-          <span className="text-xs font-medium text-gray-600">
-            {leader.userDisplayName}
-          </span>
+      {/* Title and Month */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          🔥
+          <span className="text-sm font-medium text-gray-700">yokarats</span>
         </div>
+        <span className="text-xs text-gray-500">{getMonthYearLabel()}</span>
       </div>
 
-      {/* Current User */}
-      {currentUserEntry && (
-        <>
-          <div className="flex items-center gap-2">
-            {currentUserEntry.userImageUrl ? (
-              <div className="relative h-8 w-8 overflow-hidden rounded-full">
-                <Image
-                  src={currentUserEntry.userImageUrl}
-                  alt={currentUserEntry.userDisplayName}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-sm font-medium text-purple-600">
-                {currentUserEntry.userDisplayName.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <div className="flex flex-col">
-              <span className="text-xs font-semibold text-purple-600">
-                {currentUserEntry.activeDays} dias ativos
-              </span>
-              <span className="text-xs font-medium text-gray-600">você</span>
+      {/* Leader and User */}
+      <div className="flex items-center gap-4">
+        {/* Leader */}
+        <div className="flex items-center gap-2">
+          {leader.userImageUrl ? (
+            <div className="relative h-8 w-8 overflow-hidden rounded-full">
+              <Image
+                src={leader.userImageUrl}
+                alt={leader.userDisplayName}
+                fill
+                className="object-cover"
+              />
             </div>
+          ) : (
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-sm font-medium text-purple-600">
+              {leader.userDisplayName.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-orange-600">
+              {leader.activeDays} dias ativos
+            </span>
+            <span className="text-xs font-medium text-gray-600">
+              {leader.userDisplayName}
+            </span>
           </div>
-        </>
-      )}
+        </div>
 
-      {!currentUserEntry && (
-        <>
-          <div className="h-6 w-px bg-gray-200"></div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-medium text-gray-400">
-              ?
+        {/* Current User */}
+        {currentUserEntry && (
+          <>
+            <div className="h-6 w-px bg-gray-200"></div>
+            <div className="flex items-center gap-2">
+              {currentUserEntry.userImageUrl ? (
+                <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                  <Image
+                    src={currentUserEntry.userImageUrl}
+                    alt={currentUserEntry.userDisplayName}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-sm font-medium text-purple-600">
+                  {currentUserEntry.userDisplayName.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-purple-600">
+                  {currentUserEntry.activeDays} dias ativos
+                </span>
+                <span className="text-xs font-medium text-gray-600">você</span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-400">0 dias ativos</span>
-              <span className="text-xs font-medium text-gray-600">você</span>
+          </>
+        )}
+
+        {!currentUserEntry && (
+          <>
+            <div className="h-6 w-px bg-gray-200"></div>
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-medium text-gray-400">
+                ?
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-400">0 dias ativos</span>
+                <span className="text-xs font-medium text-gray-600">você</span>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </Link>
   );
 }
