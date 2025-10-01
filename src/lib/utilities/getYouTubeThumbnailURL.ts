@@ -6,12 +6,36 @@ function getYouTubeThumbnailURL(url: string): string {
 
   if (!videoIdMatch) {
     return '/placeholder.svg';
-    // throw new Error('Invalid YouTube URL');
   }
   const videoId = videoIdMatch[1];
 
-  // Construct the thumbnail URL using the video ID
-  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  // Use hqdefault.jpg as it's more reliable than maxresdefault.jpg
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
+// Function to get YouTube thumbnail with fallback
+export function getYouTubeThumbnailWithFallback(url: string): {
+  src: string;
+  fallbackSrc: string;
+} {
+  const videoIdMatch = url.match(
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/
+  );
+
+  if (!videoIdMatch) {
+    return {
+      src: '/placeholder.svg',
+      fallbackSrc: '/placeholder.svg',
+    };
+  }
+
+  const videoId = videoIdMatch[1];
+
+  // Use hqdefault.jpg as primary (more reliable) and mqdefault.jpg as fallback
+  return {
+    src: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    fallbackSrc: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+  };
 }
 
 export default getYouTubeThumbnailURL;
