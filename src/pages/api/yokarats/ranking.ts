@@ -46,9 +46,19 @@ const getYokaratsRanking = async (
       });
     }
 
-    // Calculate the start and end dates of the month
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+    // Calculate the start and end dates of the month in Brazil timezone
+    // Brazil (São Paulo) is UTC-3 year-round (no DST since 2019)
+    // Use ISO string with explicit timezone offset to ensure correct UTC conversion
+    const lastDay = new Date(year, month, 0).getDate();
+    const startDate = new Date(
+      `${year}-${String(month).padStart(2, '0')}-01T00:00:00-03:00`
+    );
+    const endDate = new Date(
+      `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(
+        2,
+        '0'
+      )}T23:59:59.999-03:00`
+    );
 
     // Get all completed watch sessions (progress > 0.8) for the month
     const completedWatchSessions = await prisma.watchSession.findMany({

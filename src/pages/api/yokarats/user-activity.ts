@@ -57,9 +57,21 @@ const getUserActivity = async (
       });
     }
 
-    // Calculate the start and end dates of the month
-    const startDate = new Date(selectedYear, selectedMonth - 1, 1);
-    const endDate = new Date(selectedYear, selectedMonth, 0, 23, 59, 59, 999);
+    // Calculate the start and end dates of the month in Brazil timezone
+    // Brazil (São Paulo) is UTC-3 year-round (no DST since 2019)
+    // Use ISO string with explicit timezone offset to ensure correct UTC conversion
+    const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
+    const startDate = new Date(
+      `${selectedYear}-${String(selectedMonth).padStart(
+        2,
+        '0'
+      )}-01T00:00:00-03:00`
+    );
+    const endDate = new Date(
+      `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(
+        lastDay
+      ).padStart(2, '0')}T23:59:59.999-03:00`
+    );
 
     // Get completed watch sessions for the month
     const watchSessions = await prisma.watchSession.findMany({
