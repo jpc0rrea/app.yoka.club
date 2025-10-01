@@ -136,7 +136,7 @@ export default function YokaratsRanking() {
           🔥 yokarats
         </h1>
         <p className="mt-2 text-sm text-gray-500">
-          ranking dos praticantes mais ativos do mês
+          ranking das praticantes mais ativas do mês
         </p>
       </div>
 
