@@ -34,8 +34,8 @@ const MONTHS = [
 ];
 
 // Earliest date we have records (adjust this to your platform's launch date)
-const EARLIEST_YEAR = 2024;
-const EARLIEST_MONTH = 1; // January
+const EARLIEST_YEAR = 2025;
+const EARLIEST_MONTH = 10; // October
 
 export default function YokaratsRanking() {
   const currentDate = new Date();
@@ -256,7 +256,9 @@ export default function YokaratsRanking() {
             <Flame className="h-8 w-8 text-gray-300" strokeWidth={1.5} />
           </div>
           <p className="text-sm text-gray-400">
-            ainda não há dados para este período
+            {selectedYear === 2025 && selectedMonth === 10
+              ? 'ainda não há dados para este período'
+              : 'nenhuma atividade registrada neste mês'}
           </p>
         </div>
       )}
