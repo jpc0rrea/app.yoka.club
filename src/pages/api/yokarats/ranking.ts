@@ -116,12 +116,10 @@ const getYokaratsRanking = async (
     completedWatchSessions.forEach((session) => {
       const userId = session.userId;
       // Convert UTC date to Brazil timezone (America/Sao_Paulo)
-      const brazilDate = new Date(
-        session.updatedAt.toLocaleString('en-US', {
-          timeZone: 'America/Sao_Paulo',
-        })
-      );
-      const dateKey = brazilDate.toISOString().split('T')[0] as string; // YYYY-MM-DD - split always returns at least one element
+      const brazilDateStr = session.updatedAt.toLocaleDateString('sv-CA', {
+        timeZone: 'America/Sao_Paulo',
+      });
+      const dateKey = brazilDateStr; // Already in YYYY-MM-DD format
 
       if (!userActiveDaysMap.has(userId)) {
         userActiveDaysMap.set(userId, new Set());
@@ -148,12 +146,10 @@ const getYokaratsRanking = async (
       }
 
       // Convert UTC date to Brazil timezone (America/Sao_Paulo)
-      const brazilDate = new Date(
-        eventStartDate.toLocaleString('en-US', {
-          timeZone: 'America/Sao_Paulo',
-        })
-      );
-      const dateKey = brazilDate.toISOString().split('T')[0] as string; // YYYY-MM-DD - split always returns at least one element
+      const brazilDateStr = eventStartDate.toLocaleDateString('sv-CA', {
+        timeZone: 'America/Sao_Paulo',
+      });
+      const dateKey = brazilDateStr; // Already in YYYY-MM-DD format
 
       if (!userActiveDaysMap.has(userId)) {
         userActiveDaysMap.set(userId, new Set());

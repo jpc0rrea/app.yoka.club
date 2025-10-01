@@ -130,12 +130,10 @@ const getUserActivity = async (
     // Process watch sessions
     watchSessions.forEach((session) => {
       // Convert UTC date to Brazil timezone (America/Sao_Paulo)
-      const brazilDate = new Date(
-        session.updatedAt.toLocaleString('en-US', {
-          timeZone: 'America/Sao_Paulo',
-        })
-      );
-      const dateKey = brazilDate.toISOString().split('T')[0] as string;
+      const brazilDateStr = session.updatedAt.toLocaleDateString('sv-CA', {
+        timeZone: 'America/Sao_Paulo',
+      });
+      const dateKey = brazilDateStr; // Already in YYYY-MM-DD format
 
       if (!activitiesByDate.has(dateKey)) {
         activitiesByDate.set(dateKey, []);
@@ -164,12 +162,10 @@ const getUserActivity = async (
       }
 
       // Convert UTC date to Brazil timezone (America/Sao_Paulo)
-      const brazilDate = new Date(
-        eventStartDate.toLocaleString('en-US', {
-          timeZone: 'America/Sao_Paulo',
-        })
-      );
-      const dateKey = brazilDate.toISOString().split('T')[0] as string;
+      const brazilDateStr = eventStartDate.toLocaleDateString('sv-CA', {
+        timeZone: 'America/Sao_Paulo',
+      });
+      const dateKey = brazilDateStr; // Already in YYYY-MM-DD format
 
       if (!activitiesByDate.has(dateKey)) {
         activitiesByDate.set(dateKey, []);
