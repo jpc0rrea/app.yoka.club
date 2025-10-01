@@ -272,8 +272,8 @@ export default function YokaratsRanking() {
           <li className="flex items-start gap-2">
             <span className="mt-0.5 text-purple-400">•</span>
             <span>
-              um dia ativo = pelo menos uma aula gravada completa (80%+) ou uma
-              aula ao vivo
+              um dia ativo = pelo menos uma aula gravada completa ou uma aula ao
+              vivo
             </span>
           </li>
           <li className="flex items-start gap-2">
