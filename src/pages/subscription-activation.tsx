@@ -111,16 +111,16 @@ export default function SubscriptionActivation() {
                   }
                 : undefined,
           });
-        }
 
-        dlPush({
-          event: 'yoka_purchase',
-          email: (freshUser || user)!.email,
-          name: (freshUser || user)!.name,
-          price_value: planData.plan.price,
-          currency: 'BRL',
-          price_id: planData.plan.id,
-        });
+          dlPush({
+            event: 'yoka_purchase',
+            email: (freshUser || user)!.email,
+            name: (freshUser || user)!.name,
+            price_value: planData.plan.price,
+            currency: 'BRL',
+            price_id: planData.plan.id,
+          });
+        }
 
         return;
       }
