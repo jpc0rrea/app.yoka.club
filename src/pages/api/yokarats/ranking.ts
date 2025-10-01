@@ -56,7 +56,7 @@ const getYokaratsRanking = async (
         progress: {
           gt: 0.8,
         },
-        updatedAt: {
+        createdAt: {
           gte: startDate,
           lte: endDate,
         },
