@@ -13,6 +13,7 @@ import { UserPlan } from '@hooks/useUserPlan';
 import { sleep } from '@lib/utils';
 import { Button } from '@components/ui/button';
 import { trackPurchase } from '@utils/facebook-tracking';
+import { dlPush } from '@lib/gtm';
 
 const MAX_RETRIES = 15;
 const INITIAL_RETRY_DELAY = 1000; // 1 second
@@ -111,6 +112,16 @@ export default function SubscriptionActivation() {
                 : undefined,
           });
         }
+
+        dlPush({
+          event: 'yoka_purchase',
+          email: (freshUser || user)!.email,
+          name: (freshUser || user)!.name,
+          price_value: planData.plan.price,
+          currency: 'BRL',
+          price_id: planData.plan.id,
+        });
+
         return;
       }
 
