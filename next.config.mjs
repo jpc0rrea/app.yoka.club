@@ -27,6 +27,21 @@ const config = {
     }, {
       protocol: 'https',
       hostname: 'img.youtube.com',
+    }, {
+      protocol: 'https',
+      hostname: 'lriy63ibgf.ufs.sh',
+    }, {
+      protocol: 'https',
+      hostname: 'utfs.io',
+    }, {
+      protocol: 'https',
+      hostname: 'uploadthing.com',
+    }, {
+      protocol: 'https',
+      hostname: 'www.youtube.com',
+    }, {
+      protocol: 'https',
+      hostname: 'img.youtube.com',
     }],
   },
   async headers() {

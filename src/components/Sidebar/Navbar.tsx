@@ -12,6 +12,7 @@ import {
   PlayCircleIcon,
   RocketIcon,
   MousePointerClick,
+  Flame,
 } from 'lucide-react';
 import useUser from '@hooks/useUser';
 
@@ -26,6 +27,12 @@ export const navigationItems = [
     name: 'aulas ao vivo',
     href: '/live-classes',
     icon: PlayCircleIcon,
+    role: ['ADMIN', 'USER', 'INSTRUCTOR'],
+  },
+  {
+    name: 'yokarats',
+    href: '/yokarats',
+    icon: Flame,
     role: ['ADMIN', 'USER', 'INSTRUCTOR'],
   },
   {
