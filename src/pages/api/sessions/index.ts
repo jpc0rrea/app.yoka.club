@@ -76,6 +76,7 @@ async function createSessionHandler(
   res: NextApiResponse
 ) {
   let storedUser;
+
   try {
     storedUser = await user.findOneByEmail({
       email: req.body.email,

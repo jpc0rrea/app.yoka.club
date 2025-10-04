@@ -207,6 +207,10 @@ module.exports = withUt({
         'tremor-metric': ['1.875rem', { lineHeight: '2.25rem' }],
       },
       keyframes: {
+        scrollText: {
+          '0%, 20%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' }
+        },
         'accordion-down': {
           from: { height: 0 },
           to: { height: 'var(--radix-accordion-content-height)' },
@@ -219,6 +223,8 @@ module.exports = withUt({
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'scroll-text': 'scrollText 12s linear infinite',
+        'no-scroll-text': 'scrollText 0s linear infinite',
       },
     },
   },

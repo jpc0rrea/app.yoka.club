@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { Loader2 } from 'lucide-react';
 
@@ -12,13 +12,15 @@ import { queryClient } from '@lib/queryClient';
 import { UserPlan } from '@hooks/useUserPlan';
 import { sleep } from '@lib/utils';
 import { Button } from '@components/ui/button';
+import { trackPurchase } from '@utils/facebook-tracking';
+import { dlPush } from '@lib/gtm';
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 15;
 const INITIAL_RETRY_DELAY = 1000; // 1 second
 
 export default function SubscriptionActivation() {
   const router = useRouter();
-  const { fetchUser } = useUser();
+  const { fetchUser, user } = useUser();
   const { sessionToken } = router.query;
 
   const [globalMessage, setGlobalMessage] = useState(
@@ -30,6 +32,8 @@ export default function SubscriptionActivation() {
   const [buttonText, setButtonText] = useState('home');
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const purchaseTrackedRef = useRef(false);
 
   const fetchPlanWithRetry = async (
     retries = 0
@@ -87,13 +91,44 @@ export default function SubscriptionActivation() {
         );
         setButtonText('ir para a página inicial');
         queryClient.invalidateQueries(['userPlan']);
-        await fetchUser();
+        const freshUser = await fetchUser();
+        if (!purchaseTrackedRef.current) {
+          purchaseTrackedRef.current = true;
+          trackPurchase({
+            value: planData.plan.price,
+            currency: 'BRL',
+            customData: {
+              content_name: planData.plan.name,
+              content_category: planData.plan.type,
+              content_ids: [planData.plan.id],
+            },
+            userData:
+              freshUser || user
+                ? {
+                    email: (freshUser || user)!.email,
+                    first_name: (freshUser || user)!.name.split(' ')[0],
+                    last_name: (freshUser || user)!.name.split(' ')[1],
+                  }
+                : undefined,
+          });
+
+          dlPush({
+            event: 'yoka_purchase',
+            email: (freshUser || user)!.email,
+            name: (freshUser || user)!.name,
+            price_value: planData.plan.price,
+            currency: 'BRL',
+            price_id: planData.plan.id,
+          });
+        }
+
         return;
       }
 
       setIsSuccess(false);
       throw new Error('Failed to fetch plan after multiple attempts');
     } catch (err) {
+      console.log('TODELETE ACTIVATION:', err);
       const { message, description } = convertErrorMessage({
         err,
       });

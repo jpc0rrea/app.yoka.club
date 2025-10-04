@@ -52,6 +52,10 @@ async function postStripeWebhookHandler(
   const secret = req.headers['stripe-signature'];
 
   if (!secret) {
+    console.log('TODELETE STRIPE WEBHOOK nao possui secret:', {
+      headers: req.headers,
+      STRIPE_WEBHOOK_SECRET: env.STRIPE_WEBHOOK_SECRET,
+    });
     throw new UnauthorizedError({
       message: `o webhook não foi autenticado.`,
       action: `verifique se o webhook foi enviado pelo stripe e tente novamente.`,

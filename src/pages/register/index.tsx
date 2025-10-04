@@ -22,6 +22,7 @@ import {
   isValidBrazilianPhoneNumber,
 } from '@lib/utils';
 import { Button } from '@components/ui/button';
+import { trackLead } from '@utils/facebook-tracking';
 
 const registerFormSchema = z
   .object({
@@ -142,6 +143,15 @@ export default function Login() {
         name: data.fullName,
         phoneNumber: String(phoneNumber),
         id: response.data.userId,
+      });
+
+      trackLead({
+        userData: {
+          email: data.email,
+          first_name: data.fullName.split(' ')[0],
+          last_name: data.fullName.split(' ')[1],
+          phone: String(phoneNumber),
+        },
       });
 
       successToast({
